@@ -1,2 +1,2 @@
 # javascript-training
-Javascript Training
+loi-phan-internship
