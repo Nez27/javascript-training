@@ -26,3 +26,31 @@ if (year < 2023) {
 info.location = "VietNam";
 info["facebook"] = "Nezumi2711";
 console.log(info);
+
+let key = prompt("What do you want to know about the user?");
+
+alert(info[key]);
+
+let fruit = prompt("Which fruit to buy?", "apple");
+
+let bag = {
+  [fruit]: 5, // the name of the property is taken from the variable fruit
+};
+
+alert(bag.melon);
+
+let user = {
+  name: "John",
+  sizes: {
+    height: 182,
+    width: 50,
+  },
+};
+
+let clone = Object.assign({}, user);
+
+// user and clone share sizes
+user.sizes.width = 60; // change a property from one place
+
+console.log(user.sizes.width);
+console.log(clone.sizes.width);
