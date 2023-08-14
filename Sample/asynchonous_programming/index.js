@@ -21,28 +21,28 @@ var promise = new Promise(
   }
 );
 
-promise
-  .then(function (number) {
-    console.log("Then 1");
-    return number;
-  })
-  .then(function (data) {
-    return new Promise(function (resolve) {
-      console.log(`Then 2: ${data}`);
-      setTimeout(function () {
-        resolve(1000);
-      }, 5000);
-    });
-  })
-  .then(function (data) {
-    console.log(`Then 3: ${data}`);
-  })
-  .catch(function () {
-    console.log("Failure!");
-  })
-  .finally(function () {
-    console.log("Done!");
-  });
+// promise
+//   .then(function (number) {
+//     console.log("Then 1");
+//     return number;
+//   })
+//   .then(function (data) {
+//     return new Promise(function (resolve) {
+//       console.log(`Then 2: ${data}`);
+//       setTimeout(function () {
+//         resolve(1000);
+//       }, 5000);
+//     });
+//   })
+//   .then(function (data) {
+//     console.log(`Then 3: ${data}`);
+//   })
+//   .catch(function () {
+//     console.log("Failure!");
+//   })
+//   .finally(function () {
+//     console.log("Done!");
+//   });
 
 // Async, await
 
@@ -96,5 +96,48 @@ const getCountryData = function (country) {
     })
     .finally(() => console.log("End!"));
 };
+
+const API_KEY = "105525161113601304911x6595";
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+const getMyLocation = async function () {
+  try {
+    // Geolocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    console.log(lat, lng);
+
+    // Reverse geocoding
+    const resGeo = await fetch(
+      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=${API_KEY}`
+    );
+    if (!resGeo.ok) throw new Error("Problem getting location data");
+
+    const dataGeo = await resGeo.json();
+    console.log(dataGeo);
+
+    // Country data
+    const res = await fetch(
+      `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
+    );
+
+    if (!res.ok) throw new Error("Problem getting country");
+
+    const data = await res.json();
+    console.log(data);
+    renderCountry(data[0]);
+  } catch (err) {
+    console.error(`${err} 💥`);
+    renderError(`💥 ${err.message}`);
+  }
+};
+
+getMyLocation();
 
 getCountryData("vietnam");
