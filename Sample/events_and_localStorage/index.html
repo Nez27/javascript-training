@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Javascript Training</title>
+  </head>
+  <body>
+    <h1>Javascript Training</h1>
+
+    <!-- Inline Event Handler Attributes -->
+    <!-- <button onclick="changeText()">Click me</button>
+
+    <p>Try to change me.</p> -->
+
+    <!-- Event handler Properties -->
+    <!-- <button>Click me</button>
+
+    <p>I will change.</p> -->
+
+    <!-- <section>
+      <div id="one">One</div>
+      <div id="two">Two</div>
+      <div id="three">Three</div>
+    </section> -->
+
+    <!-- <div id="menu">
+      <button data-action="save">Save</button>
+      <button data-action="load">Load</button>
+      <button data-action="search">Search</button>
+    </div>
+
+    <script>
+      class Menu {
+        constructor(elem) {
+          this._elem = elem;
+          elem.onclick = this.onClick.bind(this);
+        }
+
+        save() {
+          alert("saving");
+        }
+
+        load() {
+          alert("loading");
+        }
+
+        search() {
+          alert("searching");
+        }
+
+        onClick(event) {
+          let action = event.target.dataset.action;
+          if (action) {
+            this[action]();
+          }
+        }
+      }
+
+      new Menu(menu);
+    </script> -->
+
+    <button data-toggle-id-set="subscribe-mail">
+      Show the subscription form
+    </button>
+
+    <form id="subscribe-mail" hidden>Your mail: <input type="email" /></form>
+
+    <script>
+      document.addEventListener("click", function (event) {
+        let id = event.target.dataset.toggleIdSet;
+        if (!id) return;
+
+        let elem = document.getElementById(id);
+
+        elem.hidden = !elem.hidden;
+      });
+    </script>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
