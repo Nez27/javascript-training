@@ -1,0 +1,76 @@
+.background {
+  height: 100vh;
+  background: linear-gradient(#00710f 314px, #ebebeb -100%);
+}
+
+.wrapper {
+  @extend %margin-inline-auto;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.logo-web {
+  padding-top: 54px;
+}
+
+.form {
+  @extend %margin-inline-auto;
+
+  margin-top: 34px;
+  padding-top: 34px;
+  padding-bottom: 40px;
+  background-color: $white;
+  width: 670px;
+  border-radius: 20px;
+
+  &__container {
+    @extend %margin-inline-auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    width: 280px;
+  }
+
+  &__title {
+    color: $primary-text-color;
+    font-size: $fs-2x-lg;
+    font-weight: 700;
+    line-height: 48px;
+  }
+
+  &__description {
+    margin-top: 15px;
+    color: $secondary-text-color;
+    font-size: $fs-md;
+    line-height: 24px;
+  }
+
+  &__input {
+    @extend %rounded;
+
+    font-size: $fs-md;
+    height: 52px;
+    border: 2px solid $color-background-input;
+    background-color: $color-background-input;
+    padding-inline: 14px;
+  }
+
+  &__submit-btn {
+    @extend %rounded;
+
+    border: none;
+    background: $light-primary-color;
+    color: $white;
+    height: 36px;
+    margin-top: 30px;
+  }
+
+  &__link {
+    color: $primary-color;
+  }
+}

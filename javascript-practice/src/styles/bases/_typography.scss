@@ -26,3 +26,8 @@ $font-path: '../assets/fonts';
 
   font-display: swap;
 }
+
+* {
+  font-family: $primary-font, sans-serif;
+  font-size: $fs-sm;
+}
