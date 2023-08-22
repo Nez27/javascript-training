@@ -4,7 +4,7 @@
   "description": "loi-phan-internship",
   "scripts": {
     "start": "parcel ./src/*.html --no-cache --no-source-maps",
-    "build": "rm -rf build && rm -rf .parcel-cache && parcel build ./src/*.pug --no-cache --no-source-maps --dist-dir dist"
+    "build": "rm -rf build && rm -rf .parcel-cache && parcel build ./src/*.html --no-cache --no-source-maps --dist-dir dist"
   },
   "author": "",
   "license": "ISC",
