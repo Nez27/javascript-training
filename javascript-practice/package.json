@@ -10,10 +10,20 @@
   "license": "ISC",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.9.3",
-    "parcel": "^2.9.3"
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "parcel": "^2.9.3",
+    "prettier": "^3.0.2"
   },
   "dependencies": {
     "core-js": "^3.32.1",
+    "eslint-config-airbnb-base": "^15.0.0",
     "regenerator-runtime": "^0.14.0"
   }
 }
