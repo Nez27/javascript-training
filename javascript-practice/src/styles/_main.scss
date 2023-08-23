@@ -4,8 +4,12 @@
 
 // Bases
 @import './bases/base';
+@import './bases/placeholder';
 @import './bases/reset';
 @import './bases/typography';
+
+// Components
+@import './components/loader';
 
 // Layouts
 @import './layouts/header';
