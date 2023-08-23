@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "loi-phan-internship",
   "scripts": {
-    "start": "parcel ./src/*.html --no-cache --no-source-maps",
-    "build": "rm -rf build && rm -rf .parcel-cache && parcel build ./src/*.html --no-cache --no-source-maps --dist-dir dist"
+    "start": "parcel ./src/pages/*.html --no-cache --no-source-maps",
+    "build": "rm -rf build && rm -rf .parcel-cache && parcel build ./src/pages/*.html --no-cache --no-source-maps --dist-dir dist"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.9.3",
     "parcel": "^2.9.3"
   },
   "dependencies": {
