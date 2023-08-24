@@ -1,12 +1,12 @@
 .background {
   height: 100vh;
-  background: linear-gradient(#00710f 314px, #ebebeb -100%);
+  background: linear-gradient($dark-primary-color 314px, #ebebeb -100%);
 }
 
 .wrapper {
   @extend %margin-inline-auto;
+  @extend %d-absolute;
 
-  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -15,6 +15,20 @@
 
 .logo-web {
   padding-top: 54px;
+}
+
+.checkmark {
+  display: inline-block;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 11px;
+    height: 22px;
+    border: solid $primary-color;
+    border-width: 0 10px 10px 0;
+    transform: rotate(45deg);
+  }
 }
 
 .form {

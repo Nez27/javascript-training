@@ -1,1 +1,27 @@
-// TODO
+@mixin flex-layout(
+  $justify: null,
+  $align: null,
+  $direction: null,
+  $gap: null,
+  $wrap: null
+) {
+  @if $justify != null {
+    justify-content: $justify;
+  }
+
+  @if $align != null {
+    align-items: $align;
+  }
+
+  @if $direction != null {
+    flex-direction: $direction;
+  }
+
+  @if $gap != null {
+    gap: $gap;
+  }
+
+  @if $wrap != null {
+    flex-wrap: $wrap;
+  }
+}
