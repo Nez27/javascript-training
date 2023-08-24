@@ -31,59 +31,6 @@
   }
 }
 
-.overlay {
-  @extend %d-absolute;
-
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 2;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.modal-box {
-  @extend %d-flex;
-  @extend %d-absolute;
-  @include flex-layout($direction: column, $align: center, $gap: 30px);
-
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  z-index: 2;
-  padding: 40px 50px;
-  border-radius: 10px;
-  background-color: $white;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
-
-  &__title {
-    font-size: $fs-2x-lg;
-  }
-
-  &__message {
-    font-size: $fs-lg;
-    text-align: center;
-  }
-
-  &__redirect-btn {
-    color: $white;
-    font-size: $fs-md;
-    background-color: $light-primary-color;
-    border: none;
-    border-radius: 10px;
-    padding: 15px 30px;
-    cursor: pointer;
-  }
-}
-
-.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 .form {
   @extend %margin-inline-auto;
 
