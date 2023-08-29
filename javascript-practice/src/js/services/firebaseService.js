@@ -7,12 +7,12 @@ import {
   goOnline,
   onValue,
 } from 'firebase/database';
-import { databaseURL } from '../constants/constant';
+import { DATABASE_URL } from '../constants/config';
 
 class FirebaseService {
   constructor() {
     const firebaseConfig = {
-      databaseURL,
+      DATABASE_URL,
     };
     this.app = initializeApp(firebaseConfig);
     this.db = getDatabase(this.app);
@@ -36,8 +36,11 @@ class FirebaseService {
         ref(this.db, path),
         (snapshot) => {
           let result = false;
+
+          // snapshot is a type of data by Firebase define
           snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
+
             if (data[property] === value) {
               result = true;
             }

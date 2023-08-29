@@ -1,8 +1,12 @@
-import { TIME_OUT_SEC, TIME_OUT_ERROR, regex } from '../constants/constant';
+import {
+  TIME_OUT_SEC,
+  TIME_OUT_ERROR,
+  REGEX_PASSWORD,
+} from '../constants/constant';
 import FirebaseService from '../services/firebaseService';
 
 export const validatePassword = (password) => {
-  return regex.test(password);
+  return REGEX_PASSWORD.test(password);
 };
 
 export const timeout = (s) => {
@@ -11,10 +15,6 @@ export const timeout = (s) => {
       reject(TIME_OUT_ERROR);
     }, s * 1000);
   });
-};
-
-export const createIdUser = () => {
-  return new Date().getTime();
 };
 
 export const timeOutConnect = async (action) => {
