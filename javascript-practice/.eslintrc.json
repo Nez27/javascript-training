@@ -1,6 +1,11 @@
 {
   "extends": ["airbnb", "prettier", "plugin:prettier/recommended"],
   "plugins": ["prettier"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
+  },
   "rules": {
     "prettier/prettier": [
       "error",
@@ -8,5 +13,8 @@
         "endOfLine": "auto"
       }
     ]
+  },
+  "globals": {
+    "document": false
   }
 }
