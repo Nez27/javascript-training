@@ -1,0 +1,58 @@
+.mark {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #c4cbd2;
+  border-radius: 100px;
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+  }
+}
+
+.check:before {
+  top: 16px;
+  left: 15px;
+  margin: -5px 0 0 -6px;
+  height: 10px;
+  width: 20px;
+  border: solid #39ca74;
+  border-width: 0 0 3px 3px;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.error:before {
+  top: 6px;
+  left: 13px;
+  height: 10px;
+  width: 10px;
+  border: solid #c0392b;
+  border-width: 0 0 4px 4px;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.error:after {
+  top: 21px;
+  left: 13px;
+  height: 10px;
+  width: 10px;
+  border: solid #c0392b;
+  border-width: 0 0 4px 4px;
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  -o-transform: rotate(135deg);
+  transform: rotate(135deg);
+}

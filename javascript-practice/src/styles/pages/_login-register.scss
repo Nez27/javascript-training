@@ -17,20 +17,6 @@
   padding-top: 54px;
 }
 
-.checkmark {
-  display: inline-block;
-
-  &:after {
-    content: '';
-    display: block;
-    width: 11px;
-    height: 22px;
-    border: solid $primary-color;
-    border-width: 0 10px 10px 0;
-    transform: rotate(45deg);
-  }
-}
-
 .form {
   @extend %margin-inline-auto;
 
@@ -55,6 +41,15 @@
     font-size: $fs-2x-lg;
     font-weight: 700;
     line-height: 48px;
+  }
+
+  &__error-message {
+    font-size: $fs-md;
+    background-color: $light-error-color;
+    color: $dark-error-color;
+    padding: 15px 15px;
+    border-radius: 10px;
+    line-height: 22px;
   }
 
   &__description {
