@@ -3,24 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../styles/_main.scss" />
     <title>Register - Money Lover</title>
   </head>
   <body>
-    <!-- <div class="loader"></div> -->
-    <div class="overlay"></div>
-    <div class="modal-box">
-      <div class="checkmark"></div>
+    <!-- <div class="loader hidden"></div> -->
+    <!-- <div class="overlay"></div>
+    <div class="modal-box success-form">
+      <div class="mark check"></div>
       <h2 class="modal-box__title">Register success!</h2>
       <p class="modal-box__message">Please login to continue.</p>
 
       <button class="modal-box__redirect-btn">OK!</button>
-    </div>
+    </div> -->
     <div class="background">
       <div class="wrapper">
         <img class="logo-web" src="../assets/images/logo.svg" alt="Logo web" />
         <!-- Register form -->
-        <form action="#" class="form" method="post">
+        <form action="#" class="form" method="post" id="registerForm">
           <div class="form__container">
             <h1 class="form__title">Register</h1>
             <p class="form__description">Using Money Lover account</p>
@@ -55,5 +54,6 @@
         <!-- End form -->
       </div>
     </div>
+    <script type="module" src="../js/controller.js"></script>
   </body>
 </html>
