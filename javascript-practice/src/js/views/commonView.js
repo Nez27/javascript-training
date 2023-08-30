@@ -1,4 +1,4 @@
-import { MARK_ICON, TYPE_FORM } from '../constants/constant';
+import { MARK_ICON, TYPE_POPUP } from '../constants/constant';
 
 export default class CommonView {
   constructor() {
@@ -10,6 +10,9 @@ export default class CommonView {
     this.handleEventBtnPopupAndOverlay();
   }
 
+  /**
+   * Implement popup in site
+   */
   initPopup() {
     this.rootElement = document.querySelector('body');
 
@@ -27,8 +30,10 @@ export default class CommonView {
     this.rootElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  /**
+   * Assgign element in popup to property
+   */
   initElementPopup() {
-    // Init element
     this.modalBox = document.querySelector('.modal-box');
     this.popupIcon = document.querySelector('.mark');
     this.popupBtn = document.querySelector('.modal-box__redirect-btn');
@@ -37,19 +42,32 @@ export default class CommonView {
     this.overlay = document.querySelector('.overlay');
   }
 
+  /**
+   * Show or hide loader screen
+   */
   toogleLoaderSpinner() {
     this.spinner.classList.toggle('hidden');
   }
 
+  /**
+   * Show or hide popup
+   */
   tooglePopupForm() {
     this.overlay.classList.toggle('active');
     this.modalBox.classList.toggle('active');
   }
 
-  initPopupContent(typeForm, title, content, btnContent) {
-    // Remove old typeForm class if haved
+  /**
+   * Add popup content
+   * @param {TYPE_POPUP} typePopup Type of the popup
+   * @param {string} title Title of popup
+   * @param {string} content Content of popup
+   * @param {string} btnContent Content of button
+   */
+  initPopupContent(typePopup, title, content, btnContent) {
+    // Remove old typePopup class if haved
     this.modalBox.classList.forEach((classItem) =>
-      classItem === TYPE_FORM.success || classItem === TYPE_FORM.error
+      classItem === TYPE_POPUP.success || classItem === TYPE_POPUP.error
         ? this.modalBox.classList.remove(classItem)
         : '',
     );
@@ -63,21 +81,27 @@ export default class CommonView {
 
     // Init content popup
     this.modalBox.classList.add(
-      typeForm === TYPE_FORM.success ? TYPE_FORM.success : TYPE_FORM.error,
+      typePopup === TYPE_POPUP.success ? TYPE_POPUP.success : TYPE_POPUP.error,
     );
     this.popupIcon.classList.add(
-      typeForm === TYPE_FORM.success ? MARK_ICON.success : MARK_ICON.error,
+      typePopup === TYPE_POPUP.success ? MARK_ICON.success : MARK_ICON.error,
     );
     this.popupTitle.textContent = title;
     this.popupContent.textContent = content;
     this.popupBtn.textContent = btnContent;
   }
 
+  /**
+   * Add event listener for popup and overlay
+   */
   handleEventBtnPopupAndOverlay() {
     this.popupBtn.addEventListener('click', this.tooglePopupForm.bind(this));
     this.overlay.addEventListener('click', this.tooglePopupForm.bind(this));
   }
 
+  /**
+   * Implement loader screen
+   */
   initLoader() {
     const markup = `<div class="loader hidden"></div>`;
 

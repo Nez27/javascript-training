@@ -7,6 +7,10 @@ export default class UserService {
     this.path = 'users/';
   }
 
+  /**
+   * Save user into database
+   * @param {Object} user The user object need to be saved into databae
+   */
   async saveUser(user) {
     FirebaseService.reconnect();
     const saveUser = FirebaseService.save(
@@ -16,6 +20,11 @@ export default class UserService {
     await timeOutConnect(saveUser);
   }
 
+  /**
+   * Check user exist in database by email
+   * @param {string} email Email need to be check
+   * @returns {boolean} Return true if email exist and otherwise is false
+   */
   async checkExistUserByEmail(email) {
     FirebaseService.reconnect();
     const existUser = FirebaseService.findKeyByPropery(
