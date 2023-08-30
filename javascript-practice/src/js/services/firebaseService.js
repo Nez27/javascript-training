@@ -12,7 +12,7 @@ import { DATABASE_URL } from '../constants/config';
 class FirebaseService {
   constructor() {
     const firebaseConfig = {
-      DATABASE_URL,
+      databaseUrl: DATABASE_URL,
     };
     this.app = initializeApp(firebaseConfig);
     this.db = getDatabase(this.app);
