@@ -12,24 +12,43 @@ import { DATABASE_URL } from '../constants/config';
 class FirebaseService {
   constructor() {
     const firebaseConfig = {
-      DATABASE_URL,
+      databaseURL: DATABASE_URL,
     };
     this.app = initializeApp(firebaseConfig);
     this.db = getDatabase(this.app);
   }
 
+  /**
+   * Save data in database
+   * @param {Object} data The object need to save into database
+   * @param {string} path The path of database need to be save
+   * @returns {Promise} Return the relsoves when write to database completed
+   */
   save(data, path) {
     return set(ref(this.db, path), data);
   }
 
+  /**
+   * Disconnect to database
+   */
   disconnect() {
     goOffline(this.db);
   }
 
+  /**
+   * Reconnect to database
+   */
   reconnect() {
     goOnline(this.db);
   }
 
+  /**
+   * Find the key of value by property in database
+   * @param {string} path The path of database to be found
+   * @param {string} property The property of the value need to be found
+   * @param {value} value The value to compare in database
+   * @returns {Promise} Return the relsoves when find completed
+   */
   findKeyByPropery(path, property, value) {
     return new Promise((resolve) => {
       onValue(
