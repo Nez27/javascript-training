@@ -1,9 +1,11 @@
 import { timeOutConnect } from '../helpers/helpers';
 import FirebaseService from './firebaseService';
 import User from '../models/userModel';
+import CommonService from './commonService';
 
-export default class UserService {
+export default class UserService extends CommonService {
   constructor() {
+    super();
     this.path = 'users/';
   }
 
@@ -12,7 +14,7 @@ export default class UserService {
    * @param {Object} user The user object need to be saved into databae
    */
   async saveUser(user) {
-    FirebaseService.reconnect();
+    this.connectToDb();
     const saveUser = FirebaseService.save(
       user,
       this.path + User.createIdUser(),
@@ -26,7 +28,7 @@ export default class UserService {
    * @returns {boolean} Return true if email exist and otherwise is false
    */
   async checkExistUserByEmail(email) {
-    FirebaseService.reconnect();
+    this.connectToDb();
     const existUser = FirebaseService.findKeyByPropery(
       this.path,
       'email',
