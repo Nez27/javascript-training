@@ -4,42 +4,20 @@ export default class RegisterController {
     this.service = service;
   }
 
-  async controlRegister() {
-    try {
-      // Load spinner
-      this.registerView.toogleLoaderSpinner();
+  hanlderCheckUserExist(email) {
+    return this.service.userService.checkUserExist(email);
+  }
 
-      // Get data from form
-      const user = this.registerView.getDataFromForm();
-
-      // Save user
-      if (user) {
-        // Check user exist
-        const userExist = await this.service.userService.checkUserExist(
-          user.email,
-        );
-        if (userExist) {
-          throw Error('User is exists! Please try another email!');
-        } else {
-          await this.service.userService.saveUser(user);
-          // Show popup success
-          this.registerView.initRegisterSuccessPopup();
-          this.registerView.tooglePopupForm();
-        }
-      }
-    } catch (error) {
-      // Show popup error
-      this.registerView.initErrorPopup(error);
-      this.registerView.tooglePopupForm();
-    }
-
-    // Close spinner
-    this.registerView.toogleLoaderSpinner();
+  handlerSaveUser(user) {
+    return this.service.userService.saveUser(user);
   }
 
   init() {
-    if (this.registerView.registerForm !== null) {
-      this.registerView.addHandlerForm(this.controlRegister.bind(this));
+    if (this.registerView.checkRegisterFormElExist()) {
+      this.registerView.addHandlerForm(
+        this.hanlderCheckUserExist.bind(this),
+        this.handlerSaveUser.bind(this),
+      );
       this.registerView.addHandlerInputFormChange();
     }
   }

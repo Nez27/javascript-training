@@ -32,18 +32,6 @@ export default class CommonLoginRegisterView extends CommonView {
   }
 
   /**
-   * Add event listener for form input
-   * @param {Function} handler The function need to be set event
-   */
-  addHandlerForm(handler) {
-    this.parentElement.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.clearErrorMessage();
-      handler();
-    });
-  }
-
-  /**
    * Show or hide style error input password
    */
   toogleErrorStyleInputPass() {
