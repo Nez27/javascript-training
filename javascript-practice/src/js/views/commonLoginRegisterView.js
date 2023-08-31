@@ -8,7 +8,10 @@ export default class CommonLoginRegisterView extends CommonView {
 
     this.parentElement = document.querySelector('.form');
     this.messageDefault = CONSTANT.MESSAGE.ERROR_MESSAGE_DEFAULT;
-    this.inputField = document.querySelectorAll('.form__input');
+    this.inputPassword = document.querySelector('input[name="password"]');
+    this.inputPasswordConfirm = document.querySelector(
+      'input[name="password_confirm"]',
+    );
   }
 
   /**
@@ -41,43 +44,24 @@ export default class CommonLoginRegisterView extends CommonView {
   }
 
   /**
-   * Show error style input password
+   * Show or hide style error input password
    */
-  changeToStyleErrorInputPassword() {
-    // Index = 1 because it should skip email input field
-    for (let index = 1; index < this.inputField.length; index += 1) {
-      this.inputField[index].style.background = '#ffc3c3';
-      this.inputField[index].style.borderColor = '#ce1414';
-    }
-  }
-
-  /**
-   * Clear error style input password
-   */
-  clearStyleErrorInputPassword() {
-    for (let index = 1; index < this.inputField.length; index += 1) {
-      this.inputField[index].style.background = '#f5f5f5';
-      this.inputField[index].style.borderColor = '#f5f5f5';
-    }
-  }
-
-  /**
-   * Reassign again to check error message element haved on page or not
-   */
-  reassignVariableErrorMessage() {
-    this.errorMessage = document.querySelector('.form__error-message');
+  toogleErrorStyleInputPass() {
+    this.inputPassword.classList.toggle('error-input');
+    this.inputPasswordConfirm.classList.toggle('error-input');
   }
 
   /**
    * Clear error message at form
    */
   clearErrorMessage() {
-    this.reassignVariableErrorMessage();
+    // Reassign again to check error message element haved on page or not
+    this.errorMessageEl = document.querySelector('.form__error-message');
 
     // If have error message on page, remove it
-    if (this.errorMessage) {
-      this.errorMessage.remove();
-      this.clearStyleErrorInputPassword();
+    if (this.errorMessageEl) {
+      this.errorMessageEl.remove();
+      this.toogleErrorStyleInputPass();
     }
   }
 
@@ -96,12 +80,12 @@ export default class CommonLoginRegisterView extends CommonView {
    */
   showError(message) {
     this.renderError(message);
-    this.changeToStyleErrorInputPassword();
+    this.toogleErrorStyleInputPass();
   }
 
   /**
    * Show error message in form
-   * @param {*} message The message will show in form
+   * @param {string} message The message will show in form
    */
   renderError(message) {
     const markup = `
