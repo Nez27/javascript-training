@@ -23,7 +23,7 @@ export default class UserService extends CommonService {
   }
 
   /**
-   * Get user by email
+   * Get user id by email
    * @param {string} email Email need to be check
    * @returns {Promise || number} Return id user when exist, otherwise will undefined
    */
@@ -52,9 +52,17 @@ export default class UserService extends CommonService {
     return false;
   }
 
+  /**
+   * Get user data from email
+   * @param {string} email Email user
+   * @returns {Object || null} Return new User Object if find, otherwise return null.
+   */
   async getUserByEmail(email) {
     const id = await this.getUserIdByEmail(email);
-    const user = await FirebaseService.getDataFromId(id, this.path);
-    return new User(user);
+    if (id) {
+      const user = await FirebaseService.getDataFromId(id, this.path);
+      return new User(user);
+    }
+    return null;
   }
 }
