@@ -1,21 +1,21 @@
 export default class RegisterController {
   constructor(service, view) {
-    this.view = view;
+    this.registerView = view.registerView;
     this.service = service;
   }
 
   async controlRegister() {
     try {
       // Load spinner
-      this.view.registerView.toogleLoaderSpinner();
+      this.registerView.toogleLoaderSpinner();
 
       // Get data from form
-      const user = this.view.registerView.getDataFromForm();
+      const user = this.registerView.getDataFromForm();
 
       // Save user
       if (user) {
         // Check user exist
-        const userExist = await this.service.userService.checkExistUserByEmail(
+        const userExist = await this.service.userService.checkUserExist(
           user.email,
         );
         if (userExist) {
@@ -23,24 +23,24 @@ export default class RegisterController {
         } else {
           await this.service.userService.saveUser(user);
           // Show popup success
-          this.view.registerView.initRegisterSuccessPopup();
-          this.view.registerView.tooglePopupForm();
+          this.registerView.initRegisterSuccessPopup();
+          this.registerView.tooglePopupForm();
         }
       }
     } catch (error) {
       // Show popup error
-      this.view.registerView.initErrorPopup(error);
-      this.view.registerView.tooglePopupForm();
+      this.registerView.initErrorPopup(error);
+      this.registerView.tooglePopupForm();
     }
 
     // Close spinner
-    this.view.registerView.toogleLoaderSpinner();
+    this.registerView.toogleLoaderSpinner();
   }
 
   init() {
-    if (this.view.registerView.registerForm !== null) {
-      this.view.registerView.addHandlerForm(this.controlRegister.bind(this));
-      this.view.registerView.addHandlerInputFormChange();
+    if (this.registerView.registerForm !== null) {
+      this.registerView.addHandlerForm(this.controlRegister.bind(this));
+      this.registerView.addHandlerInputFormChange();
     }
   }
 }

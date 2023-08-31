@@ -23,11 +23,11 @@ export default class UserService extends CommonService {
   }
 
   /**
-   * Check user exist in database by email
+   * Get user by email
    * @param {string} email Email need to be check
-   * @returns {boolean} Return true if email exist and otherwise is false
+   * @returns {Promise || number} Return id user when exist, otherwise will undefined
    */
-  async checkExistUserByEmail(email) {
+  async getUserIdByEmail(email) {
     this.connectToDb();
     const existUser = FirebaseService.findKeyByPropery(
       this.path,
@@ -37,5 +37,24 @@ export default class UserService extends CommonService {
     const result = await timeOutConnect(existUser);
 
     return result;
+  }
+
+  /**
+   * Check user exist in database
+   * @param {string} email Email to find user
+   * @returns {boolean} Return true if find, otherwise return false
+   */
+  async checkUserExist(email) {
+    const userExist = await this.getUserIdByEmail(email);
+    if (userExist) {
+      return true;
+    }
+    return false;
+  }
+
+  async getUserByEmail(email) {
+    const id = await this.getUserIdByEmail(email);
+    const user = await FirebaseService.getDataFromId(id, this.path);
+    return new User(user);
   }
 }
