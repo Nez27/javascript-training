@@ -83,3 +83,8 @@
     color: $primary-color;
   }
 }
+
+.error-input {
+  border: 2px solid $dark-error-color;
+  background-color: $light-error-color;
+}
