@@ -54,17 +54,31 @@ class FirebaseService {
       onValue(
         ref(this.db, path),
         (snapshot) => {
-          let result = false;
+          let result;
 
           // snapshot is a type of data by Firebase define
           snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
 
             if (data[property] === value) {
-              result = true;
+              result = childSnapshot.key;
             }
           });
           resolve(result);
+        },
+        {
+          onlyOnce: true,
+        },
+      );
+    });
+  }
+
+  getDataFromId(id, path) {
+    return new Promise((resolve) => {
+      onValue(
+        ref(this.db, path + id),
+        (snapshot) => {
+          resolve(snapshot.val());
         },
         {
           onlyOnce: true,
