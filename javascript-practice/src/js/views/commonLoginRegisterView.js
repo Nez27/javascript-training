@@ -87,11 +87,9 @@ export default class CommonLoginRegisterView extends CommonView {
    * Show error message in form
    * @param {string} message The message will show in form
    */
-  renderError(message) {
+  renderError(message = this.messageDefault) {
     const markup = `
-      <p class="form__error-message">${
-        !message ? this.messageDefault : message
-      }</p>
+      <p class="form__error-message">${message}</p>
     `;
 
     document
