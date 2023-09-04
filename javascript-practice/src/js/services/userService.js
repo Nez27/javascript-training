@@ -1,3 +1,4 @@
+import { createToken } from '../helpers/helpers';
 import User from '../models/user';
 import CommonService from './commonService';
 
@@ -51,5 +52,15 @@ export default class UserService extends CommonService {
       return new User(user);
     }
     return null;
+  }
+
+  async createTokenUser(user) {
+    const id = await this.getUserIdByEmail(user.email);
+
+    // Add token to user object
+    const newUserData = new User(user);
+    newUserData.accessToken = createToken();
+
+    this.save(newUserData, this.defaultPath + id);
   }
 }

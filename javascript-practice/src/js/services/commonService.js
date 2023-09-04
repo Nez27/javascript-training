@@ -22,13 +22,13 @@ export default class CommonService {
     return result;
   }
 
-  async save(data, path = this.path) {
+  async save(data, path = this.defaultPath) {
     this.connectToDb();
     const saveUser = this.firebaseService.save(data, path);
     await timeOutConnect(saveUser);
   }
 
-  async getDataFromId(id, path = this.path) {
+  async getDataFromId(id, path = this.defaultPath) {
     this.connectToDb();
     const data = await this.firebaseService.getDataFromId(id, path);
     if (data) return data;
