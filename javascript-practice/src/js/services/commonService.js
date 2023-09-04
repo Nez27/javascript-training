@@ -30,7 +30,8 @@ export default class CommonService {
 
   async getDataFromId(id, path = this.defaultPath) {
     this.connectToDb();
-    const data = await this.firebaseService.getDataFromId(id, path);
+    const result = await this.firebaseService.getDataFromId(id, path);
+    const data = await timeOutConnect(result);
     if (data) return data;
     return null;
   }
