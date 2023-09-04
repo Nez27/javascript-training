@@ -12,6 +12,7 @@ export default class CommonService {
   }
 
   async findKeyByProperty(property, value, path = this.defaultPath) {
+    this.connectToDb();
     const existUser = this.firebaseService.findKeyByPropery(
       path,
       property,
@@ -28,6 +29,7 @@ export default class CommonService {
   }
 
   async getDataFromId(id, path = this.path) {
+    this.connectToDb();
     const data = await this.firebaseService.getDataFromId(id, path);
     if (data) return data;
     return null;

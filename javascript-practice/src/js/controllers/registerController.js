@@ -13,7 +13,7 @@ export default class RegisterController {
   }
 
   init() {
-    if (this.registerView.checkRegisterFormElExist()) {
+    if (this.registerView.isRegisterPage()) {
       this.registerView.addHandlerForm(
         this.hanlderCheckUserExist.bind(this),
         this.handlerSaveUser.bind(this),

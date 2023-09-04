@@ -6,7 +6,7 @@ export default class RegisterView extends CommonLoginRegisterView {
   constructor() {
     super();
 
-    this.registerForm = document.getElementById('registerForm');
+    this.registerPage = document.getElementById('registerPage');
   }
 
   /**
@@ -100,7 +100,7 @@ export default class RegisterView extends CommonLoginRegisterView {
     this.toogleLoaderSpinner();
   }
 
-  checkRegisterFormElExist() {
-    return this.registerForm !== null;
+  isRegisterPage() {
+    return this.registerPage !== null;
   }
 }

@@ -25,11 +25,9 @@ export default class CommonLoginRegisterView extends CommonView {
         return true;
       }
       this.showError(CONSTANT.MESSAGE.PASSWORD_NOT_STRONG);
-      this.toogleErrorStyleInputPass();
       return false;
     }
     this.showError(CONSTANT.MESSAGE.PASSWORD_NOT_MATCH);
-    this.toogleErrorStyleInputPass();
     return false;
   }
 
@@ -48,9 +46,10 @@ export default class CommonLoginRegisterView extends CommonView {
     // Reassign again to check error message element haved on page or not
     this.errorMessageEl = document.querySelector('.form__error-message');
 
-    // If have error message on page, remove it
+    // If have error message on page, remove it with style error input password
     if (this.errorMessageEl) {
       this.errorMessageEl.remove();
+      this.toogleErrorStyleInputPass();
     }
   }
 
