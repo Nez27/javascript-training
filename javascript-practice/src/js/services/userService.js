@@ -1,6 +1,7 @@
 import { createToken } from '../helpers/helpers';
 import User from '../models/user';
 import CommonService from './commonService';
+import LocalStorageService from './localStorageService';
 
 export default class UserService extends CommonService {
   constructor() {
@@ -62,5 +63,7 @@ export default class UserService extends CommonService {
     newUserData.accessToken = createToken();
 
     this.save(newUserData, this.defaultPath + id);
+
+    LocalStorageService.add('accessToken', newUserData.accessToken);
   }
 }
