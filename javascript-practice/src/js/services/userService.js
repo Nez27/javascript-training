@@ -1,25 +1,20 @@
-import { timeOutConnect } from '../helpers/helpers';
-import FirebaseService from './firebaseService';
-import User from '../models/userModel';
+import User from '../models/user';
 import CommonService from './commonService';
 
 export default class UserService extends CommonService {
   constructor() {
     super();
-    this.path = 'users/';
+
+    this.defaultPath = 'users/';
   }
 
   /**
    * Save user into database
    * @param {Object} user The user object need to be saved into databae
    */
-  async saveUser(user) {
-    this.connectToDb();
-    const saveUser = FirebaseService.save(
-      user,
-      this.path + User.createIdUser(),
-    );
-    await timeOutConnect(saveUser);
+  saveUser(user) {
+    const pathData = this.defaultPath + User.createIdUser();
+    this.save(user, pathData);
   }
 
   /**
@@ -27,16 +22,8 @@ export default class UserService extends CommonService {
    * @param {string} email Email need to be check
    * @returns {Promise || number} Return id user when exist, otherwise will undefined
    */
-  async getUserIdByEmail(email) {
-    this.connectToDb();
-    const existUser = FirebaseService.findKeyByPropery(
-      this.path,
-      'email',
-      email,
-    );
-    const result = await timeOutConnect(existUser);
-
-    return result;
+  getUserIdByEmail(email) {
+    return this.findKeyByProperty('email', email);
   }
 
   /**
@@ -60,7 +47,7 @@ export default class UserService extends CommonService {
   async getUserByEmail(email) {
     const id = await this.getUserIdByEmail(email);
     if (id) {
-      const user = await FirebaseService.getDataFromId(id, this.path);
+      const user = await this.getDataFromId(id);
       return new User(user);
     }
     return null;

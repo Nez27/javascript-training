@@ -1,6 +1,6 @@
 import { TYPE_POPUP } from '../constants/constant';
 import CommonLoginRegisterView from './commonLoginRegisterView';
-import User from '../models/userModel';
+import User from '../models/user';
 
 export default class RegisterView extends CommonLoginRegisterView {
   constructor() {
