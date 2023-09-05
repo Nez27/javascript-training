@@ -19,12 +19,14 @@ export default class CommonService {
       value,
     );
     const result = await timeOutConnect(existUser);
+
     return result;
   }
 
   async save(data, path = this.defaultPath) {
     this.connectToDb();
     const saveUser = this.firebaseService.save(data, path);
+
     await timeOutConnect(saveUser);
   }
 
@@ -32,7 +34,9 @@ export default class CommonService {
     this.connectToDb();
     const result = await this.firebaseService.getDataFromId(id, path);
     const data = await timeOutConnect(result);
+    
     if (data) return data;
+
     return null;
   }
 }
