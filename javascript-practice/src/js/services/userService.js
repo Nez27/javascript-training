@@ -14,6 +14,7 @@ export default class UserService extends CommonService {
    */
   saveUser(user) {
     const pathData = this.defaultPath + User.createIdUser();
+
     this.save(user, pathData);
   }
 
@@ -33,9 +34,11 @@ export default class UserService extends CommonService {
    */
   async checkUserExist(email) {
     const userExist = await this.getUserIdByEmail(email);
+
     if (userExist) {
       return true;
     }
+
     return false;
   }
 
@@ -46,10 +49,13 @@ export default class UserService extends CommonService {
    */
   async getUserByEmail(email) {
     const id = await this.getUserIdByEmail(email);
+
     if (id) {
       const user = await this.getDataFromId(id);
+
       return new User(user);
     }
+
     return null;
   }
 }
