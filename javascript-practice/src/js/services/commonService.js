@@ -1,4 +1,8 @@
-import { timeOutConnect } from '../helpers/helpers';
+import {
+  convertDataObjectToModel,
+  convertModelToDataObject,
+  timeOutConnect,
+} from '../helpers/helpers';
 import FirebaseService from './firebaseService';
 
 export default class CommonService {
@@ -14,23 +18,20 @@ export default class CommonService {
     this.firebaseService.reconnect();
   }
 
-  /**
-   * Find the id of data on database
-   * @param {string} property The property want to get value
-   * @param {string} value The value of property
-   * @param {path} path The path of datbase
-   * @returns {string} The id of data object
-   */
-  async findIdByProperty(property, value, path = this.defaultPath) {
+  async getDataFromProp(property, value, path = this.defaultPath) {
     this.connectToDb();
-    const existUser = this.firebaseService.findIdByProperty(
+    const existUser = this.firebaseService.getDataFromProp(
       path,
       property,
       value,
     );
     const result = await timeOutConnect(existUser);
 
-    return result;
+    if (result.id && result.data) {
+      return convertDataObjectToModel(result);
+    }
+
+    return null;
   }
 
   /**
@@ -38,11 +39,16 @@ export default class CommonService {
    * @param {*} data The data wants to save on database
    * @param {string} path The path of database
    */
-  async save(data, path = this.defaultPath) {
+  async save(model) {
     this.connectToDb();
-    const saveUser = this.firebaseService.save(data, path);
+    const results = convertModelToDataObject(model);
 
-    await timeOutConnect(saveUser);
+    const saveData = this.firebaseService.save(
+      results.data,
+      this.defaultPath + results.id,
+    );
+
+    await timeOutConnect(saveData);
   }
 
   /**

@@ -1,5 +1,4 @@
 import { createToken } from '../helpers/helpers';
-import User from '../models/user';
 import CommonService from './commonService';
 
 export default class UserService extends CommonService {
@@ -14,18 +13,7 @@ export default class UserService extends CommonService {
    * @param {Object} user The user object need to be saved into databae
    */
   saveUser(user) {
-    const pathData = this.defaultPath + User.createIdUser();
-
-    this.save(user, pathData);
-  }
-
-  /**
-   * Get user id by email
-   * @param {string} email Email need to be check
-   * @returns {Promise || number} Return id user when exist, otherwise will undefined
-   */
-  getUserIdByEmail(email) {
-    return this.findIdByProperty('email', email);
+    this.save(user);
   }
 
   /**
@@ -34,7 +22,7 @@ export default class UserService extends CommonService {
    * @returns {boolean} Return true if find, otherwise return false
    */
   async checkUserExist(email) {
-    const userExist = await this.getUserIdByEmail(email);
+    const userExist = await this.getUserByEmail(email);
 
     if (userExist) {
       return true;
@@ -49,24 +37,37 @@ export default class UserService extends CommonService {
    * @returns {Object || null} Return new User Object if find, otherwise return null.
    */
   async getUserByEmail(email) {
-    const id = await this.getUserIdByEmail(email);
+    const result = await this.getDataFromProp('email', email);
 
-    if (id) {
-      const user = await this.getDataFromId(id);
-
-      return new User(user);
+    if (result) {
+      return result;
     }
 
     return null;
   }
 
-  async createTokenUser(user) {
-    const id = await this.getUserIdByEmail(user.email);
+  async validateUser(email, password) {
+    const user = await this.getUserByEmail(email);
+
+    if (user) {
+      // Check password
+      if (user.password === password) {
+        // Create token for user
+        await this.createTokenUser(email);
+
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  async createTokenUser(email) {
+    const user = await this.getUserByEmail(email);
 
     // Add token to user object
-    const newUserData = new User(user);
+    const newUserData = user;
     newUserData.accessToken = createToken();
-
-    this.save(newUserData, this.defaultPath + id);
+    this.save(newUserData);
   }
 }

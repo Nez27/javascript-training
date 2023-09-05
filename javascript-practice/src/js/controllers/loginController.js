@@ -4,20 +4,13 @@ export default class LoginController {
     this.loginView = view.loginView;
   }
 
-  handlerGetUserByEmail(email) {
-    return this.service.userService.getUserByEmail(email);
-  }
-
-  handlerCreateTokenUser(user) {
-    return this.service.userService.createTokenUser(user);
+  handlerValidateUser(email, password) {
+    return this.service.userService.validateUser(email, password);
   }
 
   init() {
     if (this.loginView.isLoginPage()) {
-      this.loginView.addHandlerForm(
-        this.handlerGetUserByEmail.bind(this),
-        this.handlerCreateTokenUser.bind(this),
-      );
+      this.loginView.addHandlerForm(this.handlerValidateUser.bind(this));
     }
   }
 }

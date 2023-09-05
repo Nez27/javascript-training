@@ -1,4 +1,4 @@
-import { TYPE_POPUP } from '../constants/constant';
+import { TYPE_POPUP, MESSAGE, BTN_CONTENT } from '../constants/constant';
 import CommonLoginRegisterView from './commonLoginRegisterView';
 import User from '../models/user';
 
@@ -6,7 +6,7 @@ export default class RegisterView extends CommonLoginRegisterView {
   constructor() {
     super();
 
-    this.registerPage = document.getElementById('registerPage');
+    this.registerPage = document.URL.includes('/register');
   }
 
   /**
@@ -50,12 +50,11 @@ export default class RegisterView extends CommonLoginRegisterView {
    * Implement error popup in site
    * @param {string} content The content will show in error popup
    */
-  initErrorPopup(content) {
-    const typePopup = TYPE_POPUP.error;
-    const title = 'Error';
-    const btnContent = 'Got it!';
+  initErrorPopup(error) {
+    const title = error.title ? error.title : MESSAGE.DEFAULT_TITLE_ERROR_POPUP;
+    const content = error.message ? error.message : error;
 
-    this.initPopupContent(typePopup, title, content, btnContent);
+    this.initPopupContent(TYPE_POPUP.error, title, content, BTN_CONTENT.OK);
 
     // Show popup
     this.tooglePopupForm();
@@ -86,7 +85,7 @@ export default class RegisterView extends CommonLoginRegisterView {
         // Check user exist
         const userExist = await checkExistUser(user.email);
         if (userExist) {
-          throw Error('User is exists! Please try another email!');
+          throw Error(MESSAGE.USER_EXIST_ERROR);
         } else {
           await saveUser(user);
           // Show popup success
@@ -103,6 +102,6 @@ export default class RegisterView extends CommonLoginRegisterView {
   }
 
   isRegisterPage() {
-    return this.registerPage !== null;
+    return this.registerPage;
   }
 }

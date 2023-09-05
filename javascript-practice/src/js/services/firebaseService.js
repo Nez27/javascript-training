@@ -49,22 +49,24 @@ class FirebaseService {
    * @param {value} value The value to compare in database
    * @returns {Promise} Return the relsoves when find completed
    */
-  findIdByProperty(path, property, value) {
+  getDataFromProp(path, property, value) {
     return new Promise((resolve) => {
       onValue(
         ref(this.db, path),
         (snapshot) => {
-          let result;
+          let id;
+          let data;
 
           // snapshot is a type of data by Firebase define
           snapshot.forEach((childSnapshot) => {
-            const data = childSnapshot.val();
+            const dataTemp = childSnapshot.val();
 
-            if (data[property] === value) {
-              result = childSnapshot.key;
+            if (dataTemp[property] === value) {
+              id = childSnapshot.key;
+              data = dataTemp;
             }
           });
-          resolve(result);
+          resolve({ id, data });
         },
         {
           onlyOnce: true,

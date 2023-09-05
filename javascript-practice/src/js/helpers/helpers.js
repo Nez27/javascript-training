@@ -50,3 +50,17 @@ export const createToken = () => {
   }
   return token;
 };
+
+export const convertModelToDataObject = (model) => {
+  const { id, ...data } = model;
+
+  return { id, data };
+};
+
+export const convertDataObjectToModel = (data) => {
+  const model = data.data;
+
+  model.id = data.id;
+
+  return model;
+};
