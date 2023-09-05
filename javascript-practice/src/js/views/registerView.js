@@ -1,12 +1,12 @@
 import { TYPE_POPUP } from '../constants/constant';
 import CommonLoginRegisterView from './commonLoginRegisterView';
-import User from '../models/userModel';
+import User from '../models/user';
 
 export default class RegisterView extends CommonLoginRegisterView {
   constructor() {
     super();
 
-    this.registerForm = document.getElementById('registerForm');
+    this.registerPage = document.getElementById('registerPage');
   }
 
   /**
@@ -24,8 +24,10 @@ export default class RegisterView extends CommonLoginRegisterView {
 
     if (this.validateForm(account)) {
       const user = new User(account);
+
       return user;
     }
+
     return null;
   }
 
@@ -100,7 +102,7 @@ export default class RegisterView extends CommonLoginRegisterView {
     this.toogleLoaderSpinner();
   }
 
-  checkRegisterFormElExist() {
-    return this.registerForm !== null;
+  isRegisterPage() {
+    return this.registerPage !== null;
   }
 }
