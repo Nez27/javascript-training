@@ -43,13 +43,13 @@ class FirebaseService {
   }
 
   /**
-   * Find the key of value by property in database
+   * Find id of value by property in database
    * @param {string} path The path of database to be found
    * @param {string} property The property of the value need to be found
    * @param {value} value The value to compare in database
    * @returns {Promise} Return the relsoves when find completed
    */
-  findKeyByPropery(path, property, value) {
+  findIdByProperty(path, property, value) {
     return new Promise((resolve) => {
       onValue(
         ref(this.db, path),
@@ -73,6 +73,12 @@ class FirebaseService {
     });
   }
 
+  /**
+   * Get data object from Id
+   * @param {string} id The id of data object
+   * @param {string} path The path of data save in database
+   * @returns {Promise} Return new Promise
+   */
   getDataFromId(id, path) {
     return new Promise((resolve) => {
       onValue(

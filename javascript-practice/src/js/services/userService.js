@@ -25,7 +25,7 @@ export default class UserService extends CommonService {
    * @returns {Promise || number} Return id user when exist, otherwise will undefined
    */
   getUserIdByEmail(email) {
-    return this.findKeyByProperty('email', email);
+    return this.findIdByProperty('email', email);
   }
 
   /**

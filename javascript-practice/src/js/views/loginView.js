@@ -30,7 +30,7 @@ export default class LoginView extends CommonLoginRegisterView {
    */
   initErrorPopup(content) {
     const typePopup = CONSTANT.TYPE_POPUP.error;
-    const title = 'Error Credential!';
+    const title = 'Error!';
     const btnContent = 'Got it!';
 
     this.initPopupContent(typePopup, title, content, btnContent);
@@ -41,7 +41,8 @@ export default class LoginView extends CommonLoginRegisterView {
 
   /**
    * Add event listener for form input
-   * @param {Function} handler The function need to be set event
+   * @param {Function} getUserByEmail The function need to be set event
+   * @param {Function} createTokenUser The function need to be set event
    */
   addHandlerForm(getUserByEmail, createTokenUser) {
     this.parentElement.addEventListener('submit', (e) => {
@@ -51,6 +52,11 @@ export default class LoginView extends CommonLoginRegisterView {
     });
   }
 
+  /**
+   * The action when submit form
+   * @param {Function} getUserByEmail The function need to be set event
+   * @param {Function} createTokenUser The function need to be set event
+   */
   async submitForm(getUserByEmail, createTokenUser) {
     try {
       // Load spinner
@@ -66,6 +72,7 @@ export default class LoginView extends CommonLoginRegisterView {
         if (userInput.password === user.password) {
           await createTokenUser(user);
           window.location.replace('/');
+
           return;
         }
       }
