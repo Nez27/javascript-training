@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE } from '../constants/constant';
 import { createToken } from '../helpers/helpers';
 import CommonService from './commonService';
 import LocalStorageService from './localStorageService';
@@ -81,6 +82,9 @@ export default class UserService extends CommonService {
     this.save(newUserData);
 
     // Add access token to local storage
-    LocalStorageService.add('accessToken', newUserData.accessToken);
+    LocalStorageService.add(
+      LOCAL_STORAGE.ACCESS_TOKEN,
+      newUserData.accessToken,
+    );
   }
 }
