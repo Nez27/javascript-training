@@ -7,15 +7,15 @@ class LocalStorageService {
     this.localStorage.setItem(key, value);
   }
 
-  static get(key) {
+  get(key) {
     this.localStorage.getItem(key);
   }
 
-  static remove(key) {
+  remove(key) {
     this.localStorage.removeItem(key);
   }
 
-  static clear() {
+  clear() {
     this.localStorage.clear();
   }
 }
