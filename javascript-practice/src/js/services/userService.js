@@ -46,27 +46,35 @@ export default class UserService extends CommonService {
     return null;
   }
 
+  /**
+   * Validate user info
+   * @param {string} email The email user input
+   * @param {*} password The password user input
+   * @returns {boolean} Return true if match info on database, otherwise return false
+   */
   async validateUser(email, password) {
     const user = await this.getUserByEmail(email);
 
-    if (user) {
-      // Check password
-      if (user.password === password) {
-        // Create token for user
-        await this.createTokenUser(email);
+    // Check password
+    if (user && user.password === password) {
+      // Create token for user
+      await this.createTokenUser(email);
 
-        return true;
-      }
-      return false;
+      return true;
     }
+
     return false;
   }
 
+  /**
+   * Create token for user on database
+   * @param {string} email The email user need to be create token
+   */
   async createTokenUser(email) {
     const user = await this.getUserByEmail(email);
+    const newUserData = user;
 
     // Add token to user object
-    const newUserData = user;
     newUserData.accessToken = createToken();
     this.save(newUserData);
   }
