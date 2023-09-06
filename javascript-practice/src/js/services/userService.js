@@ -1,5 +1,4 @@
 import { createToken } from '../helpers/helpers';
-import User from '../models/user';
 import CommonService from './commonService';
 import LocalStorageService from './localStorageService';
 
@@ -15,17 +14,7 @@ export default class UserService extends CommonService {
    * @param {Object} user The user object need to be saved into databae
    */
   saveUser(user) {
-    const pathData = this.defaultPath + User.createIdUser();
-    this.save(user, pathData);
-  }
-
-  /**
-   * Get user id by email
-   * @param {string} email Email need to be check
-   * @returns {Promise || number} Return id user when exist, otherwise will undefined
-   */
-  getUserIdByEmail(email) {
-    return this.findKeyByProperty('email', email);
+    this.save(user);
   }
 
   /**
@@ -34,10 +23,12 @@ export default class UserService extends CommonService {
    * @returns {boolean} Return true if find, otherwise return false
    */
   async checkUserExist(email) {
-    const userExist = await this.getUserIdByEmail(email);
+    const userExist = await this.getUserByEmail(email);
+
     if (userExist) {
       return true;
     }
+
     return false;
   }
 
@@ -47,23 +38,49 @@ export default class UserService extends CommonService {
    * @returns {Object || null} Return new User Object if find, otherwise return null.
    */
   async getUserByEmail(email) {
-    const id = await this.getUserIdByEmail(email);
-    if (id) {
-      const user = await this.getDataFromId(id);
-      return new User(user);
+    const result = await this.getDataFromProp('email', email);
+
+    if (result) {
+      return result;
     }
+
     return null;
   }
 
-  async createTokenUser(user) {
-    const id = await this.getUserIdByEmail(user.email);
+  /**
+   * Validate user info
+   * @param {string} email The email user input
+   * @param {*} password The password user input
+   * @returns {boolean} Return true if match info on database, otherwise return false
+   */
+  async validateUser(email, password) {
+    const user = await this.getUserByEmail(email);
+
+    // Check password
+    if (user && user.password === password) {
+      // Create token for user
+      await this.createTokenUser(email);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Create token for user on database
+   * @param {string} email The email user need to be create token
+   */
+  async createTokenUser(email) {
+    const user = await this.getUserByEmail(email);
+    const newUserData = user;
 
     // Add token to user object
-    const newUserData = new User(user);
     newUserData.accessToken = createToken();
 
-    this.save(newUserData, this.defaultPath + id);
+    this.save(newUserData);
 
+    // Add access token to local storage
     LocalStorageService.add('accessToken', newUserData.accessToken);
   }
 }

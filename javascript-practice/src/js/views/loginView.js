@@ -1,21 +1,20 @@
 import CommonLoginRegisterView from './commonLoginRegisterView';
-import * as CONSTANT from '../constants/constant';
+import { MESSAGE, TYPE_POPUP, BTN_CONTENT } from '../constants/constant';
 
 export default class LoginView extends CommonLoginRegisterView {
   constructor() {
     super();
 
     this.parentElement = document.querySelector('.form');
-    this.loginPage = document.getElementById('loginPage');
+    this.loginPage = document.URL.includes('/login');
   }
 
   /**
    * Get data from user input
    * @returns {Object || null} Return object or null
    */
-  getDataFromForm() {
-    const { loginForm } = document.forms;
-    const formData = new FormData(loginForm);
+  getDataFromForm(event) {
+    const formData = new FormData(event.target);
     const email = formData.get('email');
     const password = formData.get('password');
 
@@ -28,12 +27,11 @@ export default class LoginView extends CommonLoginRegisterView {
    * Implement error popup in site
    * @param {string} content The content will show in error popup
    */
-  initErrorPopup(content) {
-    const typePopup = CONSTANT.TYPE_POPUP.error;
-    const title = 'Error Credential!';
-    const btnContent = 'Got it!';
+  initErrorPopup(error) {
+    const title = error.title ? error.title : MESSAGE.DEFAULT_TITLE_ERROR_POPUP;
+    const content = error.message ? error.message : error;
 
-    this.initPopupContent(typePopup, title, content, btnContent);
+    this.initPopupContent(TYPE_POPUP.error, title, content, BTN_CONTENT.GOT_IT);
 
     // Show popup
     this.tooglePopupForm();
@@ -41,35 +39,36 @@ export default class LoginView extends CommonLoginRegisterView {
 
   /**
    * Add event listener for form input
-   * @param {Function} handler The function need to be set event
+   * @param {Function} validateUser The function need to be set event
    */
-  addHandlerForm(getUserByEmail, createTokenUser) {
+  addHandlerForm(validateUser) {
     this.parentElement.addEventListener('submit', (e) => {
       e.preventDefault();
       this.clearErrorMessage();
-      this.submitForm(getUserByEmail, createTokenUser);
+      this.submitForm(validateUser, e);
     });
   }
 
-  async submitForm(getUserByEmail, createTokenUser) {
+  /**
+   * The action when submit form
+   * @param {Function} validateUser The function need to be set event
+   */
+  async submitForm(validateUser, event) {
     try {
       // Load spinner
       this.toogleLoaderSpinner();
 
       // Get data from form
-      const userInput = this.getDataFromForm();
+      const userInput = this.getDataFromForm(event);
       // Check user exist
-      const user = await getUserByEmail(userInput.email);
+      const results = await validateUser(userInput.email, userInput.password);
 
-      if (user) {
-        // If user exist, compare password
-        if (userInput.password === user.password) {
-          await createTokenUser(user);
-          window.location.replace('/');
-          return;
-        }
+      if (results) {
+        window.location.replace('/');
+
+        return;
       }
-      throw Error(CONSTANT.MESSAGE.ERROR_CREDENTIAL);
+      throw MESSAGE.ERROR_CREDENTIAL;
     } catch (error) {
       // Show popup error
       this.initErrorPopup(error);
@@ -79,6 +78,6 @@ export default class LoginView extends CommonLoginRegisterView {
   }
 
   isLoginPage() {
-    return this.loginPage !== null;
+    return this.loginPage;
   }
 }

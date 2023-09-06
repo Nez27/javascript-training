@@ -1,4 +1,8 @@
-import { timeOutConnect } from '../helpers/helpers';
+import {
+  convertDataObjectToModel,
+  convertModelToDataObject,
+  timeOutConnect,
+} from '../helpers/helpers';
 import FirebaseService from './firebaseService';
 
 export default class CommonService {
@@ -7,32 +11,59 @@ export default class CommonService {
     this.firebaseService = FirebaseService;
   }
 
+  /**
+   * Connect to Firebase Databse
+   */
   connectToDb() {
     this.firebaseService.reconnect();
   }
 
-  async findKeyByProperty(property, value, path = this.defaultPath) {
+  async getDataFromProp(property, value, path = this.defaultPath) {
     this.connectToDb();
-    const existUser = this.firebaseService.findKeyByPropery(
+    const existUser = this.firebaseService.getDataFromProp(
       path,
       property,
       value,
     );
     const result = await timeOutConnect(existUser);
-    return result;
+
+    if (result.id && result.data) {
+      return convertDataObjectToModel(result);
+    }
+
+    return null;
   }
 
-  async save(data, path = this.defaultPath) {
+  /**
+   * Save data on database
+   * @param {*} data The data wants to save on database
+   * @param {string} path The path of database
+   */
+  async save(model) {
     this.connectToDb();
-    const saveUser = this.firebaseService.save(data, path);
-    await timeOutConnect(saveUser);
+    const results = convertModelToDataObject(model);
+
+    const saveData = this.firebaseService.save(
+      results.data,
+      this.defaultPath + results.id,
+    );
+
+    await timeOutConnect(saveData);
   }
 
+  /**
+   *
+   * @param {string} id The string of data object
+   * @param {string} path The path of database
+   * @returns {Object || null} Return the object if has, otherwise return null
+   */
   async getDataFromId(id, path = this.defaultPath) {
     this.connectToDb();
     const result = await this.firebaseService.getDataFromId(id, path);
     const data = await timeOutConnect(result);
+
     if (data) return data;
+
     return null;
   }
 }
