@@ -58,9 +58,7 @@ export const convertModelToDataObject = (model) => {
 };
 
 export const convertDataObjectToModel = (data) => {
-  const model = data.data;
+  const { id, ...object } = data;
 
-  model.id = data.id;
-
-  return model;
+  return { id, ...object.data };
 };
