@@ -35,3 +35,30 @@ export const timeOutConnect = async (action) => {
 
   return result;
 };
+
+/**
+ * A function create token for user
+ * @returns {string} Return token string
+ */
+export const createToken = () => {
+  const lengthToken = 36;
+  const chars =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let token = '';
+  for (let i = 0; i < lengthToken; i += 1) {
+    token += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return token;
+};
+
+export const convertModelToDataObject = (model) => {
+  const { id, ...data } = model;
+
+  return { id, data };
+};
+
+export const convertDataObjectToModel = (data) => {
+  const { id, ...object } = data;
+
+  return { id, ...object.data };
+};
