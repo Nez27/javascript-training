@@ -1,19 +1,24 @@
 $primary-font: 'Roboto';
 
 // Color
+$hover-light-primary-color: #cdecd3;
 $light-primary-color: #00bc2a;
 $primary-color: #2db84c;
 $dark-primary-color: #00710f;
 $primary-text-color: #000;
 $secondary-text-color: #0000008a;
 $secondary-light-text-color: #00000042;
-$receive-money-color: #e51c23;
-$deducted-money-color: #039be5;
+$amount-outcome-color: #e51c23;
+$amount-income-color: #039be5;
 $background-input-color: #f5f5f5;
 $dark-error-color: #ce1414;
 $light-error-color: #ffc3c3;
+$light-gray: #f4f4f4;
 $gray: #dddddd;
+$dark-gray: #00000042;
+$dark-x-gray: #0000008a;
 $white: #ffffff;
+$black: #000000;
 
 // Font size
 $fs-2x-sm: 11px;

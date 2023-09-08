@@ -22,6 +22,11 @@
     border-radius: 50%;
     animation: loading 0.75s ease infinite;
   }
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 @keyframes loading {
@@ -31,9 +36,4 @@
   to {
     transform: rotate(1turn);
   }
-}
-
-.hidden {
-  opacity: 0;
-  visibility: hidden;
 }

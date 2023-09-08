@@ -1,0 +1,647 @@
+.home-page {
+  .background {
+    height: 100vh;
+    background: $gray;
+  }
+
+  .wrapper {
+    max-width: 1920px;
+    margin-inline: auto;
+  }
+
+  .main {
+    padding-top: 96px;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: $white;
+
+    &__content {
+      @extend %d-flex;
+      @include flex-layout($justify: space-between, $align: center);
+
+      padding: 12px 8px;
+    }
+
+    &__left-content {
+      @extend %d-flex;
+      @include flex-layout($align: center, $gap: 12px);
+    }
+
+    &__add-btn {
+      @extend %base-btn, %rounded-sm;
+
+      height: 32px;
+      padding-inline: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      transition: 0.2s;
+      cursor: pointer;
+
+      &:hover {
+        background: $dark-primary-color;
+      }
+    }
+  }
+
+  .wallet {
+    @extend %d-flex;
+    @include flex-layout($align: center, $gap: 8px);
+
+    min-width: 170px;
+
+    &__icon {
+      width: 40px;
+      height: 41px;
+    }
+
+    &__name {
+      font-size: $fs-x-sm;
+      line-height: 21px;
+    }
+
+    &__price {
+      line-height: 18px;
+      font-weight: 700;
+    }
+  }
+
+  .app {
+    border-radius: 4px;
+    background: $white;
+    box-shadow: 0px 3px 24px 0px rgba(0, 0, 0, 0.12);
+    margin-inline: auto;
+    width: 624px;
+
+    &__tabs {
+      padding-top: 20px;
+      text-align: center;
+      border-bottom: 1px solid $gray;
+      position: relative;
+    }
+
+    &__tab-item {
+      font-weight: 500;
+      color: $dark-x-gray;
+      background: none;
+      border: none;
+      padding: 15px 23.62px;
+      cursor: pointer;
+
+      &.active {
+        color: $primary-color;
+      }
+    }
+
+    &__content-item {
+      display: none;
+      animation: fade 0.5s ease;
+
+      &.active {
+        display: block;
+      }
+    }
+
+    &__line {
+      position: absolute;
+      top: 66px;
+      left: 150px;
+      width: 115px;
+      height: 2px;
+      background-color: $primary-color;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
+  .summary {
+    @extend %d-flex;
+    @include flex-layout($direction: column);
+
+    padding: 10px 16px 40px;
+    text-align: right;
+
+    &__line {
+      width: 150px;
+      height: 1px;
+      background-color: $gray;
+      align-self: flex-end;
+    }
+
+    &__total {
+      margin-top: 5px;
+      font-size: $fs-md;
+      line-height: 16px;
+    }
+  }
+
+  .inflow {
+    @extend %base-layout-item;
+
+    &__text {
+      line-height: 16px;
+
+      &--income {
+        font-size: $fs-md;
+        color: $amount-income-color;
+      }
+    }
+  }
+
+  .outflow {
+    @extend %base-layout-item;
+
+    &__text {
+      line-height: 16px;
+
+      &--outcome {
+        font-size: $fs-md;
+        color: $amount-outcome-color;
+      }
+    }
+  }
+
+  .transaction {
+    background: $light-gray;
+
+    &__line {
+      width: 100%;
+      height: 1px;
+      background-color: $gray;
+    }
+
+    &__list {
+      @extend %d-flex;
+      @include flex-layout(
+        $justify: space-between,
+        $gap: 32px,
+        $direction: column
+      );
+    }
+
+    &__item {
+      background-color: $white;
+    }
+
+    &__category {
+      @extend %d-flex;
+      @include flex-layout($justify: space-between, $align: center);
+
+      padding: 16px;
+
+      &-infor {
+        @extend %d-flex;
+        @include flex-layout($align: center, $gap: 9px);
+      }
+
+      &-icon-container {
+        width: 40px;
+        height: 40px;
+      }
+
+      &-name {
+        font-weight: 500;
+        line-height: 20px;
+      }
+
+      &-total {
+        font-size: $fs-lg;
+        line-height: 15px;
+      }
+    }
+
+    &__total {
+      font-size: $fs-x-sm;
+      color: $dark-x-gray;
+      line-height: 16px;
+    }
+
+    &__time {
+      @extend %d-flex;
+      @include flex-layout($justify: space-between, $align: center);
+
+      padding: 16px;
+    }
+
+    &__details {
+      @extend %d-flex;
+      @include flex-layout($justify: space-between, $align: center, $gap: 12px);
+    }
+
+    &__day {
+      font-size: $fs-2x-lg;
+      line-height: 16px;
+      font-weight: 300;
+    }
+
+    &__date-time {
+      font-size: $fs-2x-sm;
+      line-height: 15px;
+      text-transform: capitalize;
+    }
+
+    &__note {
+      @extend .transaction__date-time;
+
+      color: $dark-gray;
+    }
+
+    &__outcome {
+      color: $amount-outcome-color;
+    }
+
+    &__income {
+      color: $amount-income-color;
+    }
+  }
+
+  .dialog {
+    // Add wallet dialog
+    &__add-wallet {
+      .dialog {
+        &__body {
+          padding: 17px 24px;
+        }
+
+        &__header {
+          border-bottom: 1px solid $gray;
+        }
+
+        &__title {
+          padding: 20px 24px 24px 24px;
+        }
+      }
+
+      .form {
+        &__save-btn {
+          margin-top: 31px;
+          align-self: flex-end;
+        }
+
+        &__currency-balance {
+          @extend %d-flex;
+          @include flex-layout($justify: space-between, $gap: 20px);
+
+          margin-top: 16px;
+        }
+
+        &__wrap-text-icon {
+          @extend %d-flex;
+          @include flex-layout($gap: 16px, $align: center);
+
+          margin-top: 6px;
+          width: 230px;
+        }
+
+        &__text-currency {
+          font-size: $fs-md;
+          line-height: 24px;
+        }
+      }
+    }
+
+    // Add budget dialog
+    &__add-budget {
+      .dialog {
+        &__body {
+          padding: 24px 40px 0;
+        }
+
+        &__title {
+          padding: 20px 40px;
+        }
+      }
+
+      .form {
+        &__date-amount-input {
+          @extend %d-flex;
+          @include flex-layout($gap: 32px);
+
+          & .form__input-field:first-child {
+            width: 208px;
+          }
+
+          & .form__input-field:last-child {
+            width: 240px;
+          }
+        }
+
+        &__note-input {
+          @extend %input-field;
+
+          width: 768px;
+          margin-top: 24px;
+        }
+
+        &__input-text {
+          width: 100%;
+        }
+
+        &__cancel-btn {
+          width: 96px;
+          height: 36px;
+        }
+
+        &__save-btn {
+          width: 96px;
+          height: 36px;
+        }
+      }
+    }
+
+    // Add transaction dialog
+    &__add-transaction {
+      .dialog {
+        &__header {
+          @extend %d-flex;
+          @include flex-layout($justify: space-between, $align: center);
+
+          padding: 20px 40px;
+        }
+
+        &__body {
+          padding: 24px 40px 0;
+        }
+      }
+
+      .form {
+        &__date-category-amount-input {
+          @extend %d-flex;
+          @include flex-layout($justify: space-between, $gap: 24px);
+        }
+
+        &__input-field:first-child {
+          width: 255px;
+        }
+
+        &__input-field:nth-child(2),
+        &__input-field:nth-child(3) {
+          width: 240px;
+        }
+
+        &__note-input {
+          @extend %input-field;
+
+          margin-top: 24px;
+        }
+
+        &__save-btn {
+          width: 96px;
+          height: 36px;
+        }
+      }
+    }
+
+    // Select category dialog
+    &__select-category {
+      .dialog {
+        &__header {
+          padding-top: 15px;
+          position: relative;
+          border-bottom: 1px solid $gray;
+        }
+
+        &__title-container {
+          @extend %d-flex;
+          @include flex-layout($align: center, $gap: 28px);
+
+          padding-left: 24px;
+        }
+
+        &__title {
+          font-weight: 400;
+        }
+      }
+
+      .form {
+        padding: 10px 144px;
+
+        &__search-container {
+          @extend %d-flex, %rounded-x-lg;
+          @include flex-layout(
+            $justify: flex-end,
+            $gap: 16px,
+            $direction: row-reverse,
+            $align: center
+          );
+
+          padding-inline: 16px;
+          width: 208px;
+          height: 51px;
+          background-color: $light-gray;
+        }
+
+        &__category-input-field {
+          border: none;
+          background-color: transparent;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        &__search-btn {
+          cursor: pointer;
+          border: none;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  // Common property
+  .form {
+    @extend %d-flex;
+    @include flex-layout($direction: column);
+
+    &__input-field {
+      @extend %rounded;
+
+      padding: 6px 16px 13.5px 16px;
+      border: 1px solid $gray;
+    }
+
+    &__label {
+      color: $dark-x-gray;
+      font-size: $fs-x-sm;
+      line-height: 18px;
+    }
+
+    &__input-text {
+      margin-top: 7px;
+      font-size: $fs-lg;
+      width: 100%;
+      border: none;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: $gray;
+      }
+    }
+
+    &__input-balance {
+      font-size: $fs-md;
+      line-height: 20px;
+      margin-top: 6px;
+      border: none;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &__save-btn {
+      @extend %rounded-sm;
+
+      border: none;
+      background-color: $gray;
+      line-height: 16.1px;
+      font-weight: 500;
+      padding: 10px 20px;
+      color: $dark-gray;
+      cursor: pointer;
+
+      &.active {
+        background-color: $primary-color;
+        color: $white;
+      }
+    }
+
+    &__cancel-btn {
+      @extend .form__save-btn;
+
+      color: $primary-color !important;
+      margin-right: 16px;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: $hover-light-primary-color;
+      }
+    }
+
+    &__delete-btn {
+      @extend .form__save-btn;
+
+      color: $dark-error-color !important;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: $light-error-color;
+      }
+    }
+
+    &__action {
+      align-self: flex-end;
+      margin-top: 64px;
+      padding: 14px 0;
+    }
+  }
+
+  .date-input-container {
+    position: relative;
+    float: left;
+    width: 100%;
+  }
+
+  .input-date {
+    height: 30px;
+    width: 100%;
+    border: none;
+    font-size: $fs-lg;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      background: transparent;
+      cursor: pointer;
+    }
+  }
+
+  .icon-btn {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    background-color: $white;
+    border-top: 3px solid $dark-gray;
+    border-right: 3px solid $dark-gray;
+    border-bottom: none;
+    border-left: none;
+    height: 7px;
+    width: 7px;
+    rotate: 45deg;
+    pointer-events: none;
+  }
+
+  .category-input-container {
+    @extend %d-flex;
+    @include flex-layout($align: center, $gap: 8px);
+
+    position: relative;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+
+  .category-name {
+    font-size: $fs-lg;
+    line-height: 25.5px;
+    color: $dark-gray;
+  }
+
+  .list-category {
+    @extend %d-flex;
+    @include flex-layout($direction: column);
+
+    padding-top: 5px;
+    height: 451px;
+    overflow: auto;
+  }
+
+  .category-item {
+    @extend %d-flex;
+    @include flex-layout($align: center, $gap: 16px);
+
+    margin-inline: 68px;
+    padding: 8px 0;
+    border-bottom: 1px solid $gray;
+  }
+}
+
+.close-icon {
+  @extend .error, .mark;
+
+  border: none;
+  cursor: pointer;
+
+  &::after,
+  &::before {
+    border-color: $black;
+    border-width: 0 0 2px 2px;
+  }
+}
+
+.hide {
+  opacity: 0;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#categoryForm {
+  z-index: 4;
+}

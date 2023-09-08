@@ -1,0 +1,23 @@
+.dialog {
+  @extend %d-absolute, %rounded-sm;
+
+  left: 50%;
+  top: 32%;
+  transform: translate(-50%, -50%) scale(1);
+  background-color: $white;
+  z-index: 2;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+
+  &__title {
+    font-size: $fs-x-lg;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  &.active {
+    @extend %active;
+  }
+}
