@@ -1,14 +1,3 @@
-.overlay {
-  @extend %d-absolute;
-
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 2;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .modal-box {
   @extend %d-flex;
   @extend %d-absolute;
@@ -18,7 +7,7 @@
   top: 50%;
   transform: translate(-50%, -50%) scale(1);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  z-index: $zindex-lv-2;
   padding: 40px 50px;
   border-radius: 10px;
   background-color: $white;
@@ -43,11 +32,11 @@
     padding: 15px 30px;
     cursor: pointer;
   }
-}
 
-.active {
-  opacity: 1;
-  pointer-events: auto;
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .success .modal-box__redirect-btn {

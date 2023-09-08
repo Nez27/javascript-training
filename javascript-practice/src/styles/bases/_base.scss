@@ -1,1 +1,21 @@
-// TODO
+.overlay {
+  @extend %d-absolute;
+
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: $zindex-lv-1;
+  opacity: 0;
+  pointer-events: none;
+
+  &.active {
+    @extend %active;
+  }
+}
+
+.dark-overlay {
+  @extend .overlay;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: $zindex-lv-3;
+}

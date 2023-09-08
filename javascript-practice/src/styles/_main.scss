@@ -9,6 +9,7 @@
 @import './bases/typography';
 
 // Components
+@import './components/dialog';
 @import './components/icons';
 @import './components/loader';
 @import './components/popup-form';
@@ -19,3 +20,4 @@
 
 // Pages
 @import './pages/login-register';
+@import './pages/index';

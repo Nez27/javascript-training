@@ -2,8 +2,20 @@
   margin-inline: auto;
 }
 
-%rounded {
+%rounded-x-lg {
+  border-radius: 50px;
+}
+
+%rounded-lg {
   border-radius: 10px;
+}
+
+%rounded {
+  border-radius: 8px;
+}
+
+%rounded-sm {
+  border-radius: 4px;
 }
 
 %d-flex {
@@ -12,4 +24,30 @@
 
 %d-absolute {
   position: absolute;
+}
+
+%base-btn {
+  border: none;
+  background: $light-primary-color;
+  color: $white;
+  text-transform: uppercase;
+}
+
+%active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+%input-field {
+  @extend %rounded;
+
+  padding: 6px 16px 13.5px 16px;
+  border: 1px solid $gray;
+}
+
+%base-layout-item {
+  @extend %d-flex;
+  @include flex-layout($justify: space-between);
+
+  padding: 8 0px;
 }

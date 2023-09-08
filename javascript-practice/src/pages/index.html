@@ -1,9 +1,491 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="shortcut icon" href="../assets/images/favicon.ico" />
+    <link rel="stylesheet" href="../styles/_main.scss" />
+    <title>Money Lover Web</title>
   </head>
-  <body></body>
+  <body class="home-page">
+    <div class="overlay active"></div>
+    <div class="dark-overlay"></div>
+    <!-- <div class="modal-box success active">
+      <div class="mark check"></div>
+      <h2 class="modal-box__title">Login Success!</h2>
+      <p class="modal-box__message">Welcome to Money Lover!</p>
+
+      <button class="modal-box__redirect-btn">OK</button>
+    </div> -->
+    <!-- Add a wallet form -->
+    <div class="dialog active" id="walletForm">
+      <div class="dialog__add-wallet">
+        <!-- Dialog header -->
+        <div class="dialog__header">
+          <p class="dialog__title">Add a wallet first!</p>
+        </div>
+        <!-- Dialog body -->
+        <div class="dialog__body">
+          <form class="form">
+            <div class="form__input-field">
+              <p class="form__label">Wallet name</p>
+              <input
+                type="text"
+                class="form__input-text"
+                placeholder="Your wallet name?"
+                name="wallet-name"
+              />
+            </div>
+            <div class="form__currency-balance">
+              <div class="form__input-field">
+                <p class="form__label">Currency</p>
+                <div class="form__wrap-text-icon">
+                  <img
+                    src="../assets/images/dollar-icon.svg"
+                    alt="Dollar icon"
+                  />
+                  <p class="form__text-currency">United States Dollar</p>
+                </div>
+              </div>
+              <div class="form__input-field">
+                <p class="form__label">Initial Balance</p>
+                <input type="number" class="form__input-balance" value="0" />
+              </div>
+            </div>
+            <button type="submit" class="form__save-btn">SAVE</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- End form -->
+    <!-- Add budget form -->
+    <div class="dialog" id="budgetForm">
+      <div class="dialog__add-budget">
+        <!-- Header -->
+        <div class="dialog__header">
+          <p class="dialog__title">Add budget</p>
+        </div>
+        <!-- Body -->
+        <div class="dialog__body">
+          <form class="form" id="formAddBudget">
+            <div class="form__date-amount-input">
+              <div class="form__input-field">
+                <p class="form__label">Date</p>
+                <div class="date-input-container">
+                  <input class="input-date" type="date" name="selected_date" />
+                  <div class="icon-btn"></div>
+                </div>
+              </div>
+              <div class="form__input-field">
+                <p class="form__label">Amount</p>
+                <input
+                  class="form__input-balance"
+                  type="number"
+                  name="date"
+                  value="0"
+                />
+              </div>
+            </div>
+            <div class="form__note-input">
+              <p class="form__label">Note</p>
+              <input
+                class="form__input-text"
+                type="text"
+                name="note"
+                placeholder="Note"
+              />
+            </div>
+            <div class="form__action">
+              <button type="button" class="form__cancel-btn">CANCEL</button>
+              <button type="submit" class="form__save-btn">SAVE</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- End form -->
+    <!-- Add, edit, delete transaction form -->
+    <div class="dialog" id="transactionForm">
+      <div class="dialog__add-transaction">
+        <!-- Header-->
+        <div class="dialog__header">
+          <p class="dialog__title">Add transaction</p>
+          <button type="button" class="form__delete-btn">DELETE</button>
+        </div>
+        <!-- Body -->
+        <div class="dialog__body">
+          <form class="form" id="formAddBudget">
+            <div class="form__date-category-amount-input">
+              <div class="form__input-field">
+                <p class="form__label">Date</p>
+                <div class="date-input-container">
+                  <input class="input-date" type="date" name="selected_date" />
+                  <span class="icon-btn"></span>
+                </div>
+              </div>
+              <div class="form__input-field" id="selectCategory">
+                <p class="form__label">Category</p>
+                <div class="category-input-container">
+                  <img
+                    src="../assets/images/question-icon.svg"
+                    alt="Question icon"
+                  />
+                  <p class="category-name">Select category</p>
+                  <div class="icon-btn"></div>
+                </div>
+              </div>
+              <div class="form__input-field">
+                <p class="form__label">Amount</p>
+                <input
+                  class="form__input-balance"
+                  type="number"
+                  name="date"
+                  value="0"
+                />
+              </div>
+            </div>
+            <div class="form__note-input">
+              <p class="form__label">Note</p>
+              <input
+                class="form__input-text"
+                type="text"
+                name="note"
+                placeholder="Note"
+              />
+            </div>
+            <div class="form__action">
+              <button type="button" class="form__cancel-btn">CANCEL</button>
+              <button type="submit" class="form__save-btn">SAVE</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- End form -->
+    <!-- Select category form -->
+    <div class="dialog" id="categoryForm">
+      <div class="dialog__select-category">
+        <div class="dialog__header">
+          <div class="dialog__title-container">
+            <div class="close-icon"></div>
+            <div class="dialog__title">Select category</div>
+          </div>
+          <form class="form">
+            <div class="form__search-container">
+              <input
+                type="text"
+                name="category"
+                class="form__category-input-field"
+                placeholder="Search"
+              />
+              <button type="submit" class="form__search-btn">
+                <img src="../assets/images/icon-search.svg" alt="Search icon" />
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="dialog__body">
+          <div class="list-category">
+            <!-- Category item -->
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+            <div class="category-item">
+              <img
+                class="icon-category"
+                src="../assets/images/ic_category_foodndrink.png.png"
+                alt="Food & Beverage Icon"
+              />
+              <p class="name-category">Food & Beverage</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End form -->
+    <!-- Start header -->
+    <header class="header">
+      <div class="wrapper">
+        <div class="header__content">
+          <div class="header__left-content">
+            <div class="wallet">
+              <div class="wallet__icon">
+                <img src="../assets/images/icon.png" alt="Wallet Icon" />
+              </div>
+              <div class="wallet__info">
+                <p class="wallet__name">Nezumi</p>
+                <p class="wallet__price">+$ 499,900,900.00</p>
+              </div>
+            </div>
+            <button class="header__add-btn" id="addBudget">Add budget</button>
+          </div>
+          <button class="header__add-btn" id="addTransaction">
+            Add transaction
+          </button>
+        </div>
+      </div>
+    </header>
+    <!-- End header -->
+    <div class="background">
+      <!-- Main app -->
+      <main class="main">
+        <div class="app">
+          <div class="app__container">
+            <!-- Tabs -->
+            <div class="app__tabs">
+              <button class="app__tab-item active">SUMMARY</button>
+              <button class="app__tab-item">TRANSACTION DETAILS</button>
+              <div class="app__line"></div>
+            </div>
+            <!-- Start content app -->
+            <div class="app__contents">
+              <div class="app__content-item active">
+                <!-- Content summary -->
+                <div class="summary">
+                  <div class="inflow">
+                    <p class="inflow__text">Inflow</p>
+                    <p class="inflow__text--income">+$ 500,000,000.00</p>
+                  </div>
+                  <div class="outflow">
+                    <p class="outflow__text">Outflow</p>
+                    <p class="outflow__text--outcome">-$ 100,000.00</p>
+                  </div>
+                  <div class="summary__line"></div>
+                  <p class="summary__total">+$ 499,900,000.00</p>
+                </div>
+                <!-- End content summary -->
+              </div>
+              <div class="app__content-item">
+                <!-- Start content transaction -->
+                <div class="transaction">
+                  <div class="transaction__list">
+                    <!-- Transaction item -->
+                    <!-- Outcome transaction -->
+                    <div class="transaction__item">
+                      <div class="transaction__category">
+                        <div class="transaction__category-infor">
+                          <div class="transaction__category-icon-container">
+                            <img
+                              src="../assets/images/ic_category_transport.png.png"
+                              alt="Transportation icon category"
+                            />
+                          </div>
+                          <div class="transaction__category-content">
+                            <p class="transaction__category-name">
+                              Transportation
+                            </p>
+                            <p class="transaction__total">1 Transactions</p>
+                          </div>
+                        </div>
+                        <p class="transaction__category-total">-$ 100,000.00</p>
+                      </div>
+                      <div class="transaction__line"></div>
+                      <!-- Transaction time item -->
+                      <div class="transaction__time">
+                        <div class="transaction__details">
+                          <p class="transaction__day">18</p>
+                          <div class="transaction__time-details">
+                            <p class="transaction__date-time">
+                              Friday, August 2023
+                            </p>
+                            <p class="transaction__note">Test Note</p>
+                          </div>
+                        </div>
+                        <p class="transaction__outcome">-$ 100,000.00</p>
+                      </div>
+                    </div>
+                    <!-- Income transaction -->
+                    <div class="transaction__item">
+                      <div class="transaction__category">
+                        <div class="transaction__category-infor">
+                          <div class="transaction__category-icon-container">
+                            <img
+                              src="../assets/images/ic_category_other_income.png.png"
+                              alt="Transportation icon category"
+                            />
+                          </div>
+                          <div class="transaction__category-content">
+                            <p class="transaction__category-name">
+                              Transportation
+                            </p>
+                            <p class="transaction__total">1 Transactions</p>
+                          </div>
+                        </div>
+                        <p class="transaction__category-total">
+                          +$ 500,000,000.00
+                        </p>
+                      </div>
+                      <div class="transaction__line"></div>
+                      <!-- Transaction time item -->
+                      <div class="transaction__time">
+                        <div class="transaction__details">
+                          <p class="transaction__day">18</p>
+                          <div class="transaction__time-details">
+                            <p class="transaction__date-time">
+                              Friday, August 2023
+                            </p>
+                            <p class="transaction__note">Initial Balance</p>
+                          </div>
+                        </div>
+                        <p class="transaction__income">+$ 500,000,000.00</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End content transaction -->
+              </div>
+            </div>
+            <!-- End content app -->
+          </div>
+        </div>
+      </main>
+      <!-- End app -->
+    </div>
+    <!-- All scripts below is use for test purpose!  -->
+    <script>
+      // Handle event when click on tabs
+      const tabs = document.querySelectorAll('.app__tab-item');
+      const all_content = document.querySelectorAll('.app__content-item');
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', (e) => {
+          tabs.forEach((tab) => {
+            tab.classList.remove('active');
+          });
+          tab.classList.add('active');
+
+          const line = document.querySelector('.app__line');
+          line.style.width = e.target.offsetWidth + 'px';
+          line.style.left = e.target.offsetLeft + 'px';
+
+          all_content.forEach((content) => {
+            content.classList.remove('active');
+          });
+          all_content[index].classList.add('active');
+        });
+      });
+
+      // Add event
+      const addTransactionBtn = document.getElementById('addTransaction');
+      const addBudgetBtn = document.getElementById('addBudget');
+      const overlay = document.querySelector('.overlay');
+      const darkOverlay = document.querySelector('.dark-overlay');
+      const dialog = document.querySelectorAll('.dialog');
+      const cancelBtn = document.querySelectorAll('.form__cancel-btn');
+      const categoryField = document.getElementById('selectCategory');
+      const closeIcon = document.querySelector('.close-icon');
+
+      const budgetForm = document.getElementById('budgetForm');
+      const transactionForm = document.getElementById('transactionForm');
+      const categoryForm = document.getElementById('categoryForm');
+
+      overlay.addEventListener('click', () => {
+        overlay.classList.toggle('active');
+
+        dialog.forEach((item) => {
+          if (item.classList.contains('active')) {
+            item.classList.remove('active');
+          }
+        });
+      });
+
+      addTransactionBtn.addEventListener('click', () => {
+        transactionForm.classList.toggle('active');
+        overlay.classList.toggle('active');
+      });
+
+      addBudgetBtn.addEventListener('click', () => {
+        budgetForm.classList.toggle('active');
+        overlay.classList.toggle('active');
+      });
+
+      cancelBtn.forEach((item) => {
+        item.addEventListener('click', () => {
+          overlay.classList.toggle('active');
+
+          dialog.forEach((item) => {
+            if (item.classList.contains('active')) {
+              item.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      categoryField.addEventListener('click', () => {
+        categoryForm.classList.add('active');
+        darkOverlay.classList.add('active');
+      });
+
+      closeIcon.addEventListener('click', () => {
+        categoryForm.classList.remove('active');
+        darkOverlay.classList.remove('active');
+      });
+
+      darkOverlay.addEventListener('click', () => {
+        darkOverlay.classList.remove('active');
+        categoryForm.classList.remove('active');
+      });
+    </script>
+  </body>
 </html>
