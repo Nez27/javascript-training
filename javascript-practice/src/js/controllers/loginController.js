@@ -9,7 +9,7 @@ export default class LoginController {
   }
 
   init() {
-    if (this.loginView.isLoginPage()) {
+    if (this.loginView) {
       this.loginView.addHandlerForm(this.handlerValidateUser.bind(this));
     }
   }

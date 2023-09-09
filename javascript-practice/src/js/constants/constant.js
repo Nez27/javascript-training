@@ -12,6 +12,12 @@ export const MESSAGE = {
   USER_EXIST_ERROR: 'User is exists! Please try another email!',
 };
 
+export const URL = {
+  LOGIN: 'login',
+  REGISTER: 'register',
+  HOME: 'home',
+};
+
 export const BTN_CONTENT = {
   GOT_IT: 'Got it!',
   OK: 'Ok',

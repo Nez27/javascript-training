@@ -62,3 +62,11 @@ export const convertDataObjectToModel = (data) => {
 
   return { id, ...object.data };
 };
+
+export const getURL = () => {
+  const url = window.location.href;
+
+  const parts = url.split('/');
+  const lastPart = parts.pop(); // Lấy phần tử cuối cùng trong mảng
+  return lastPart;
+};
