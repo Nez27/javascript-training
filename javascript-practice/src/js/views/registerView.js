@@ -7,6 +7,7 @@ export default class RegisterView extends CommonLoginRegisterView {
     super();
 
     this.registerPage = document.URL.includes('/register');
+    this.dialog = document.querySelector('.modal-box');
   }
 
   /**

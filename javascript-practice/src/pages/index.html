@@ -8,7 +8,6 @@
     <title>Money Lover Web</title>
   </head>
   <body class="home-page">
-    <div class="overlay active"></div>
     <div class="dark-overlay"></div>
     <!-- <div class="modal-box success active">
       <div class="mark check"></div>
@@ -18,7 +17,7 @@
       <button class="modal-box__redirect-btn">OK</button>
     </div> -->
     <!-- Add a wallet form -->
-    <div class="dialog active" id="walletForm">
+    <div class="dialog" id="walletForm">
       <div class="dialog__add-wallet">
         <!-- Dialog header -->
         <div class="dialog__header">
@@ -403,7 +402,8 @@
       <!-- End app -->
     </div>
     <!-- All scripts below is use for test purpose!  -->
-    <script>
+    <script type="module" src="../js/main.js"></script>
+    <!-- <script>
       // Handle event when click on tabs
       const tabs = document.querySelectorAll('.app__tab-item');
       const all_content = document.querySelectorAll('.app__content-item');
@@ -486,6 +486,6 @@
         darkOverlay.classList.remove('active');
         categoryForm.classList.remove('active');
       });
-    </script>
+    </script> -->
   </body>
 </html>

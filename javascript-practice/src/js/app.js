@@ -12,5 +12,6 @@ export default class App {
   start() {
     this.controller.registerController.init();
     this.controller.loginController.init();
+    this.controller.homeController.init();
   }
 }

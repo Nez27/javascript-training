@@ -15,7 +15,7 @@ export const MESSAGE = {
 export const URL = {
   LOGIN: 'login',
   REGISTER: 'register',
-  HOME: 'home',
+  HOME: '',
 };
 
 export const BTN_CONTENT = {

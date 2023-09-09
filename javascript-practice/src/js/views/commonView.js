@@ -96,7 +96,21 @@ export default class CommonView {
    */
   handleEventBtnPopupAndOverlay() {
     this.popupBtn.addEventListener('click', this.tooglePopupForm.bind(this));
-    this.overlay.addEventListener('click', this.tooglePopupForm.bind(this));
+    this.overlay.addEventListener('click', this.toogleDialog.bind(this));
+  }
+
+  toogleDialog() {
+    this.overlay.classList.toggle('active');
+    if (this.dialog.length) {
+      // If it have more dialog
+      this.dialog.forEach((item) => {
+        if (item.classList.contains('active')) {
+          item.classList.remove('active');
+        }
+      });
+    } else {
+      this.dialog.classList.toggle('active');
+    }
   }
 
   /**
