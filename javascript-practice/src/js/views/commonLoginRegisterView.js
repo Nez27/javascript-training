@@ -6,6 +6,8 @@ export default class CommonLoginRegisterView extends CommonView {
   constructor() {
     super();
 
+    this.handleEventBtnPopupAndOverlay();
+
     this.parentElement = document.querySelector('.form');
     this.messageDefault = CONSTANT.MESSAGE.ERROR_MESSAGE_DEFAULT;
     this.inputPassword = document.querySelector('input[name="password"]');
@@ -83,5 +85,17 @@ export default class CommonLoginRegisterView extends CommonView {
     document
       .querySelector('.form__title')
       .insertAdjacentHTML('afterend', markup);
+  }
+
+  /**
+   * Add event listener for popup and overlay
+   */
+  handleEventBtnPopupAndOverlay() {
+    this.popupBtn.addEventListener('click', this.tooglePopupForm.bind(this));
+    this.overlay.addEventListener('click', this.toogleDialog.bind(this));
+  }
+
+  toogleDialog() {
+    this.dialog.classList.toggle('active');
   }
 }

@@ -10,6 +10,10 @@ export const MESSAGE = {
   },
   DEFAULT_TITLE_ERROR_POPUP: 'Error',
   USER_EXIST_ERROR: 'User is exists! Please try another email!',
+  WELCOME: {
+    title: 'Login Successful!',
+    message: 'Welcome to Money Lover!',
+  },
 };
 
 export const URL = {
@@ -25,6 +29,7 @@ export const BTN_CONTENT = {
 
 export const LOCAL_STORAGE = {
   ACCESS_TOKEN: 'accessToken',
+  IS_FIRST_LOGIN: 'isFirstLogin',
 };
 
 export const TYPE_POPUP = { success: 'success', error: 'error' };
