@@ -63,10 +63,12 @@ export const convertDataObjectToModel = (data) => {
   return { id, ...object.data };
 };
 
-export const getURL = () => {
+export const getSubdirectoryURL = () => {
   const url = window.location.href;
 
-  const parts = url.split('/');
-  const lastPart = parts.pop(); // Lấy phần tử cuối cùng trong mảng
-  return lastPart;
+  const parts = url.split('/'); // Results: ['http:', '', 'example.com', '']
+
+  const subDirectory = parts[3]; // Get subdirectory url only
+
+  return subDirectory;
 };
