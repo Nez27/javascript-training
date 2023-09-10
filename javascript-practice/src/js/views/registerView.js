@@ -6,7 +6,6 @@ export default class RegisterView extends CommonLoginRegisterView {
   constructor() {
     super();
 
-    this.registerPage = document.URL.includes('/register');
     this.dialog = document.querySelector('.modal-box');
   }
 
@@ -100,9 +99,5 @@ export default class RegisterView extends CommonLoginRegisterView {
 
     // Close spinner
     this.toogleLoaderSpinner();
-  }
-
-  isRegisterPage() {
-    return this.registerPage;
   }
 }

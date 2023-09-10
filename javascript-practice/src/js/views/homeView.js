@@ -18,8 +18,6 @@ export default class HomeView extends CommonView {
     this.budgetForm = document.getElementById('budgetForm');
     this.transactionForm = document.getElementById('transactionForm');
     this.categoryForm = document.getElementById('categoryForm');
-
-    this.homePage = document.URL.includes('/');
   }
 
   /**
@@ -108,9 +106,5 @@ export default class HomeView extends CommonView {
     this.tabs.forEach((tab) => {
       tab.classList.remove('active');
     });
-  }
-
-  isHomePage() {
-    return this.homePage;
   }
 }

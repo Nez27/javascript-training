@@ -6,7 +6,6 @@ export default class LoginView extends CommonLoginRegisterView {
     super();
 
     this.parentElement = document.querySelector('.form');
-    this.loginPage = document.URL.includes('/login');
     this.dialog = document.querySelector('.modal-box');
   }
 
@@ -76,9 +75,5 @@ export default class LoginView extends CommonLoginRegisterView {
     }
     // Close spinner
     this.toogleLoaderSpinner();
-  }
-
-  isLoginPage() {
-    return this.loginPage;
   }
 }
