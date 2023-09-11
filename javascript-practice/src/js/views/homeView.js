@@ -24,6 +24,7 @@ export default class HomeView extends CommonView {
   }
 
   async loadPage(getInfoUserLogin, checkWalletExist) {
+    this.toggleLoaderSpinner();
     const user = await getInfoUserLogin();
 
     if (!user) {
@@ -40,6 +41,8 @@ export default class HomeView extends CommonView {
         this.loadEvent();
       }
     }
+
+    this.toggleLoaderSpinner();
   }
 
   addHandlerSubmitWalletForm(saveWallet) {
@@ -51,6 +54,8 @@ export default class HomeView extends CommonView {
   }
 
   async submitWalletForm(saveWallet) {
+    this.walletDialog.close();
+    this.toggleLoaderSpinner();
     try {
       const wallet = new Wallet({
         walletName: this.walletName,
@@ -60,13 +65,14 @@ export default class HomeView extends CommonView {
 
       await saveWallet(wallet);
 
-      this.hideDialog();
       this.showSuccessToast('Add wallet success', 'Click ok to continue!');
       this.loadEvent();
     } catch (error) {
       // Show toast error
       this.initErrorToast(error);
     }
+
+    this.toggleLoaderSpinner();
   }
 
   addHandlerInputChangeWalletForm() {
@@ -94,7 +100,7 @@ export default class HomeView extends CommonView {
 
     this.initToastContent(typeToast, title, message, btnContent);
 
-    this.dialogToast.showModal();
+    this.toastDialog.showModal();
   }
 
   /**
@@ -108,7 +114,7 @@ export default class HomeView extends CommonView {
     this.initToastContent(TYPE_TOAST.error, title, content, BTN_CONTENT.GOT_IT);
 
     // Show toast
-    this.toggleToastForm();
+    this.dialogToast.showModal();
   }
 
   /* ------------------------------- HANDLER EVENT ------------------------------- */
@@ -178,14 +184,6 @@ export default class HomeView extends CommonView {
   removeActiveTab() {
     this.tabs.forEach((tab) => {
       tab.classList.remove('active');
-    });
-  }
-
-  toggleDialog() {
-    this.dialog.forEach((item) => {
-      if (item.classList.contains('active')) {
-        item.classList.remove('active');
-      }
     });
   }
 }
