@@ -8,16 +8,14 @@ export default class HomeView extends CommonView {
     this.allContent = document.querySelectorAll('.app__content-item');
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
-    this.overlay = document.querySelector('.overlay');
-    this.darkOverlay = document.querySelector('.dark-overlay');
-    this.dialog = document.querySelectorAll('.dialog');
+    this.dialogs = document.querySelectorAll('.dialog');
     this.cancelBtn = document.querySelectorAll('.form__cancel-btn');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
 
-    this.budgetForm = document.getElementById('budgetForm');
-    this.transactionForm = document.getElementById('transactionForm');
-    this.categoryForm = document.getElementById('categoryForm');
+    this.budgetDialog = document.getElementById('budgetDialog');
+    this.transactionDialog = document.getElementById('transactionDialog');
+    this.categoryDialog = document.getElementById('categoryDialog');
   }
 
   /**
@@ -42,69 +40,51 @@ export default class HomeView extends CommonView {
   }
 
   addCommonEventPage() {
-    this.addTransactionBtn.addEventListener('click', () => {
-      this.transactionForm.classList.add('active');
-      this.toggleActiveOverlay();
-    });
-
-    this.addBudgetBtn.addEventListener('click', () => {
-      this.budgetForm.classList.add('active');
-      this.toggleActiveOverlay();
-    });
-
-    this.cancelBtn.forEach((item) => {
-      item.addEventListener('click', () => {
-        this.hideDialog();
-        this.toggleActiveOverlay();
+    // Add event close dialog when click outside
+    this.dialogs.forEach((dialog) => {
+      dialog.addEventListener('click', (e) => {
+        const dialogDimensions = dialog.getBoundingClientRect();
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          dialog.close();
+        }
       });
     });
 
-    this.overlay.addEventListener('click', () => {
-      this.hideDialog();
+    this.addTransactionBtn.addEventListener('click', () => {
+      this.transactionDialog.showModal();
+    });
+
+    this.addBudgetBtn.addEventListener('click', () => {
+      this.budgetDialog.showModal();
     });
   }
 
   addEventSelectCategoryDialog() {
     this.categoryField.addEventListener('click', () => {
-      this.categoryForm.classList.add('active');
-      this.toggleDarkOverlayActive();
+      this.categoryDialog.showModal();
     });
 
-    this.closeIcon.addEventListener(
-      'click',
-      this.hideSelectCategoryForm.bind(this),
-    );
-
-    this.darkOverlay.addEventListener(
-      'click',
-      this.hideSelectCategoryForm.bind(this),
-    );
-  }
-
-  hideSelectCategoryForm() {
-    this.categoryForm.classList.remove('active');
-    this.toggleDarkOverlayActive();
-  }
-
-  toggleDarkOverlayActive() {
-    this.darkOverlay.classList.toggle('active');
-  }
-
-  hideDialog() {
-    this.dialog.forEach((item) => {
-      if (item.classList.contains('active')) {
-        item.classList.remove('active');
-      }
+    this.closeIcon.addEventListener('click', () => {
+      this.categoryDialog.close();
     });
-  }
-
-  toggleActiveOverlay() {
-    this.overlay.classList.toggle('active');
   }
 
   removeActiveTab() {
     this.tabs.forEach((tab) => {
       tab.classList.remove('active');
+    });
+  }
+
+  toggleDialog() {
+    this.dialog.forEach((item) => {
+      if (item.classList.contains('active')) {
+        item.classList.remove('active');
+      }
     });
   }
 }

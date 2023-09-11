@@ -1,12 +1,12 @@
 import CommonLoginRegisterView from './commonLoginRegisterView';
-import { MESSAGE, TYPE_POPUP, BTN_CONTENT } from '../constants/constant';
+import { MESSAGE, TYPE_TOAST, BTN_CONTENT } from '../constants/constant';
 
 export default class LoginView extends CommonLoginRegisterView {
   constructor() {
     super();
 
     this.parentElement = document.querySelector('.form');
-    this.dialog = document.querySelector('.modal-box');
+    this.dialog = document.querySelector('.toast');
   }
 
   /**
@@ -24,17 +24,17 @@ export default class LoginView extends CommonLoginRegisterView {
   }
 
   /**
-   * Implement error popup in site
-   * @param {string} content The content will show in error popup
+   * Implement error toast in site
+   * @param {string} content The content will show in error toast
    */
-  initErrorPopup(error) {
-    const title = error.title ? error.title : MESSAGE.DEFAULT_TITLE_ERROR_POPUP;
+  initErrorToast(error) {
+    const title = error.title ? error.title : MESSAGE.DEFAULT_TITLE_ERROR_TOAST;
     const content = error.message ? error.message : error;
 
-    this.initPopupContent(TYPE_POPUP.error, title, content, BTN_CONTENT.GOT_IT);
+    this.initToastContent(TYPE_TOAST.error, title, content, BTN_CONTENT.GOT_IT);
 
-    // Show popup
-    this.tooglePopupForm();
+    // Show toast
+    this.toastDialog.showModal();
   }
 
   /**
@@ -56,7 +56,7 @@ export default class LoginView extends CommonLoginRegisterView {
   async submitForm(validateUser, event) {
     try {
       // Load spinner
-      this.toogleLoaderSpinner();
+      this.toggleLoaderSpinner();
 
       // Get data from form
       const userInput = this.getDataFromForm(event);
@@ -70,10 +70,10 @@ export default class LoginView extends CommonLoginRegisterView {
       }
       throw MESSAGE.ERROR_CREDENTIAL;
     } catch (error) {
-      // Show popup error
-      this.initErrorPopup(error);
+      // Show toast error
+      this.initErrorToast(error);
     }
     // Close spinner
-    this.toogleLoaderSpinner();
+    this.toggleLoaderSpinner();
   }
 }

@@ -8,16 +8,16 @@
     <title>Money Lover Web</title>
   </head>
   <body class="home-page">
-    <div class="dark-overlay"></div>
-    <!-- <div class="modal-box success active">
-      <div class="mark check"></div>
-      <h2 class="modal-box__title">Login Success!</h2>
-      <p class="modal-box__message">Welcome to Money Lover!</p>
-
-      <button class="modal-box__redirect-btn">OK</button>
-    </div> -->
+    <dialog class="dialog">
+      <div class="toast success">
+        <div class="mark check"></div>
+        <h2 class="toast__title">Login Success!</h2>
+        <p class="toast__message">Welcome to Money Lover!</p>
+        <button class="toast__redirect-btn">OK</button>
+      </div>
+    </dialog>
     <!-- Add a wallet form -->
-    <div class="dialog" id="walletForm">
+    <dialog class="dialog" id="walletDialog">
       <div class="dialog__add-wallet">
         <!-- Dialog header -->
         <div class="dialog__header">
@@ -55,10 +55,10 @@
           </form>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Add budget form -->
-    <div class="dialog" id="budgetForm">
+    <dialog class="dialog" id="budgetDialog">
       <div class="dialog__add-budget">
         <!-- Header -->
         <div class="dialog__header">
@@ -95,16 +95,18 @@
               />
             </div>
             <div class="form__action">
-              <button type="button" class="form__cancel-btn">CANCEL</button>
+              <button formmethod="dialog" class="form__cancel-btn">
+                CANCEL
+              </button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Add, edit, delete transaction form -->
-    <div class="dialog" id="transactionForm">
+    <dialog class="dialog" id="transactionDialog">
       <div class="dialog__add-transaction">
         <!-- Header-->
         <div class="dialog__header">
@@ -153,20 +155,22 @@
               />
             </div>
             <div class="form__action">
-              <button type="button" class="form__cancel-btn">CANCEL</button>
+              <button formmethod="dialog" class="form__cancel-btn">
+                CANCEL
+              </button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Select category form -->
-    <div class="dialog" id="categoryForm">
+    <dialog class="dialog" id="categoryDialog">
       <div class="dialog__select-category">
         <div class="dialog__header">
           <div class="dialog__title-container">
-            <div class="close-icon"></div>
+            <div formmethod="dialog" class="close-icon"></div>
             <div class="dialog__title">Select category</div>
           </div>
           <form class="form">
@@ -261,7 +265,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Start header -->
     <header class="header">

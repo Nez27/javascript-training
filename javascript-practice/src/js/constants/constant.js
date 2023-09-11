@@ -8,7 +8,7 @@ export const MESSAGE = {
     title: 'Error Credential',
     message: 'Email or password not match! Please try again!',
   },
-  DEFAULT_TITLE_ERROR_POPUP: 'Error',
+  DEFAULT_TITLE_ERROR_TOAST: 'Error',
   USER_EXIST_ERROR: 'User is exists! Please try another email!',
 };
 
@@ -27,5 +27,5 @@ export const LOCAL_STORAGE = {
   ACCESS_TOKEN: 'accessToken',
 };
 
-export const TYPE_POPUP = { success: 'success', error: 'error' };
+export const TYPE_TOAST = { success: 'success', error: 'error' };
 export const MARK_ICON = { success: 'check', error: 'error' };
