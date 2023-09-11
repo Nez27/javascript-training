@@ -70,5 +70,11 @@ export const getSubdirectoryURL = () => {
 
   const subDirectory = parts[3]; // Get subdirectory url only
 
+  // Remove query behind subDirectory
+  const index = subDirectory.indexOf('?');
+  if (index !== -1) {
+    return subDirectory.substring(0, index);
+  }
+
   return subDirectory;
 };
