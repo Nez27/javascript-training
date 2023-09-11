@@ -1,5 +1,6 @@
 import CommonLoginRegisterView from './commonLoginRegisterView';
-import { MESSAGE, TYPE_TOAST, BTN_CONTENT } from '../constants/constant';
+import { TYPE_TOAST, BTN_CONTENT } from '../constants/variable';
+import * as MESSAGE from '../constants/message';
 
 export default class LoginView extends CommonLoginRegisterView {
   constructor() {
@@ -51,9 +52,10 @@ export default class LoginView extends CommonLoginRegisterView {
 
   /**
    * The action when submit form
-   * @param {Function} validateUser The function need to be set event
+   * @param {Function} loginUser The function need to be set event
+   * * @param {event} event The event target
    */
-  async submitForm(validateUser, event) {
+  async submitForm(loginUser, event) {
     try {
       // Load spinner
       this.toggleLoaderSpinner();
@@ -61,7 +63,7 @@ export default class LoginView extends CommonLoginRegisterView {
       // Get data from form
       const userInput = this.getDataFromForm(event);
       // Check user exist
-      const results = await validateUser(userInput.email, userInput.password);
+      const results = await loginUser(userInput.email, userInput.password);
 
       if (results) {
         window.location.replace('/');

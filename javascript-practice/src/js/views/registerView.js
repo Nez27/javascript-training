@@ -1,4 +1,5 @@
-import { TYPE_TOAST, MESSAGE, BTN_CONTENT } from '../constants/constant';
+import { TYPE_TOAST, BTN_CONTENT } from '../constants/variable';
+import * as MESSAGE from '../constants/message';
 import CommonLoginRegisterView from './commonLoginRegisterView';
 import User from '../models/user';
 

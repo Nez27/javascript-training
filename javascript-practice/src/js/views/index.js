@@ -1,7 +1,7 @@
 import RegisterView from './registerView';
 import LoginView from './loginView';
 import { getSubdirectoryURL } from '../helpers/helpers';
-import { URL } from '../constants/constant';
+import { URL } from '../constants/variable';
 import HomeView from './homeView';
 
 export default class View {

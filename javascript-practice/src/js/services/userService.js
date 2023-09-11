@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE } from '../constants/constant';
+import { LOCAL_STORAGE } from '../constants/variable';
 import { createToken } from '../helpers/helpers';
 import CommonService from './commonService';
 import LocalStorageService from './localStorageService';
@@ -54,7 +54,7 @@ export default class UserService extends CommonService {
    * @param {*} password The password user input
    * @returns {boolean} Return true if match info on database, otherwise return false
    */
-  async validateUser(email, password) {
+  async loginUser(email, password) {
     const user = await this.getUserByEmail(email);
 
     // Check password

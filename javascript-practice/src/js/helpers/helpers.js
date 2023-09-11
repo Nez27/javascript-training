@@ -1,6 +1,7 @@
-import { MESSAGE } from '../constants/constant';
-import { REGEX_PASSWORD, TIME_OUT_SEC } from '../constants/config';
+import * as MESSAGE from '../constants/message';
+import { TIME_OUT_SEC } from '../constants/config';
 import FirebaseService from '../services/firebaseService';
+import { REGEX_PASSWORD } from '../constants/variable';
 
 /**
  * Validate password
