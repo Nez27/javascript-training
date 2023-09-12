@@ -34,10 +34,10 @@ export default class CommonView {
   initElementToast() {
     this.toastDialog = document.querySelector('.dialog');
     this.toast = document.querySelector('.toast');
-    this.toastIcon = document.querySelector('.mark');
-    this.toastBtn = document.querySelector('.toast__redirect-btn');
-    this.toastTitle = document.querySelector('.toast__title');
-    this.toastContent = document.querySelector('.toast__message');
+    this.toastIcon = this.toast.querySelector('.mark');
+    this.toastBtn = this.toast.querySelector('.toast__redirect-btn');
+    this.toastTitle = this.toast.querySelector('.toast__title');
+    this.toastContent = this.toast.querySelector('.toast__message');
   }
 
   /**
@@ -56,18 +56,14 @@ export default class CommonView {
    */
   initToastContent(typeToast, title, content, btnContent) {
     // Remove old typeToast class if haved
-    this.toast.classList.forEach((classItem) =>
-      classItem === TYPE_TOAST.success || classItem === TYPE_TOAST.error
-        ? this.toast.classList.remove(classItem)
-        : '',
-    );
+    Object.keys(TYPE_TOAST).forEach((value) => {
+      CommonView.removeClassElement(value, this.toast);
+    });
 
     // Remove old icon toast if haved
-    this.toastIcon.classList.forEach((classItem) =>
-      classItem === MARK_ICON.success || classItem === MARK_ICON.error
-        ? this.toastIcon.classList.remove(classItem)
-        : '',
-    );
+    Object.keys(MARK_ICON).forEach((value) => {
+      CommonView.removeClassElement(value, this.toastIcon);
+    });
 
     // Init content toast
     this.toast.classList.add(
@@ -79,6 +75,12 @@ export default class CommonView {
     this.toastTitle.textContent = title;
     this.toastContent.textContent = content;
     this.toastBtn.textContent = btnContent;
+  }
+
+  static removeClassElement(classEl, el) {
+    if (el.classList.contains(classEl)) {
+      el.classList.remove(classEl);
+    }
   }
 
   /**

@@ -13,7 +13,6 @@ export default class HomeView extends CommonView {
     this.addBudgetBtn = document.getElementById('addBudget');
     this.saveBtn = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
-    this.cancelBtn = document.querySelectorAll('.form__cancel-btn');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
 
@@ -130,13 +129,14 @@ export default class HomeView extends CommonView {
    */
   handlerTabsTransfer() {
     this.tabs.forEach((tab, index) => {
-      tab.addEventListener('click', (e) => {
+      tab.addEventListener('click', () => {
         this.removeActiveTab();
         tab.classList.add('active');
 
         const line = document.querySelector('.app__line');
-        line.style.width = `${e.target.offsetWidth}px`;
-        line.style.left = `${e.target.offsetLeft}px`;
+
+        line.classList.toggle('right', line.classList.contains('left'));
+        line.classList.toggle('left', !line.classList.contains('right'));
 
         this.allContent.forEach((content) => {
           content.classList.remove('active');

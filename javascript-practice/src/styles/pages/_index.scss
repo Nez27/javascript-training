@@ -109,12 +109,20 @@
     &__line {
       position: absolute;
       top: 66px;
-      left: 150px;
-      width: 115px;
       height: 2px;
       background-color: $primary-color;
       border-radius: 10px;
       transition: all 0.3s ease-in-out;
+
+      &.left {
+        left: 152px;
+        width: 116px;
+      }
+
+      &.right {
+        left: 272px;
+        width: 200px;
+      }
     }
   }
 
