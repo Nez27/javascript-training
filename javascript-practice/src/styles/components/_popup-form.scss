@@ -1,19 +1,8 @@
-.modal-box {
+.toast {
   @extend %d-flex;
-  @extend %d-absolute;
   @include flex-layout($direction: column, $align: center, $gap: 30px);
 
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  z-index: $zindex-lv-2;
   padding: 40px 50px;
-  border-radius: 10px;
-  background-color: $white;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
 
   &__title {
     font-size: $fs-2x-lg;
@@ -32,17 +21,12 @@
     padding: 15px 30px;
     cursor: pointer;
   }
-
-  &.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
 }
 
-.success .modal-box__redirect-btn {
+.success .toast__redirect-btn {
   background-color: $light-primary-color;
 }
 
-.error .modal-box__redirect-btn {
+.error .toast__redirect-btn {
   background-color: $dark-error-color;
 }

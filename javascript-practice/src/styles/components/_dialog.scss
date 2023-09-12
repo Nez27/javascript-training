@@ -1,14 +1,9 @@
 .dialog {
-  @extend %d-absolute, %rounded-sm;
+  @extend %rounded-sm;
 
-  left: 50%;
-  top: 32%;
-  transform: translate(-50%, -50%) scale(1);
+  border: none;
   background-color: $white;
-  z-index: $zindex-lv-2;
-
-  opacity: 0;
-  pointer-events: none;
+  padding: none;
   transition: all 0.3s ease;
 
   &__title {
@@ -17,7 +12,17 @@
     line-height: 20px;
   }
 
-  &.active {
-    @extend %active;
+  &::backdrop {
+    background-color: rgba($color: #000000, $alpha: 0.2);
+  }
+}
+
+// Login page
+.login-page,
+.register-page {
+  .dialog {
+    @extend %rounded;
+
+    padding: 0px;
   }
 }
