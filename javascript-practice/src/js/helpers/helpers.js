@@ -1,6 +1,7 @@
-import { MESSAGE } from '../constants/constant';
-import { REGEX_PASSWORD, TIME_OUT_SEC } from '../constants/config';
+import * as MESSAGE from '../constants/message';
+import { TIME_OUT_SEC } from '../constants/config';
 import FirebaseService from '../services/firebaseService';
+import { REGEX_PASSWORD } from '../constants/variable';
 
 /**
  * Validate password
@@ -61,4 +62,20 @@ export const convertDataObjectToModel = (data) => {
   const { id, ...object } = data;
 
   return { id, ...object.data };
+};
+
+export const getSubdirectoryURL = () => {
+  const url = window.location.href;
+
+  const parts = url.split('/'); // Results: ['http:', '', 'example.com', '']
+
+  const subDirectory = parts[3]; // Get subdirectory url only
+
+  // Remove query behind subDirectory
+  const index = subDirectory.indexOf('?');
+  if (index !== -1) {
+    return subDirectory.substring(0, index);
+  }
+
+  return subDirectory;
 };
