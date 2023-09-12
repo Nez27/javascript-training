@@ -66,13 +66,10 @@ export const convertDataObjectToModel = (data) => {
 
 export const getSubdirectoryURL = () => {
   const url = window.location.href;
-
   const parts = url.split('/'); // Results: ['http:', '', 'example.com', '']
-
   const subDirectory = parts[3]; // Get subdirectory url only
+  const index = subDirectory.indexOf('?'); // Remove query behind subDirectory
 
-  // Remove query behind subDirectory
-  const index = subDirectory.indexOf('?');
   if (index !== -1) {
     return subDirectory.substring(0, index);
   }
