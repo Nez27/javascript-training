@@ -2,6 +2,7 @@ import { TYPE_TOAST, BTN_CONTENT } from '../constants/variable';
 import * as MESSAGE from '../constants/message';
 import CommonView from './commonView';
 import Wallet from '../models/wallet';
+import { formatNumber } from '../helpers/helpers';
 
 export default class HomeView extends CommonView {
   constructor() {
@@ -11,7 +12,7 @@ export default class HomeView extends CommonView {
     this.allContent = document.querySelectorAll('.app__content-item');
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
-    this.saveBtn = document.querySelectorAll('.form__save-btn');
+    this.saveBtns = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
@@ -22,7 +23,8 @@ export default class HomeView extends CommonView {
     this.walletDialog = document.getElementById('walletDialog');
   }
 
-  async loadPage(getInfoUserLogin, checkWalletExist) {
+  async loadPage(getInfoUserLogin, checkWalletExist, getWalletByIdUser) {
+    this.getWalletByIdUser = getWalletByIdUser; // Init function
     this.toggleLoaderSpinner();
     const user = await getInfoUserLogin();
 
@@ -37,13 +39,40 @@ export default class HomeView extends CommonView {
         // Show add wallet dialog
         this.walletDialog.showModal();
       } else {
+        // Load event page
         this.loadEvent();
+
+        // Init data
+        this.loadData();
       }
     }
 
     this.toggleLoaderSpinner();
   }
 
+  async loadData() {
+    const wallet = await this.getWalletByIdUser(this.user.id); // Get data wallet
+    const walletName = document.querySelector('.wallet__name');
+    const walletPrice = document.querySelector('.wallet__price');
+    const sign = wallet.amount >= 0 ? '+' : '-';
+    const walletNameValue = wallet.walletName;
+    const walletAmountValue = formatNumber(wallet.amount);
+
+    this.wallet = wallet;
+
+    walletName.textContent = walletNameValue;
+    walletPrice.textContent = `${sign}$ ${walletAmountValue}`;
+  }
+
+  // ---------------------ADD BUDGET DIALOG---------------------//
+  addHandlerSubmitBudgetForm() {
+    this.budgetDialog.addEventListener('submit', (e) => {
+      // TODO
+    });
+  }
+  // ---------------------END DIALOG---------------------//
+
+  // ---------------------WALLET DIALOG--------------------- //
   addHandlerSubmitWalletForm(saveWallet) {
     this.walletDialog.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -58,7 +87,7 @@ export default class HomeView extends CommonView {
     try {
       const wallet = new Wallet({
         walletName: this.walletName,
-        amount: this.amount,
+        amount: +this.amount,
         idUser: this.user.id,
       });
 
@@ -66,6 +95,7 @@ export default class HomeView extends CommonView {
 
       this.showSuccessToast('Add wallet success', 'Click ok to continue!');
       this.loadEvent();
+      this.loadData();
     } catch (error) {
       // Show toast error
       this.initErrorToast(error);
@@ -93,6 +123,8 @@ export default class HomeView extends CommonView {
     }
   }
 
+  // ---------------------END DIALOG--------------------- //
+
   showSuccessToast(title, message) {
     const typeToast = TYPE_TOAST.success;
     const btnContent = BTN_CONTENT.OK;
@@ -116,7 +148,7 @@ export default class HomeView extends CommonView {
     this.dialogToast.showModal();
   }
 
-  /* ------------------------------- HANDLER EVENT ------------------------------- */
+  // ------------------------------- HANDLER EVENT ------------------------------- //
 
   loadEvent() {
     this.addCommonEventPage();
@@ -168,6 +200,12 @@ export default class HomeView extends CommonView {
 
     this.addBudgetBtn.addEventListener('click', () => {
       this.budgetDialog.showModal();
+    });
+
+    this.saveBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
     });
   }
 

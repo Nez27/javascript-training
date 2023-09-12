@@ -1,3 +1,4 @@
+import Wallet from '../models/wallet';
 import CommonService from './commonService';
 
 export default class WalletService extends CommonService {
@@ -39,7 +40,7 @@ export default class WalletService extends CommonService {
     const result = await this.getDataFromProp('idUser', idUser);
 
     if (result) {
-      return result;
+      return new Wallet(result);
     }
 
     return null;
