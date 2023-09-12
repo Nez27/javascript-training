@@ -1,4 +1,4 @@
-import { MARK_ICON, TYPE_TOAST } from '../constants/variable';
+import { MARK_ICON, TYPE_TOAST } from '../constants/config';
 
 export default class CommonView {
   constructor() {

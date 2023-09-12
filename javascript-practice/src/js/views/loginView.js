@@ -1,5 +1,5 @@
 import CommonLoginRegisterView from './commonLoginRegisterView';
-import { TYPE_TOAST, BTN_CONTENT } from '../constants/variable';
+import { TYPE_TOAST, BTN_CONTENT } from '../constants/config';
 import * as MESSAGE from '../constants/message';
 
 export default class LoginView extends CommonLoginRegisterView {

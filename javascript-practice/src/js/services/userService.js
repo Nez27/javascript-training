@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE } from '../constants/variable';
+import { LOCAL_STORAGE } from '../constants/config';
 import { createToken } from '../helpers/helpers';
 import CommonService from './commonService';
 import LocalStorageService from './localStorageService';
