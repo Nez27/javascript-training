@@ -1,102 +1,106 @@
-import { MARK_ICON, TYPE_POPUP } from '../constants/constant';
+import { MARK_ICON, TYPE_TOAST } from '../constants/variable';
 
 export default class CommonView {
   constructor() {
-    this.overlayMarkup = '<div class="overlay"></div>';
-
-    this.initPopup();
-    this.initElementPopup();
+    this.initToast();
+    this.initElementToast();
     this.initLoader();
-    this.handleEventBtnPopupAndOverlay();
+    this.handleEventToast();
   }
 
   /**
-   * Implement popup in site
+   * Implement toast in site
    */
-  initPopup() {
+  initToast() {
     this.rootElement = document.querySelector('body');
 
     const markup = `
-      ${this.overlayMarkup}
-      <div class="modal-box">
-        <div class="mark"></div>
-        <h2 class="modal-box__title"></h2>
-        <p class="modal-box__message"></p>
-
-        <button class="modal-box__redirect-btn"></button>
-      </div>
+      <dialog class="dialog">
+        <div class="toast">
+          <div class="mark"></div>
+          <h2 class="toast__title"></h2>
+          <p class="toast__message"></p>
+          <button class="toast__redirect-btn">OK</button>
+        </div>
+      </dialog>
     `;
 
     this.rootElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   /**
-   * Assgign element in popup to property
+   * Assign element in toast to property
    */
-  initElementPopup() {
-    this.modalBox = document.querySelector('.modal-box');
-    this.popupIcon = document.querySelector('.mark');
-    this.popupBtn = document.querySelector('.modal-box__redirect-btn');
-    this.popupTitle = document.querySelector('.modal-box__title');
-    this.popupContent = document.querySelector('.modal-box__message');
-    this.overlay = document.querySelector('.overlay');
+  initElementToast() {
+    this.toastDialog = document.querySelector('.dialog');
+    this.toast = document.querySelector('.toast');
+    this.toastIcon = document.querySelector('.mark');
+    this.toastBtn = document.querySelector('.toast__redirect-btn');
+    this.toastTitle = document.querySelector('.toast__title');
+    this.toastContent = document.querySelector('.toast__message');
   }
 
   /**
    * Show or hide loader screen
    */
-  toogleLoaderSpinner() {
+  toggleLoaderSpinner() {
     this.spinner.classList.toggle('hidden');
   }
 
   /**
-   * Show or hide popup
-   */
-  tooglePopupForm() {
-    this.overlay.classList.toggle('active');
-    this.modalBox.classList.toggle('active');
-  }
-
-  /**
-   * Add popup content
-   * @param {TYPE_POPUP} typePopup Type of the popup
-   * @param {string} title Title of popup
-   * @param {string} content Content of popup
+   * Add toast content
+   * @param {TYPE_TOAST} typeToast Type of the toast
+   * @param {string} title Title of toast
+   * @param {string} content Content of toast
    * @param {string} btnContent Content of button
    */
-  initPopupContent(typePopup, title, content, btnContent) {
-    // Remove old typePopup class if haved
-    this.modalBox.classList.forEach((classItem) =>
-      classItem === TYPE_POPUP.success || classItem === TYPE_POPUP.error
-        ? this.modalBox.classList.remove(classItem)
+  initToastContent(typeToast, title, content, btnContent) {
+    // Remove old typeToast class if haved
+    this.toast.classList.forEach((classItem) =>
+      classItem === TYPE_TOAST.success || classItem === TYPE_TOAST.error
+        ? this.toast.classList.remove(classItem)
         : '',
     );
 
-    // Remove old icon popup if haved
-    this.popupIcon.classList.forEach((classItem) =>
+    // Remove old icon toast if haved
+    this.toastIcon.classList.forEach((classItem) =>
       classItem === MARK_ICON.success || classItem === MARK_ICON.error
-        ? this.popupIcon.classList.remove(classItem)
+        ? this.toastIcon.classList.remove(classItem)
         : '',
     );
 
-    // Init content popup
-    this.modalBox.classList.add(
-      typePopup === TYPE_POPUP.success ? TYPE_POPUP.success : TYPE_POPUP.error,
+    // Init content toast
+    this.toast.classList.add(
+      typeToast === TYPE_TOAST.success ? TYPE_TOAST.success : TYPE_TOAST.error,
     );
-    this.popupIcon.classList.add(
-      typePopup === TYPE_POPUP.success ? MARK_ICON.success : MARK_ICON.error,
+    this.toastIcon.classList.add(
+      typeToast === TYPE_TOAST.success ? MARK_ICON.success : MARK_ICON.error,
     );
-    this.popupTitle.textContent = title;
-    this.popupContent.textContent = content;
-    this.popupBtn.textContent = btnContent;
+    this.toastTitle.textContent = title;
+    this.toastContent.textContent = content;
+    this.toastBtn.textContent = btnContent;
   }
 
   /**
-   * Add event listener for popup and overlay
+   * Add event listener for toast
    */
-  handleEventBtnPopupAndOverlay() {
-    this.popupBtn.addEventListener('click', this.tooglePopupForm.bind(this));
-    this.overlay.addEventListener('click', this.tooglePopupForm.bind(this));
+  handleEventToast() {
+    this.toastBtn.addEventListener('click', () => {
+      this.toastDialog.close();
+    });
+
+    // Add event close dialog when click outside
+    this.toastDialog.addEventListener('click', (e) => {
+      const dialogDimensions = this.toastDialog.getBoundingClientRect();
+      if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+      ) {
+        this.toastDialog.close();
+      }
+    });
   }
 
   /**

@@ -1,5 +1,5 @@
 import CommonView from './commonView';
-import * as CONSTANT from '../constants/constant';
+import * as MESSAGE from '../constants/message';
 import { validatePassword } from '../helpers/helpers';
 
 export default class CommonLoginRegisterView extends CommonView {
@@ -7,7 +7,7 @@ export default class CommonLoginRegisterView extends CommonView {
     super();
 
     this.parentElement = document.querySelector('.form');
-    this.messageDefault = CONSTANT.MESSAGE.ERROR_MESSAGE_DEFAULT;
+    this.messageDefault = MESSAGE.ERROR_MESSAGE_DEFAULT;
     this.inputPassword = document.querySelector('input[name="password"]');
     this.inputPasswordConfirm = document.querySelector(
       'input[name="password_confirm"]',
@@ -24,17 +24,17 @@ export default class CommonLoginRegisterView extends CommonView {
       if (validatePassword(account.passwordConfirm)) {
         return true;
       }
-      this.showError(CONSTANT.MESSAGE.PASSWORD_NOT_STRONG);
+      this.showError(MESSAGE.PASSWORD_NOT_STRONG);
       return false;
     }
-    this.showError(CONSTANT.MESSAGE.PASSWORD_NOT_MATCH);
+    this.showError(MESSAGE.PASSWORD_NOT_MATCH);
     return false;
   }
 
   /**
    * Show or hide style error input password
    */
-  toogleErrorStyleInputPass() {
+  toggleErrorStyleInputPass() {
     this.inputPassword.classList.toggle('error-input');
     this.inputPasswordConfirm.classList.toggle('error-input');
   }
@@ -49,7 +49,7 @@ export default class CommonLoginRegisterView extends CommonView {
     // If have error message on page, remove it with style error input password
     if (this.errorMessageEl) {
       this.errorMessageEl.remove();
-      this.toogleErrorStyleInputPass();
+      this.toggleErrorStyleInputPass();
     }
   }
 
@@ -68,7 +68,11 @@ export default class CommonLoginRegisterView extends CommonView {
    */
   showError(message) {
     this.renderError(message);
-    this.toogleErrorStyleInputPass();
+    this.toggleErrorStyleInputPass();
+  }
+
+  toggleDialog() {
+    this.dialog.classList.toggle('active');
   }
 
   /**
