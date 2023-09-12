@@ -1,7 +1,6 @@
 import * as MESSAGE from '../constants/message';
-import { TIME_OUT_SEC } from '../constants/config';
+import { TIME_OUT_SEC, REGEX } from '../constants/config';
 import FirebaseService from '../services/firebaseService';
-import { REGEX_PASSWORD } from '../constants/variable';
 
 /**
  * Validate password
@@ -9,7 +8,7 @@ import { REGEX_PASSWORD } from '../constants/variable';
  * @returns {boolean} Return true if validate password success, otherwise return false
  */
 export const validatePassword = (password) => {
-  return REGEX_PASSWORD.test(password);
+  return REGEX.PASSWORD.test(password);
 };
 
 /**
@@ -66,13 +65,10 @@ export const convertDataObjectToModel = (data) => {
 
 export const getSubdirectoryURL = () => {
   const url = window.location.href;
-
   const parts = url.split('/'); // Results: ['http:', '', 'example.com', '']
-
   const subDirectory = parts[3]; // Get subdirectory url only
+  const index = subDirectory.indexOf('?'); // Remove query behind subDirectory
 
-  // Remove query behind subDirectory
-  const index = subDirectory.indexOf('?');
   if (index !== -1) {
     return subDirectory.substring(0, index);
   }
