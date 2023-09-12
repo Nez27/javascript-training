@@ -9,7 +9,6 @@ export default class HomeView extends CommonView {
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
     this.dialogs = document.querySelectorAll('.dialog');
-    this.cancelBtn = document.querySelectorAll('.form__cancel-btn');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
 
@@ -29,11 +28,8 @@ export default class HomeView extends CommonView {
 
         const line = document.querySelector('.app__line');
 
-        if (line.classList.contains('left')) {
-          HomeView.replaceClassElement('left', 'right', line);
-        } else {
-          HomeView.replaceClassElement('right', 'left', line);
-        }
+        line.classList.toggle('right', line.classList.contains('left'));
+        line.classList.toggle('left', !line.classList.contains('right'));
 
         this.allContent.forEach((content) => {
           content.classList.remove('active');
@@ -41,11 +37,6 @@ export default class HomeView extends CommonView {
         this.allContent[index].classList.add('active');
       });
     });
-  }
-
-  static replaceClassElement(oldEl, newEl, el) {
-    el.classList.remove(oldEl);
-    el.classList.add(newEl);
   }
 
   addCommonEventPage() {
