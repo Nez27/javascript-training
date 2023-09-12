@@ -23,13 +23,17 @@ export default class HomeView extends CommonView {
    */
   handlerTabsTransfer() {
     this.tabs.forEach((tab, index) => {
-      tab.addEventListener('click', (e) => {
+      tab.addEventListener('click', () => {
         this.removeActiveTab();
         tab.classList.add('active');
 
         const line = document.querySelector('.app__line');
-        line.style.width = `${e.target.offsetWidth}px`;
-        line.style.left = `${e.target.offsetLeft}px`;
+
+        if (line.classList.contains('left')) {
+          HomeView.replaceClassElement('left', 'right', line);
+        } else {
+          HomeView.replaceClassElement('right', 'left', line);
+        }
 
         this.allContent.forEach((content) => {
           content.classList.remove('active');
@@ -37,6 +41,11 @@ export default class HomeView extends CommonView {
         this.allContent[index].classList.add('active');
       });
     });
+  }
+
+  static replaceClassElement(oldEl, newEl, el) {
+    el.classList.remove(oldEl);
+    el.classList.add(newEl);
   }
 
   addCommonEventPage() {
