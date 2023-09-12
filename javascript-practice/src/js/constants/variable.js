@@ -1,4 +1,4 @@
-export const URL = {
+export const SUBDIRECTORY_URL = {
   LOGIN: 'login',
   REGISTER: 'register',
   HOME: '',
