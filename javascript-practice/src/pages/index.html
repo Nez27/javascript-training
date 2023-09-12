@@ -8,17 +8,16 @@
     <title>Money Lover Web</title>
   </head>
   <body class="home-page">
-    <div class="overlay active"></div>
-    <div class="dark-overlay"></div>
-    <!-- <div class="modal-box success active">
-      <div class="mark check"></div>
-      <h2 class="modal-box__title">Login Success!</h2>
-      <p class="modal-box__message">Welcome to Money Lover!</p>
-
-      <button class="modal-box__redirect-btn">OK</button>
-    </div> -->
+    <dialog class="dialog">
+      <div class="toast success">
+        <div class="mark check"></div>
+        <h2 class="toast__title">Login Success!</h2>
+        <p class="toast__message">Welcome to Money Lover!</p>
+        <button class="toast__redirect-btn">OK</button>
+      </div>
+    </dialog>
     <!-- Add a wallet form -->
-    <div class="dialog active" id="walletForm">
+    <dialog class="dialog" id="walletDialog">
       <div class="dialog__add-wallet">
         <!-- Dialog header -->
         <div class="dialog__header">
@@ -56,10 +55,10 @@
           </form>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Add budget form -->
-    <div class="dialog" id="budgetForm">
+    <dialog class="dialog" id="budgetDialog">
       <div class="dialog__add-budget">
         <!-- Header -->
         <div class="dialog__header">
@@ -96,16 +95,18 @@
               />
             </div>
             <div class="form__action">
-              <button type="button" class="form__cancel-btn">CANCEL</button>
+              <button formmethod="dialog" class="form__cancel-btn">
+                CANCEL
+              </button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Add, edit, delete transaction form -->
-    <div class="dialog" id="transactionForm">
+    <dialog class="dialog" id="transactionDialog">
       <div class="dialog__add-transaction">
         <!-- Header-->
         <div class="dialog__header">
@@ -154,20 +155,22 @@
               />
             </div>
             <div class="form__action">
-              <button type="button" class="form__cancel-btn">CANCEL</button>
+              <button formmethod="dialog" class="form__cancel-btn">
+                CANCEL
+              </button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Select category form -->
-    <div class="dialog" id="categoryForm">
+    <dialog class="dialog" id="categoryDialog">
       <div class="dialog__select-category">
         <div class="dialog__header">
           <div class="dialog__title-container">
-            <div class="close-icon"></div>
+            <div formmethod="dialog" class="close-icon"></div>
             <div class="dialog__title">Select category</div>
           </div>
           <form class="form">
@@ -262,7 +265,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
     <!-- End form -->
     <!-- Start header -->
     <header class="header">
@@ -402,90 +405,6 @@
       </main>
       <!-- End app -->
     </div>
-    <!-- All scripts below is use for test purpose!  -->
-    <script>
-      // Handle event when click on tabs
-      const tabs = document.querySelectorAll('.app__tab-item');
-      const all_content = document.querySelectorAll('.app__content-item');
-
-      tabs.forEach((tab, index) => {
-        tab.addEventListener('click', (e) => {
-          tabs.forEach((tab) => {
-            tab.classList.remove('active');
-          });
-          tab.classList.add('active');
-
-          const line = document.querySelector('.app__line');
-          line.style.width = e.target.offsetWidth + 'px';
-          line.style.left = e.target.offsetLeft + 'px';
-
-          all_content.forEach((content) => {
-            content.classList.remove('active');
-          });
-          all_content[index].classList.add('active');
-        });
-      });
-
-      // Add event
-      const addTransactionBtn = document.getElementById('addTransaction');
-      const addBudgetBtn = document.getElementById('addBudget');
-      const overlay = document.querySelector('.overlay');
-      const darkOverlay = document.querySelector('.dark-overlay');
-      const dialog = document.querySelectorAll('.dialog');
-      const cancelBtn = document.querySelectorAll('.form__cancel-btn');
-      const categoryField = document.getElementById('selectCategory');
-      const closeIcon = document.querySelector('.close-icon');
-
-      const budgetForm = document.getElementById('budgetForm');
-      const transactionForm = document.getElementById('transactionForm');
-      const categoryForm = document.getElementById('categoryForm');
-
-      overlay.addEventListener('click', () => {
-        overlay.classList.toggle('active');
-
-        dialog.forEach((item) => {
-          if (item.classList.contains('active')) {
-            item.classList.remove('active');
-          }
-        });
-      });
-
-      addTransactionBtn.addEventListener('click', () => {
-        transactionForm.classList.toggle('active');
-        overlay.classList.toggle('active');
-      });
-
-      addBudgetBtn.addEventListener('click', () => {
-        budgetForm.classList.toggle('active');
-        overlay.classList.toggle('active');
-      });
-
-      cancelBtn.forEach((item) => {
-        item.addEventListener('click', () => {
-          overlay.classList.toggle('active');
-
-          dialog.forEach((item) => {
-            if (item.classList.contains('active')) {
-              item.classList.remove('active');
-            }
-          });
-        });
-      });
-
-      categoryField.addEventListener('click', () => {
-        categoryForm.classList.add('active');
-        darkOverlay.classList.add('active');
-      });
-
-      closeIcon.addEventListener('click', () => {
-        categoryForm.classList.remove('active');
-        darkOverlay.classList.remove('active');
-      });
-
-      darkOverlay.addEventListener('click', () => {
-        darkOverlay.classList.remove('active');
-        categoryForm.classList.remove('active');
-      });
-    </script>
+    <script type="module" src="../js/main.js"></script>
   </body>
 </html>
