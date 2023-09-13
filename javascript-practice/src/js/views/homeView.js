@@ -11,7 +11,7 @@ export default class HomeView extends CommonView {
     this.allContent = document.querySelectorAll('.app__content-item');
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
-    this.saveBtn = document.querySelectorAll('.form__save-btn');
+    this.saveBtns = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
@@ -84,12 +84,12 @@ export default class HomeView extends CommonView {
   validateWalletForm(bodyDialog) {
     this.walletName = bodyDialog.querySelector('.form__input-text').value;
     this.amount = bodyDialog.querySelector('.form__input-balance').value;
-    const saveBtn = bodyDialog.querySelector('.form__save-btn');
+    const saveBtns = bodyDialog.querySelector('.form__save-btn');
 
     if (this.walletName.length >= 3 && this.amount.length >= 1) {
-      saveBtn.classList.add('active');
+      saveBtns.classList.add('active');
     } else {
-      saveBtn.classList.remove('active');
+      saveBtns.classList.remove('active');
     }
   }
 

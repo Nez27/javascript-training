@@ -19,7 +19,7 @@ export default class CommonLoginRegisterView extends CommonView {
    * @param {Object} account The account object with email, password, passwordConfirm field
    * @returns {boolean} Return true if validate success and return false if validate not success
    */
-  isValidateForm(account) {
+  isValidateAccount(account) {
     if (account.password === account.passwordConfirm) {
       if (isValidatePassword(account.passwordConfirm)) {
         return true;
