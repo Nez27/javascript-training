@@ -75,6 +75,28 @@ class FirebaseService {
     });
   }
 
+  getAllDataFromPath(path) {
+    return new Promise((resolve) => {
+      onValue(
+        ref(this.db, path),
+        (snapshot) => {
+          const listData = [];
+          // snapshot is a type of data by Firebase define
+          snapshot.forEach((childSnapshot) => {
+            // Add data to array
+            const id = +childSnapshot.key;
+            const val = childSnapshot.val();
+            listData.push({ id, ...val });
+          });
+          resolve(listData);
+        },
+        {
+          onlyOnce: true,
+        },
+      );
+    });
+  }
+
   /**
    * Get data object from Id
    * @param {string} id The id of data object

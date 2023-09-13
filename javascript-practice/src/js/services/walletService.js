@@ -1,3 +1,4 @@
+import Wallet from '../models/wallet';
 import CommonService from './commonService';
 
 export default class WalletService extends CommonService {
@@ -24,7 +25,7 @@ export default class WalletService extends CommonService {
     const wallet = await this.getWalletByIdUser(idUser);
 
     if (wallet) {
-      return true;
+      return new Wallet(wallet);
     }
 
     return false;

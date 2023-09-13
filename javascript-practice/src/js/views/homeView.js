@@ -89,27 +89,23 @@ export default class HomeView extends CommonView {
       this.toggleLoaderSpinner(); // Enable loader spinner
       this.budgetDialog.close(); // Close dialog
 
-      const { formAddBudget } = document.forms;
-      const form = new FormData(formAddBudget);
-      const date = form.get('date');
-      const amount = form.get('amount');
-      const note = form.get('note');
+      const addBudgetForm = document.getElementById('formAddBudget');
+      const date = addBudgetForm.querySelector("[name='date']");
+      const amount = addBudgetForm.querySelector("[name='amount']");
+      const note = addBudgetForm.querySelector("[name='note']");
 
       const transaction = new Transaction({
         categoryName: DEFAULT_CATEGORY.INCOME,
-        date: changeDateFormat(date),
-        amount: +amount,
-        note,
+        date: changeDateFormat(date.value),
+        amount: +amount.value,
+        note: note.value,
       });
 
       await saveTransaction(transaction);
 
-      await this.updateAmountWallet(+amount, saveWallet); // Update wallet
+      await this.updateAmountWallet(+amount.value, saveWallet); // Update wallet
 
       this.loadData();
-
-      // Hide loader spinner
-      this.toggleLoaderSpinner();
 
       // Show success message
       this.showSuccessToast(
@@ -117,10 +113,13 @@ export default class HomeView extends CommonView {
         MESSAGE.DEFAULT_MESSAGE,
       );
 
-      document.getElementById('formAddBudget').reset();
+      addBudgetForm.reset();
     } catch (error) {
       this.initErrorToast(error);
     }
+
+    // Hide loader spinner
+    this.toggleLoaderSpinner();
   }
 
   addHandlerInputChangeBudgetForm() {
@@ -157,14 +156,13 @@ export default class HomeView extends CommonView {
     this.toggleLoaderSpinner();
 
     try {
-      const { walletForm } = document.forms;
-      const form = new FormData(walletForm);
-      const walletName = form.get('walletName');
-      const amount = form.get('amount');
+      const walletForm = document.getElementById('walletForm');
+      const walletName = walletForm.querySelector("[name='walletName']");
+      const amount = walletForm.querySelector("[name='amount']");
 
       const wallet = new Wallet({
-        walletName,
-        amount: +amount,
+        walletName: walletName.value,
+        amount: +amount.value,
         idUser: this.user.id,
       });
 

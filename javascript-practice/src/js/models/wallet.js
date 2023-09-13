@@ -1,12 +1,13 @@
 export default class Wallet {
   constructor({
+    id = Wallet.createIdWallet(),
     walletName = '',
     amount = 0,
     inflow = 0,
     outflow = 0,
     idUser,
   }) {
-    this.id = Wallet.createIdWallet();
+    this.id = id;
     this.walletName = walletName;
     this.amount = amount;
     this.inflow = inflow;

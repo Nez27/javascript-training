@@ -62,4 +62,13 @@ export default class CommonService {
 
     return null;
   }
+
+  async getAllDataFromPath(path = this.defaultPath) {
+    this.connectToDb();
+    const result = await this.firebaseService.getAllDataFromPath(path);
+
+    if (result) return result;
+
+    return null;
+  }
 }
