@@ -11,20 +11,21 @@ export default class HomeView extends CommonView {
     super();
 
     this.tabs = document.querySelectorAll('.app__tab-item');
-    this.allContent = document.querySelectorAll('.app__content-item');
-    this.addTransactionBtn = document.getElementById('addTransaction');
-    this.addBudgetBtn = document.getElementById('addBudget');
+    this.allContentTab = document.querySelectorAll('.app__content-item');
     this.cancelBtns = document.querySelectorAll('.form__cancel-btn');
     this.saveBtns = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
-    this.categoryField = document.getElementById('selectCategory');
-    this.closeIcon = document.querySelector('.close-icon');
     this.amountInputs = document.querySelectorAll('.form__input-balance');
 
+    this.addTransactionBtn = document.getElementById('addTransaction');
+    this.addBudgetBtn = document.getElementById('addBudget');
+    this.categoryField = document.getElementById('selectCategory');
     this.budgetDialog = document.getElementById('budgetDialog');
     this.transactionDialog = document.getElementById('transactionDialog');
     this.categoryDialog = document.getElementById('categoryDialog');
     this.walletDialog = document.getElementById('walletDialog');
+
+    this.closeIcon = document.querySelector('.close-icon');
   }
 
   async loadPage(getInfoUserLogin, isValidWallet, getWalletByIdUser) {
@@ -249,10 +250,10 @@ export default class HomeView extends CommonView {
         line.classList.toggle('right', line.classList.contains('left'));
         line.classList.toggle('left', !line.classList.contains('right'));
 
-        this.allContent.forEach((content) => {
+        this.allContentTab.forEach((content) => {
           content.classList.remove('active');
         });
-        this.allContent[index].classList.add('active');
+        this.allContentTab[index].classList.add('active');
       });
     });
   }
