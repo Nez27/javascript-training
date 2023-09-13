@@ -78,17 +78,18 @@
               <div class="form__input-field">
                 <p class="form__label">Date</p>
                 <div class="date-input-container">
-                  <input class="input-date" type="date" name="selected_date" />
+                  <input class="input-date" type="date" name="date" required />
                   <div class="icon-btn"></div>
                 </div>
               </div>
-              <div class="form__input-field error">
+              <div class="form__input-field">
                 <p class="form__label">Amount</p>
                 <input
                   class="form__input-balance"
                   type="number"
-                  name="date"
                   value="0"
+                  name="amount"
+                  required
                 />
               </div>
             </div>
@@ -102,9 +103,7 @@
               />
             </div>
             <div class="form__action">
-              <button formmethod="dialog" class="form__cancel-btn">
-                CANCEL
-              </button>
+              <button class="form__cancel-btn" type="button">CANCEL</button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>

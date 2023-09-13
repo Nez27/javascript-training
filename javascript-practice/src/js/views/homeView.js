@@ -12,7 +12,7 @@ export default class HomeView extends CommonView {
     this.allContent = document.querySelectorAll('.app__content-item');
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
-    this.saveBtns = document.querySelectorAll('.form__save-btn');
+    this.cancelBtns = document.querySelectorAll('.form__cancel-btn');
     this.dialogs = document.querySelectorAll('.dialog');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
@@ -67,8 +67,20 @@ export default class HomeView extends CommonView {
   // ---------------------ADD BUDGET DIALOG---------------------//
   addHandlerSubmitBudgetForm() {
     this.budgetDialog.addEventListener('submit', (e) => {
-      // TODO
+      e.preventDefault();
+
+      this.submitBudgetForm();
     });
+  }
+
+  submitBudgetForm() {
+    const { formAddBudget } = document.forms;
+    const form = new FormData(formAddBudget);
+    const date = form.get('date');
+    const amount = form.get('amount');
+    const note = form.get('note');
+
+    alert(`Date: ${date}, Amount: ${amount}, Note: ${note}`);
   }
   // ---------------------END DIALOG---------------------//
 
@@ -202,9 +214,9 @@ export default class HomeView extends CommonView {
       this.budgetDialog.showModal();
     });
 
-    this.saveBtns.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
+    this.cancelBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        this.closeAllDialog();
       });
     });
   }
@@ -216,6 +228,12 @@ export default class HomeView extends CommonView {
 
     this.closeIcon.addEventListener('click', () => {
       this.categoryDialog.close();
+    });
+  }
+
+  closeAllDialog() {
+    this.dialogs.forEach((dialog) => {
+      dialog.close();
     });
   }
 
