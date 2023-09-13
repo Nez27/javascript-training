@@ -23,7 +23,7 @@ export default class RegisterView extends CommonLoginRegisterView {
 
     const account = { email, password, passwordConfirm };
 
-    if (this.validateForm(account)) {
+    if (this.isValidateForm(account)) {
       const user = new User(account);
 
       return user;

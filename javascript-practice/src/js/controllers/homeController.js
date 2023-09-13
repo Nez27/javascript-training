@@ -8,8 +8,8 @@ export default class HomeController {
     return this.service.userService.getInfoUserLogin();
   }
 
-  handlerCheckWalletExist(idUser) {
-    return this.service.walletService.checkWalletExist(idUser);
+  handlerCheckWalletValid(idUser) {
+    return this.service.walletService.isValidWallet(idUser);
   }
 
   handlerSaveWallet(wallet) {
@@ -24,7 +24,7 @@ export default class HomeController {
       );
       this.homeView.loadPage(
         this.handlerGetInfoUserLogin.bind(this),
-        this.handlerCheckWalletExist.bind(this),
+        this.handlerCheckWalletValid.bind(this),
       );
     }
   }

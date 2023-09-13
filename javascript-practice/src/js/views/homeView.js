@@ -22,7 +22,7 @@ export default class HomeView extends CommonView {
     this.walletDialog = document.getElementById('walletDialog');
   }
 
-  async loadPage(getInfoUserLogin, checkWalletExist) {
+  async loadPage(getInfoUserLogin, isValidWallet) {
     this.toggleLoaderSpinner();
     const user = await getInfoUserLogin();
 
@@ -30,10 +30,10 @@ export default class HomeView extends CommonView {
       window.location.replace('/login');
     } else {
       this.user = user;
-      const walletExist = await checkWalletExist(user.id);
+      const wallet = await isValidWallet(user.id);
 
       // Check user's wallet if have or not
-      if (!walletExist) {
+      if (!wallet) {
         // Show add wallet dialog
         this.walletDialog.showModal();
       } else {

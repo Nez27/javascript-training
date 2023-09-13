@@ -20,10 +20,10 @@ export default class WalletService extends CommonService {
    * @param {string} idUser The id user to find user's wallet
    * @returns {boolean} Return true if find, otherwise return false
    */
-  async checkWalletExist(idUser) {
-    const walletExist = await this.getWalletByIdUser(idUser);
+  async isValidWallet(idUser) {
+    const wallet = await this.getWalletByIdUser(idUser);
 
-    if (walletExist) {
+    if (wallet) {
       return true;
     }
 

@@ -1,6 +1,6 @@
 import CommonView from './commonView';
 import * as MESSAGE from '../constants/message';
-import { validatePassword } from '../helpers/helpers';
+import { isValidatePassword } from '../helpers/helpers';
 
 export default class CommonLoginRegisterView extends CommonView {
   constructor() {
@@ -19,9 +19,9 @@ export default class CommonLoginRegisterView extends CommonView {
    * @param {Object} account The account object with email, password, passwordConfirm field
    * @returns {boolean} Return true if validate success and return false if validate not success
    */
-  validateForm(account) {
+  isValidateForm(account) {
     if (account.password === account.passwordConfirm) {
-      if (validatePassword(account.passwordConfirm)) {
+      if (isValidatePassword(account.passwordConfirm)) {
         return true;
       }
       this.showError(MESSAGE.PASSWORD_NOT_STRONG);

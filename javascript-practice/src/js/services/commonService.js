@@ -20,12 +20,8 @@ export default class CommonService {
 
   async getDataFromProp(property, value, path = this.defaultPath) {
     this.connectToDb();
-    const dataExists = this.firebaseService.getDataFromProp(
-      path,
-      property,
-      value,
-    );
-    const result = await timeOutConnect(dataExists);
+    const data = this.firebaseService.getDataFromProp(path, property, value);
+    const result = await timeOutConnect(data);
 
     if (result.id && result.data) {
       return convertDataObjectToModel(result);

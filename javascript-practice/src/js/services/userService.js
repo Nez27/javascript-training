@@ -23,7 +23,7 @@ export default class UserService extends CommonService {
    * @param {string} email Email to find user
    * @returns {boolean} Return true if find, otherwise return false
    */
-  async checkUserExist(email) {
+  async isValidUser(email) {
     const userExist = await this.getUserByEmail(email);
 
     if (userExist) {
