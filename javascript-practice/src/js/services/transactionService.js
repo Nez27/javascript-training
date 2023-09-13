@@ -1,5 +1,4 @@
 import CommonService from './commonService';
-import Transaction from '../models/transaction';
 
 export default class TransactionService extends CommonService {
   constructor() {
@@ -13,8 +12,6 @@ export default class TransactionService extends CommonService {
    * @param {Object} transaction The wallet object need to be saved into database
    */
   async saveTransaction(transaction) {
-    const transactionObject = new Transaction(transaction);
-
-    await this.save(transactionObject);
+    await this.save(transaction);
   }
 }

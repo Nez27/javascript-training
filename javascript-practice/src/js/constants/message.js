@@ -15,3 +15,9 @@ export const ERROR_CREDENTIAL = {
 export const DEFAULT_TITLE_ERROR_TOAST = 'Error';
 
 export const USER_EXIST_ERROR = 'User is exists! Please try another email!';
+
+export const ADD_WALLET_SUCCESS = 'Add wallet success!';
+
+export const DEFAULT_MESSAGE = 'Press OK to continue!';
+
+export const ADD_TRANSACTION_SUCCESS = 'Add success!';

@@ -1,8 +1,10 @@
-import { TYPE_TOAST, BTN_CONTENT } from '../constants/variable';
+/* eslint-disable class-methods-use-this */
+import { TYPE_TOAST, BTN_CONTENT, DEFAULT_CATEGORY } from '../constants/config';
 import * as MESSAGE from '../constants/message';
 import CommonView from './commonView';
 import Wallet from '../models/wallet';
-import { formatNumber } from '../helpers/helpers';
+import Transaction from '../models/transaction';
+import { changeDateFormat, formatNumber } from '../helpers/helpers';
 
 export default class HomeView extends CommonView {
   constructor() {
@@ -17,6 +19,7 @@ export default class HomeView extends CommonView {
     this.dialogs = document.querySelectorAll('.dialog');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
+    this.amountInputs = document.querySelectorAll('.form__input-balance');
 
     this.budgetDialog = document.getElementById('budgetDialog');
     this.transactionDialog = document.getElementById('transactionDialog');
@@ -57,31 +60,86 @@ export default class HomeView extends CommonView {
     const walletPrice = document.querySelector('.wallet__price');
     const sign = wallet.amount >= 0 ? '+' : '-';
     const walletNameValue = wallet.walletName;
-    const walletAmountValue = formatNumber(wallet.amount);
+    // Math.abs(wallet.amount) to keep the value always > 0
+    const walletAmountValue = formatNumber(Math.abs(wallet.amount));
 
-    this.wallet = wallet;
+    this.wallet = wallet; // Make wallet into global variable
 
     walletName.textContent = walletNameValue;
     walletPrice.textContent = `${sign}$ ${walletAmountValue}`;
   }
 
+  async updateAmountWallet(amount, saveWallet) {
+    this.wallet.amount += +amount;
+
+    await saveWallet(this.wallet);
+  }
+
   // ---------------------ADD BUDGET DIALOG---------------------//
-  addHandlerSubmitBudgetForm() {
+  addHandlerSubmitBudgetForm(saveTransaction, saveWallet) {
     this.budgetDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      this.submitBudgetForm();
+      this.submitBudgetForm(saveTransaction, saveWallet);
     });
   }
 
-  submitBudgetForm() {
-    const { formAddBudget } = document.forms;
-    const form = new FormData(formAddBudget);
-    const date = form.get('date');
-    const amount = form.get('amount');
-    const note = form.get('note');
+  async submitBudgetForm(saveTransaction, saveWallet) {
+    try {
+      this.toggleLoaderSpinner(); // Enable loader spinner
+      this.budgetDialog.close(); // Close dialog
 
-    alert(`Date: ${date}, Amount: ${amount}, Note: ${note}`);
+      const { formAddBudget } = document.forms;
+      const form = new FormData(formAddBudget);
+      const date = form.get('date');
+      const amount = form.get('amount');
+      const note = form.get('note');
+
+      const transaction = new Transaction({
+        categoryName: DEFAULT_CATEGORY.INCOME,
+        date: changeDateFormat(date),
+        amount: +amount,
+        note,
+      });
+
+      await saveTransaction(transaction);
+
+      await this.updateAmountWallet(+amount, saveWallet); // Update wallet
+
+      this.loadData();
+
+      // Hide loader spinner
+      this.toggleLoaderSpinner();
+
+      // Show success message
+      this.showSuccessToast(
+        MESSAGE.ADD_TRANSACTION_SUCCESS,
+        MESSAGE.DEFAULT_MESSAGE,
+      );
+
+      document.getElementById('formAddBudget').reset();
+    } catch (error) {
+      this.initErrorToast(error);
+    }
+  }
+
+  addHandlerInputChangeBudgetForm() {
+    this.budgetDialog.addEventListener('input', (e) => {
+      const bodyDialog = e.target.closest('.dialog__body');
+      this.validateBudgetForm(bodyDialog);
+    });
+  }
+
+  validateBudgetForm(bodyDialog) {
+    const date = bodyDialog.querySelector('.input-date').value;
+    const amount = +bodyDialog.querySelector('.form__input-balance').value;
+    const saveBtn = bodyDialog.querySelector('.form__save-btn');
+
+    if (date.trim() && amount >= 1) {
+      saveBtn.classList.add('active');
+    } else {
+      saveBtn.classList.remove('active');
+    }
   }
   // ---------------------END DIALOG---------------------//
 
@@ -97,18 +155,28 @@ export default class HomeView extends CommonView {
   async submitWalletForm(saveWallet) {
     this.walletDialog.close();
     this.toggleLoaderSpinner();
+
     try {
+      const { walletForm } = document.forms;
+      const form = new FormData(walletForm);
+      const walletName = form.get('walletName');
+      const amount = form.get('amount');
+
       const wallet = new Wallet({
-        walletName: this.walletName,
-        amount: +this.amount,
+        walletName,
+        amount: +amount,
         idUser: this.user.id,
       });
 
       await saveWallet(wallet);
 
-      this.showSuccessToast('Add wallet success', 'Click ok to continue!');
-      this.loadEvent();
-      this.loadData();
+      this.showSuccessToast(
+        MESSAGE.ADD_WALLET_SUCCESS,
+        MESSAGE.DEFAULT_MESSAGE,
+      );
+
+      this.loadEvent(); // Load event page
+      this.loadData(); // Load data from database into page
     } catch (error) {
       // Show toast error
       this.initErrorToast(error);
@@ -125,14 +193,14 @@ export default class HomeView extends CommonView {
   }
 
   validateWalletForm(bodyDialog) {
-    this.walletName = bodyDialog.querySelector('.form__input-text').value;
-    this.amount = bodyDialog.querySelector('.form__input-balance').value;
-    const saveBtns = bodyDialog.querySelector('.form__save-btn');
+    const walletName = bodyDialog.querySelector('.form__input-text').value;
+    const amount = bodyDialog.querySelector('.form__input-balance').value;
+    const saveBtn = bodyDialog.querySelector('.form__save-btn');
 
-    if (this.walletName.length >= 3 && this.amount.length >= 1) {
-      saveBtns.classList.add('active');
+    if (walletName.length >= 3 && amount >= 1) {
+      saveBtn.classList.add('active');
     } else {
-      saveBtns.classList.remove('active');
+      saveBtn.classList.remove('active');
     }
   }
 
@@ -158,7 +226,7 @@ export default class HomeView extends CommonView {
     this.initToastContent(TYPE_TOAST.error, title, content, BTN_CONTENT.GOT_IT);
 
     // Show toast
-    this.dialogToast.showModal();
+    this.toastDialog.showModal();
   }
 
   // ------------------------------- HANDLER EVENT ------------------------------- //
@@ -219,6 +287,14 @@ export default class HomeView extends CommonView {
       btn.addEventListener('click', () => {
         this.closeAllDialog();
       });
+    });
+
+    // Prevent input =,-,e into amount input
+    this.amountInputs.forEach((item) => {
+      item.addEventListener(
+        'keypress',
+        (e) => ['+', '-', 'e'].includes(e.key) && e.preventDefault(),
+      );
     });
   }
 

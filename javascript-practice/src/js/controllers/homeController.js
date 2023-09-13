@@ -20,6 +20,10 @@ export default class HomeController {
     return this.service.walletService.saveWallet(wallet);
   }
 
+  handlerSaveTransaction(transaction) {
+    return this.service.transactionService.saveTransaction(transaction);
+  }
+
   init() {
     if (this.homeView) {
       this.homeView.addHandlerInputChangeWalletForm();
@@ -34,7 +38,12 @@ export default class HomeController {
         this.handlerGetWalletUser.bind(this),
       );
 
-      this.homeView.addHandlerSubmitBudgetForm();
+      this.homeView.addHandlerSubmitBudgetForm(
+        this.handlerSaveTransaction.bind(this),
+        this.handlerSaveWallet.bind(this),
+      );
+
+      this.homeView.addHandlerInputChangeBudgetForm();
     }
   }
 }
