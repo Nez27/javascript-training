@@ -1,4 +1,7 @@
+import { TYPE_TOAST, BTN_CONTENT } from '../constants/variable';
+import * as MESSAGE from '../constants/message';
 import CommonView from './commonView';
+import Wallet from '../models/wallet';
 
 export default class HomeView extends CommonView {
   constructor() {
@@ -8,6 +11,7 @@ export default class HomeView extends CommonView {
     this.allContent = document.querySelectorAll('.app__content-item');
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
+    this.saveBtns = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
@@ -15,6 +19,109 @@ export default class HomeView extends CommonView {
     this.budgetDialog = document.getElementById('budgetDialog');
     this.transactionDialog = document.getElementById('transactionDialog');
     this.categoryDialog = document.getElementById('categoryDialog');
+    this.walletDialog = document.getElementById('walletDialog');
+  }
+
+  async loadPage(getInfoUserLogin, isValidWallet) {
+    this.toggleLoaderSpinner();
+    const user = await getInfoUserLogin();
+
+    if (!user) {
+      window.location.replace('/login');
+    } else {
+      this.user = user;
+      const wallet = await isValidWallet(user.id);
+
+      // Check user's wallet if have or not
+      if (!wallet) {
+        // Show add wallet dialog
+        this.walletDialog.showModal();
+      } else {
+        this.loadEvent();
+      }
+    }
+
+    this.toggleLoaderSpinner();
+  }
+
+  addHandlerSubmitWalletForm(saveWallet) {
+    this.walletDialog.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      this.submitWalletForm(saveWallet);
+    });
+  }
+
+  async submitWalletForm(saveWallet) {
+    this.walletDialog.close();
+    this.toggleLoaderSpinner();
+    try {
+      const wallet = new Wallet({
+        walletName: this.walletName,
+        amount: this.amount,
+        idUser: this.user.id,
+      });
+
+      await saveWallet(wallet);
+
+      this.showSuccessToast('Add wallet success', 'Click ok to continue!');
+      this.loadEvent();
+    } catch (error) {
+      // Show toast error
+      this.initErrorToast(error);
+    }
+
+    this.toggleLoaderSpinner();
+  }
+
+  addHandlerInputChangeWalletForm() {
+    this.walletDialog.addEventListener('input', (e) => {
+      const bodyDialog = e.target.closest('.dialog__body');
+      this.validateWalletForm(bodyDialog);
+    });
+  }
+
+  validateWalletForm(bodyDialog) {
+    this.walletName = bodyDialog.querySelector('.form__input-text').value;
+    this.amount = bodyDialog.querySelector('.form__input-balance').value;
+    const saveBtns = bodyDialog.querySelector('.form__save-btn');
+
+    if (this.walletName.length >= 3 && this.amount.length >= 1) {
+      saveBtns.classList.add('active');
+    } else {
+      saveBtns.classList.remove('active');
+    }
+  }
+
+  showSuccessToast(title, message) {
+    const typeToast = TYPE_TOAST.success;
+    const btnContent = BTN_CONTENT.OK;
+
+    this.initToastContent(typeToast, title, message, btnContent);
+
+    this.toastDialog.showModal();
+  }
+
+  /**
+   * Implement error toast in site
+   * @param {string} content The content will show in error toast
+   */
+  initErrorToast(error) {
+    const title = error.title ? error.title : MESSAGE.DEFAULT_TITLE_ERROR_TOAST;
+    const content = error.message ? error.message : error;
+
+    this.initToastContent(TYPE_TOAST.error, title, content, BTN_CONTENT.GOT_IT);
+
+    // Show toast
+    this.dialogToast.showModal();
+  }
+
+  /* ------------------------------- HANDLER EVENT ------------------------------- */
+
+  loadEvent() {
+    this.addCommonEventPage();
+    this.handlerTabsTransfer();
+    this.addEventSelectCategoryDialog();
   }
 
   /**
@@ -77,14 +184,6 @@ export default class HomeView extends CommonView {
   removeActiveTab() {
     this.tabs.forEach((tab) => {
       tab.classList.remove('active');
-    });
-  }
-
-  toggleDialog() {
-    this.dialog.forEach((item) => {
-      if (item.classList.contains('active')) {
-        item.classList.remove('active');
-      }
     });
   }
 }

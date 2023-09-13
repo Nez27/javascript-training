@@ -23,7 +23,7 @@ export default class UserService extends CommonService {
    * @param {string} email Email to find user
    * @returns {boolean} Return true if find, otherwise return false
    */
-  async checkUserExist(email) {
+  async isValidUser(email) {
     const userExist = await this.getUserByEmail(email);
 
     if (userExist) {
@@ -86,5 +86,41 @@ export default class UserService extends CommonService {
       LOCAL_STORAGE.ACCESS_TOKEN,
       newUserData.accessToken,
     );
+
+    LocalStorageService.add(LOCAL_STORAGE.IS_FIRST_LOGIN, true);
+  }
+
+  async getInfoUserLogin() {
+    // Find access token
+    const accessToken = LocalStorageService.get(LOCAL_STORAGE.ACCESS_TOKEN);
+
+    if (accessToken) {
+      const user = await this.getUserByToken(accessToken);
+
+      if (LocalStorageService.get(LOCAL_STORAGE.IS_FIRST_LOGIN)) {
+        user.isFirstLogin = true;
+
+        LocalStorageService.remove(LOCAL_STORAGE.IS_FIRST_LOGIN);
+      }
+
+      return user;
+    }
+
+    return null;
+  }
+
+  /**
+   * Get user data from token access
+   * @param {string} accessToken Access token user
+   * @returns {Object || null} Return new User Object if find, otherwise return null.
+   */
+  async getUserByToken(accessToken) {
+    const result = await this.getDataFromProp('accessToken', accessToken);
+
+    if (result) {
+      return result;
+    }
+
+    return null;
   }
 }

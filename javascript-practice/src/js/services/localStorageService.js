@@ -8,7 +8,7 @@ class LocalStorageService {
   }
 
   get(key) {
-    this.localStorage.getItem(key);
+    return this.localStorage.getItem(key);
   }
 
   remove(key) {
