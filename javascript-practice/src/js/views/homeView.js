@@ -13,6 +13,7 @@ export default class HomeView extends CommonView {
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.addBudgetBtn = document.getElementById('addBudget');
     this.cancelBtns = document.querySelectorAll('.form__cancel-btn');
+    this.saveBtns = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
     this.categoryField = document.getElementById('selectCategory');
     this.closeIcon = document.querySelector('.close-icon');
@@ -23,7 +24,7 @@ export default class HomeView extends CommonView {
     this.walletDialog = document.getElementById('walletDialog');
   }
 
-  async loadPage(getInfoUserLogin, checkWalletExist, getWalletByIdUser) {
+  async loadPage(getInfoUserLogin, isValidWallet, getWalletByIdUser) {
     this.getWalletByIdUser = getWalletByIdUser; // Init function
     this.toggleLoaderSpinner();
     const user = await getInfoUserLogin();
@@ -32,10 +33,10 @@ export default class HomeView extends CommonView {
       window.location.replace('/login');
     } else {
       this.user = user;
-      const walletExist = await checkWalletExist(user.id);
+      const wallet = await isValidWallet(user.id);
 
       // Check user's wallet if have or not
-      if (!walletExist) {
+      if (!wallet) {
         // Show add wallet dialog
         this.walletDialog.showModal();
       } else {
@@ -126,12 +127,12 @@ export default class HomeView extends CommonView {
   validateWalletForm(bodyDialog) {
     this.walletName = bodyDialog.querySelector('.form__input-text').value;
     this.amount = bodyDialog.querySelector('.form__input-balance').value;
-    const saveBtn = bodyDialog.querySelector('.form__save-btn');
+    const saveBtns = bodyDialog.querySelector('.form__save-btn');
 
     if (this.walletName.length >= 3 && this.amount.length >= 1) {
-      saveBtn.classList.add('active');
+      saveBtns.classList.add('active');
     } else {
-      saveBtn.classList.remove('active');
+      saveBtns.classList.remove('active');
     }
   }
 

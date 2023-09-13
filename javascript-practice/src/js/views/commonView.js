@@ -56,13 +56,13 @@ export default class CommonView {
    */
   initToastContent(typeToast, title, content, btnContent) {
     // Remove old typeToast class if haved
-    Object.keys(TYPE_TOAST).forEach((value) => {
-      CommonView.removeClassElement(value, this.toast);
+    Object.keys(TYPE_TOAST).forEach((key) => {
+      CommonView.removeClassElement(TYPE_TOAST[key], this.toast);
     });
 
     // Remove old icon toast if haved
-    Object.keys(MARK_ICON).forEach((value) => {
-      CommonView.removeClassElement(value, this.toastIcon);
+    Object.keys(MARK_ICON).forEach((key) => {
+      CommonView.removeClassElement(MARK_ICON[key], this.toastIcon);
     });
 
     // Init content toast

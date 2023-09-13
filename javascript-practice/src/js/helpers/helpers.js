@@ -7,7 +7,7 @@ import FirebaseService from '../services/firebaseService';
  * @param {string} password Password input
  * @returns {boolean} Return true if validate password success, otherwise return false
  */
-export const validatePassword = (password) => {
+export const isValidatePassword = (password) => {
   return REGEX.PASSWORD.test(password);
 };
 

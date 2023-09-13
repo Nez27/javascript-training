@@ -4,8 +4,8 @@ export default class RegisterController {
     this.service = service;
   }
 
-  handlerCheckUserExist(email) {
-    return this.service.userService.checkUserExist(email);
+  handlerCheckUserValid(email) {
+    return this.service.userService.isValidUser(email);
   }
 
   handlerSaveUser(user) {
@@ -15,7 +15,7 @@ export default class RegisterController {
   init() {
     if (this.registerView) {
       this.registerView.addHandlerForm(
-        this.handlerCheckUserExist.bind(this),
+        this.handlerCheckUserValid.bind(this),
         this.handlerSaveUser.bind(this),
       );
       this.registerView.addHandlerInputFormChange();

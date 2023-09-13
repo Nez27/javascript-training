@@ -22,7 +22,7 @@ class FirebaseService {
    * Save data in database
    * @param {Object} data The object need to save into database
    * @param {string} path The path of database need to be save
-   * @returns {Promise} Return the relsoves when write to database completed
+   * @returns {Promise} Return the resolves when write to database completed
    */
   save(data, path) {
     return set(ref(this.db, path), data);
