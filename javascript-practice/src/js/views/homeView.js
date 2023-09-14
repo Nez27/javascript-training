@@ -298,11 +298,11 @@ export default class HomeView extends CommonView {
   // ---------------------END DIALOG---------------------//
 
   // ---------------------WALLET DIALOG--------------------- //
-  addHandlerEventWalletForm(saveWallet) {
+  addHandlerEventWalletForm(saveWallet, getAllCategory) {
     this.walletDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      this.submitWalletForm(saveWallet);
+      this.submitWalletForm(saveWallet, getAllCategory);
     });
 
     this.walletDialog.addEventListener('input', (e) => {
@@ -311,7 +311,7 @@ export default class HomeView extends CommonView {
     });
   }
 
-  async submitWalletForm(saveWallet) {
+  async submitWalletForm(saveWallet, getAllCategory) {
     this.walletDialog.close();
     this.toggleLoaderSpinner();
 
@@ -335,7 +335,7 @@ export default class HomeView extends CommonView {
       );
 
       this.loadEvent(); // Load event page
-      this.loadData(); // Load data from database into page
+      this.loadData(getAllCategory); // Load data from database into page
     } catch (error) {
       // Show toast error
       this.showErrorToast(error);
