@@ -27,7 +27,12 @@ export default class HomeView extends CommonView {
     this.walletDialog = document.getElementById('walletDialog');
   }
 
-  async loadPage(getInfoUserLogin, isValidWallet, getWalletByIdUser) {
+  async loadPage(
+    getInfoUserLogin,
+    isValidWallet,
+    getWalletByIdUser,
+    getAllCategory,
+  ) {
     this.getWalletByIdUser = getWalletByIdUser; // Init function
     this.toggleLoaderSpinner();
     const user = await getInfoUserLogin();
@@ -47,15 +52,89 @@ export default class HomeView extends CommonView {
         this.loadEvent();
 
         // Init data
-        this.loadData();
+        this.loadData(getAllCategory);
       }
     }
 
     this.toggleLoaderSpinner();
   }
 
-  async loadData() {
-    const wallet = await this.getWalletByIdUser(this.user.id); // Get data wallet
+  async loadData(getAllCategory) {
+    await this.loadWalletUser();
+    await this.loadCategory(getAllCategory);
+  }
+
+  // ---------------------SELECTED CATEGORY DIALOG---------------------//
+  /**
+   * Load category data
+   * @param {function} getAllCategory Get all category function
+   */
+  async loadCategory(getAllCategory) {
+    this.listCategory = await getAllCategory();
+
+    if (this.listCategory) {
+      this.renderCategoryItem(this.listCategory);
+    }
+  }
+
+  handlerInputChangeCategoryDialog() {
+    this.categoryDialog.addEventListener('input', () => {
+      setTimeout(() => {
+        this.searchCategory();
+      }, 300);
+    });
+  }
+
+  searchCategory() {
+    const searchCategoryEl =
+      this.categoryDialog.querySelector("[name='category']");
+    const searchValue = searchCategoryEl.value.trim().toLowerCase();
+    let newListCategory = [];
+
+    if (searchValue) {
+      this.listCategory.forEach((category) => {
+        const categoryName = category.name.trim().toLowerCase();
+
+        if (categoryName.includes(searchValue)) {
+          newListCategory.unshift(category);
+        }
+      });
+    } else {
+      newListCategory = this.listCategory;
+    }
+
+    // Render category item
+    this.renderCategoryItem(newListCategory);
+  }
+
+  renderCategoryItem(listCategory) {
+    const listCategoryEl = document.querySelector('.list-category');
+
+    listCategoryEl.innerHTML = ''; // Remove old category item
+
+    listCategory.forEach((category) => {
+      const markup = `
+        <div class="category-item" value="${category.name}">
+          <img
+            class="icon-category"
+            src="${category.url}"
+            alt="${category.name} Icon"
+          />
+          <p class="name-category">${category.name}</p>
+        </div>
+      `;
+
+      listCategoryEl.insertAdjacentHTML('afterbegin', markup);
+    });
+  }
+
+  // ---------------------END DIALOG---------------------//
+
+  /**
+   * Load wallet user
+   */
+  async loadWalletUser() {
+    const wallet = await this.getWalletByIdUser(this.user.id);
     const walletName = document.querySelector('.wallet__name');
     const walletPrice = document.querySelector('.wallet__price');
     const sign = wallet.amount >= 0 ? '+' : '-';

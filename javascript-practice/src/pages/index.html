@@ -194,81 +194,7 @@
           </form>
         </div>
         <div class="dialog__body">
-          <div class="list-category">
-            <!-- Category item -->
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-          </div>
+          <div class="list-category"></div>
         </div>
       </div>
     </dialog>
@@ -412,5 +338,13 @@
       <!-- End app -->
     </div>
     <script type="module" src="../js/main.js"></script>
+    <script>
+      document
+        .querySelector('.list-category')
+        .addEventListener('click', (e) => {
+          const value = e.target.getAttribute('value');
+          alert(value);
+        });
+    </script>
   </body>
 </html>
