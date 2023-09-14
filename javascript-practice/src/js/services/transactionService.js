@@ -14,4 +14,18 @@ export default class TransactionService extends CommonService {
   async saveTransaction(transaction) {
     await this.save(transaction);
   }
+
+  async getListTransactionByIdUser(idUser) {
+    const results = this.getListDataFromProp(
+      'idUser',
+      idUser,
+      this.defaultPath,
+    );
+
+    if (results) {
+      return results;
+    }
+
+    return null;
+  }
 }

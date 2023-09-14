@@ -32,7 +32,6 @@ export default class HomeController {
     if (this.homeView) {
       this.homeView.addHandlerEventWalletForm(
         this.handlerSaveWallet.bind(this),
-        this.handlerGetAllCategory.bind(this),
       );
 
       this.homeView.loadPage(
@@ -51,6 +50,7 @@ export default class HomeController {
 
       this.homeView.handlerEventTransactionDialog(
         this.handlerSaveTransaction.bind(this),
+        this.handlerSaveWallet.bind(this),
       );
     }
   }

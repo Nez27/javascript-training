@@ -36,7 +36,10 @@ export default class HomeView extends CommonView {
     getWalletByIdUser,
     getAllCategory,
   ) {
-    this.getWalletByIdUser = getWalletByIdUser; // Init function
+    // Init function
+    this.getWalletByIdUser = getWalletByIdUser;
+    this.getAllCategory = getAllCategory;
+
     this.toggleLoaderSpinner();
     const user = await getInfoUserLogin();
 
@@ -55,18 +58,20 @@ export default class HomeView extends CommonView {
         this.loadEvent();
 
         // Init data
-        this.loadData(getAllCategory);
+        this.loadData();
       }
     }
 
     this.toggleLoaderSpinner();
   }
 
-  async loadData(getAllCategory) {
+  async loadData() {
     await this.loadWalletUser();
-    await this.loadCategory(getAllCategory);
+    await this.loadCategory(this.getAllCategory);
+    this.loadSummaryTab();
   }
 
+  // ---------------------LOAD DATA---------------------//
   /**
    * Load wallet user
    */
@@ -86,16 +91,52 @@ export default class HomeView extends CommonView {
   }
 
   async updateAmountWallet(amount, saveWallet) {
-    this.wallet.amount += +amount;
+    this.wallet.amount += amount;
+
+    if (amount > 0) {
+      this.wallet.inflow += amount;
+    } else {
+      this.wallet.outflow -= amount;
+    }
 
     await saveWallet(this.wallet);
   }
 
-  // ---------------------TRANSACTIONS DIALOG---------------------//
-  handlerEventTransactionDialog(saveTransaction) {
+  /**
+   * Load category data
+   * @param {function} getAllCategory Get all category function
+   */
+  async loadCategory(getAllCategory) {
+    this.listCategory = await getAllCategory();
+
+    if (this.listCategory) {
+      this.renderCategoryItem();
+    }
+  }
+
+  loadSummaryTab() {
+    const inflowValue = document.querySelector('.inflow__text--income');
+    const outflowValue = document.querySelector('.outflow__text--outcome');
+    const totalValue = document.querySelector('.summary__total');
+
+    const { inflow } = this.wallet;
+    const { outflow } = this.wallet;
+    const total = inflow - outflow;
+
+    inflowValue.textContent = `+$ ${formatNumber(inflow)}`;
+    outflowValue.textContent = `-$ ${formatNumber(outflow)}`;
+    totalValue.textContent = `${total >= 0 ? '+' : '-'}$ ${formatNumber(
+      Math.abs(total),
+    )}`;
+  }
+
+  // ---------------------END---------------------//
+
+  // ---------------------TRANSACTION DIALOG---------------------//
+  handlerEventTransactionDialog(saveTransaction, saveWallet) {
     this.transactionDialog.addEventListener('submit', (e) => {
       e.preventDefault();
-      this.submitTransactionDialog(saveTransaction);
+      this.submitTransactionDialog(saveTransaction, saveWallet);
     });
 
     this.transactionDialog.addEventListener('input', () => {
@@ -116,26 +157,30 @@ export default class HomeView extends CommonView {
     });
   }
 
-  async submitTransactionDialog(saveTransaction) {
+  async submitTransactionDialog(saveTransaction, saveWallet) {
     this.toggleLoaderSpinner();
     this.transactionDialog.close();
 
     try {
       const transactionForm = document.getElementById('formAddTransaction');
-      const dateEl = transactionForm.querySelector("[name='selected_date']");
-      const categoryNameEl = transactionForm.querySelector(
+      const date = transactionForm.querySelector("[name='selected_date']");
+      const categoryName = transactionForm.querySelector(
         "[name='category_name']",
       );
-      const amountEl = transactionForm.querySelector("[name='amount']");
-      const noteEl = transactionForm.querySelector("[name='note']");
+      const amount = transactionForm.querySelector("[name='amount']");
+      const note = transactionForm.querySelector("[name='note']");
       const transaction = new Transaction({
-        categoryName: categoryNameEl.value,
-        date: dateEl.value,
-        amount: +amountEl.value,
-        note: noteEl.value,
+        categoryName: categoryName.value,
+        date: date.value,
+        amount: -+amount.value,
+        note: note.value,
+        idUser: this.wallet.idUser,
       });
 
       await saveTransaction(transaction);
+
+      // Update wallet info
+      this.updateAmountWallet(-+amount.value, saveWallet);
 
       this.showSuccessToast(
         MESSAGE.ADD_TRANSACTION_SUCCESS,
@@ -143,6 +188,9 @@ export default class HomeView extends CommonView {
       );
 
       this.clearInputTransactionForm(transactionForm);
+
+      // Reload data
+      this.loadData();
     } catch (error) {
       this.showErrorToast(error);
     }
@@ -164,18 +212,6 @@ export default class HomeView extends CommonView {
   // ---------------------END DIALOG---------------------//
 
   // ---------------------SELECTED CATEGORY DIALOG---------------------//
-  /**
-   * Load category data
-   * @param {function} getAllCategory Get all category function
-   */
-  async loadCategory(getAllCategory) {
-    this.listCategory = await getAllCategory();
-
-    if (this.listCategory) {
-      this.renderCategoryItem();
-    }
-  }
-
   handlerEventCategoryDialog() {
     this.categoryDialog.addEventListener('input', () => {
       setTimeout(() => {
@@ -261,13 +297,14 @@ export default class HomeView extends CommonView {
         date: changeDateFormat(date),
         amount: +amount,
         note,
+        idUser: this.wallet.idUser,
       });
 
       await saveTransaction(transaction);
 
       await this.updateAmountWallet(+amount, saveWallet); // Update wallet
 
-      this.loadWalletUser();
+      this.loadData();
 
       // Hide loader spinner
       this.toggleLoaderSpinner();
@@ -298,11 +335,11 @@ export default class HomeView extends CommonView {
   // ---------------------END DIALOG---------------------//
 
   // ---------------------WALLET DIALOG--------------------- //
-  addHandlerEventWalletForm(saveWallet, getAllCategory) {
+  addHandlerEventWalletForm(saveWallet) {
     this.walletDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      this.submitWalletForm(saveWallet, getAllCategory);
+      this.submitWalletForm(saveWallet);
     });
 
     this.walletDialog.addEventListener('input', (e) => {
@@ -311,7 +348,7 @@ export default class HomeView extends CommonView {
     });
   }
 
-  async submitWalletForm(saveWallet, getAllCategory) {
+  async submitWalletForm(saveWallet) {
     this.walletDialog.close();
     this.toggleLoaderSpinner();
 
@@ -325,6 +362,7 @@ export default class HomeView extends CommonView {
         walletName,
         amount: +amount,
         idUser: this.user.id,
+        inflow: +amount,
       });
 
       await saveWallet(wallet);
@@ -335,7 +373,7 @@ export default class HomeView extends CommonView {
       );
 
       this.loadEvent(); // Load event page
-      this.loadData(getAllCategory); // Load data from database into page
+      this.loadData(); // Load data from database into page
     } catch (error) {
       // Show toast error
       this.showErrorToast(error);
