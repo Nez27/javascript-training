@@ -30,9 +30,7 @@ export default class HomeController {
 
   init() {
     if (this.homeView) {
-      this.homeView.addHandlerInputChangeWalletForm();
-
-      this.homeView.addHandlerSubmitWalletForm(
+      this.homeView.addHandlerEventWalletForm(
         this.handlerSaveWallet.bind(this),
       );
 
@@ -43,16 +41,14 @@ export default class HomeController {
         this.handlerGetAllCategory.bind(this),
       );
 
-      this.homeView.addHandlerSubmitBudgetForm(
+      this.homeView.addHandlerEventBudgetForm(
         this.handlerSaveTransaction.bind(this),
         this.handlerSaveWallet.bind(this),
       );
 
-      this.homeView.addHandlerInputChangeBudgetForm();
+      this.homeView.handlerEventCategoryDialog();
 
-      this.homeView.handlerInputChangeCategoryDialog();
-
-      this.homeView.handlerTransactionDialog(
+      this.homeView.handlerEventTransactionDialog(
         this.handlerSaveTransaction.bind(this),
       );
     }

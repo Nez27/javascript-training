@@ -13,13 +13,15 @@ export default class HomeView extends CommonView {
 
     this.tabs = document.querySelectorAll('.app__tab-item');
     this.allContent = document.querySelectorAll('.app__content-item');
-    this.addTransactionBtn = document.getElementById('addTransaction');
-    this.addBudgetBtn = document.getElementById('addBudget');
     this.cancelBtns = document.querySelectorAll('.form__cancel-btn');
     this.saveBtns = document.querySelectorAll('.form__save-btn');
     this.dialogs = document.querySelectorAll('.dialog');
-    this.categoryField = document.getElementById('selectCategory');
+
     this.closeIcon = document.querySelector('.close-icon');
+
+    this.categoryField = document.getElementById('selectCategory');
+    this.addBudgetBtn = document.getElementById('addBudget');
+    this.addTransactionBtn = document.getElementById('addTransaction');
     this.amountInputs = document.querySelectorAll('.form__input-balance');
 
     this.budgetDialog = document.getElementById('budgetDialog');
@@ -90,10 +92,27 @@ export default class HomeView extends CommonView {
   }
 
   // ---------------------TRANSACTIONS DIALOG---------------------//
-  handlerTransactionDialog(saveTransaction) {
+  handlerEventTransactionDialog(saveTransaction) {
     this.transactionDialog.addEventListener('submit', (e) => {
       e.preventDefault();
       this.submitTransactionDialog(saveTransaction);
+    });
+
+    this.transactionDialog.addEventListener('input', () => {
+      const dateInput = this.transactionDialog.querySelector(
+        "[name='selected_date']",
+      ).value;
+      const categoryName = this.transactionDialog.querySelector(
+        "[name='category_name']",
+      ).value;
+      const amountInput =
+        this.transactionDialog.querySelector("[name='amount']").value;
+      const saveBtn = this.transactionDialog.querySelector('.form__save-btn');
+
+      saveBtn.classList.toggle(
+        'active',
+        dateInput && categoryName && amountInput >= 1,
+      );
     });
   }
 
@@ -136,6 +155,10 @@ export default class HomeView extends CommonView {
 
     categoryIcon.src = defaultCategoryIcon;
 
+    this.keySearchCategory = null; // Delete keyword search
+
+    this.renderCategoryItem(this.keySearchCategory);
+
     transactionForm.reset();
   }
   // ---------------------END DIALOG---------------------//
@@ -153,7 +176,7 @@ export default class HomeView extends CommonView {
     }
   }
 
-  handlerInputChangeCategoryDialog() {
+  handlerEventCategoryDialog() {
     this.categoryDialog.addEventListener('input', () => {
       setTimeout(() => {
         this.searchCategory();
@@ -180,7 +203,7 @@ export default class HomeView extends CommonView {
     }
 
     // Render category item
-    this.renderCategoryItem(newListCategory);
+    this.renderCategoryItem(this.keySearchCategory, newListCategory);
   }
 
   renderCategoryItem(categorySelected, listCategory = this.listCategory) {
@@ -209,11 +232,16 @@ export default class HomeView extends CommonView {
   // ---------------------END DIALOG---------------------//
 
   // ---------------------ADD BUDGET DIALOG---------------------//
-  addHandlerSubmitBudgetForm(saveTransaction, saveWallet) {
+  addHandlerEventBudgetForm(saveTransaction, saveWallet) {
     this.budgetDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
       this.submitBudgetForm(saveTransaction, saveWallet);
+    });
+
+    this.budgetDialog.addEventListener('input', (e) => {
+      const bodyDialog = e.target.closest('.dialog__body');
+      this.validateBudgetForm(bodyDialog);
     });
   }
 
@@ -239,7 +267,7 @@ export default class HomeView extends CommonView {
 
       await this.updateAmountWallet(+amount, saveWallet); // Update wallet
 
-      this.loadData();
+      this.loadWalletUser();
 
       // Hide loader spinner
       this.toggleLoaderSpinner();
@@ -256,13 +284,6 @@ export default class HomeView extends CommonView {
     }
   }
 
-  addHandlerInputChangeBudgetForm() {
-    this.budgetDialog.addEventListener('input', (e) => {
-      const bodyDialog = e.target.closest('.dialog__body');
-      this.validateBudgetForm(bodyDialog);
-    });
-  }
-
   validateBudgetForm(bodyDialog) {
     const date = bodyDialog.querySelector('.input-date').value;
     const amount = +bodyDialog.querySelector('.form__input-balance').value;
@@ -277,11 +298,16 @@ export default class HomeView extends CommonView {
   // ---------------------END DIALOG---------------------//
 
   // ---------------------WALLET DIALOG--------------------- //
-  addHandlerSubmitWalletForm(saveWallet) {
+  addHandlerEventWalletForm(saveWallet) {
     this.walletDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
       this.submitWalletForm(saveWallet);
+    });
+
+    this.walletDialog.addEventListener('input', (e) => {
+      const bodyDialog = e.target.closest('.dialog__body');
+      this.validateWalletForm(bodyDialog);
     });
   }
 
@@ -316,13 +342,6 @@ export default class HomeView extends CommonView {
     }
 
     this.toggleLoaderSpinner();
-  }
-
-  addHandlerInputChangeWalletForm() {
-    this.walletDialog.addEventListener('input', (e) => {
-      const bodyDialog = e.target.closest('.dialog__body');
-      this.validateWalletForm(bodyDialog);
-    });
   }
 
   validateWalletForm(bodyDialog) {
@@ -368,7 +387,6 @@ export default class HomeView extends CommonView {
     this.addCommonEventPage();
     this.handlerTabsTransfer();
     this.addEventSelectCategoryDialog();
-    this.handlerClickItemCategory();
   }
 
   /**
@@ -443,15 +461,15 @@ export default class HomeView extends CommonView {
 
     deleteBtn.classList.toggle('hide', !editMode);
 
-    console.log(editMode);
-
     this.transactionDialog.showModal();
   }
 
-  handlerClickItemCategory() {
-    const categoryList = document.querySelector('.list-category');
+  addEventSelectCategoryDialog() {
+    const categoryListEl = document.querySelector('.list-category');
+    const categoryIconEl = this.categoryField.querySelector('.category-icon');
+    const categoryNameEl = this.categoryField.querySelector('.category-name');
 
-    categoryList.addEventListener('click', (e) => {
+    categoryListEl.addEventListener('click', (e) => {
       const categoryItem = e.target.closest('.category-item');
 
       if (categoryItem) {
@@ -459,26 +477,22 @@ export default class HomeView extends CommonView {
         const { value } = categoryItem.dataset;
 
         // Set url and value into category field in transaction dialog
-        const categoryIcon = this.categoryField.querySelector('.category-icon');
-        const categoryName = this.categoryField.querySelector('.category-name');
-
-        categoryIcon.src = url;
-        categoryName.value = value;
+        categoryIconEl.src = url;
+        categoryNameEl.value = value;
 
         // Close select category dialog
         this.categoryDialog.close();
       }
     });
-  }
 
-  addEventSelectCategoryDialog() {
-    this.categoryField.addEventListener('click', (e) => {
-      const categoryNameEl = e.target.closest('.category-name');
+    // Pass value selected to category dialog
+    categoryNameEl.addEventListener('click', () => {
+      if (categoryNameEl.value) {
+        // Make the keyword search category name into global
+        this.keySearchCategory = categoryNameEl.value;
 
-      if (categoryNameEl) {
-        this.renderCategoryItem(categoryNameEl.value);
+        this.renderCategoryItem(this.keySearchCategory);
       }
-
       this.categoryDialog.showModal();
     });
 
