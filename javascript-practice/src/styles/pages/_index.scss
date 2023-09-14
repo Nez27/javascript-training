@@ -596,13 +596,24 @@
 
     position: relative;
     margin-top: 4px;
-    cursor: pointer;
+
+    & .category-icon {
+      height: 24px;
+      width: 24px;
+    }
   }
 
   .category-name {
     font-size: $fs-lg;
     line-height: 25.5px;
-    color: $dark-gray;
+    color: $black;
+    border: none;
+    caret-color: transparent;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   .icon-category {
@@ -651,6 +662,7 @@
 
 .hide {
   opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes fade {

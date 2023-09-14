@@ -51,6 +51,10 @@ export default class HomeController {
       this.homeView.addHandlerInputChangeBudgetForm();
 
       this.homeView.handlerInputChangeCategoryDialog();
+
+      this.homeView.handlerTransactionDialog(
+        this.handlerSaveTransaction.bind(this),
+      );
     }
   }
 }

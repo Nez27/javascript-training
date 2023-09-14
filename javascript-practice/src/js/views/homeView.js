@@ -5,6 +5,7 @@ import CommonView from './commonView';
 import Wallet from '../models/wallet';
 import Transaction from '../models/transaction';
 import { changeDateFormat, formatNumber } from '../helpers/helpers';
+import defaultCategoryIcon from '../../assets/images/question-icon.svg';
 
 export default class HomeView extends CommonView {
   constructor() {
@@ -64,6 +65,81 @@ export default class HomeView extends CommonView {
     await this.loadCategory(getAllCategory);
   }
 
+  /**
+   * Load wallet user
+   */
+  async loadWalletUser() {
+    const wallet = await this.getWalletByIdUser(this.user.id);
+    const walletName = document.querySelector('.wallet__name');
+    const walletPrice = document.querySelector('.wallet__price');
+    const sign = wallet.amount >= 0 ? '+' : '-';
+    const walletNameValue = wallet.walletName;
+    // Math.abs(wallet.amount) to keep the value always > 0
+    const walletAmountValue = formatNumber(Math.abs(wallet.amount));
+
+    this.wallet = wallet; // Make wallet into global variable
+
+    walletName.textContent = walletNameValue;
+    walletPrice.textContent = `${sign}$ ${walletAmountValue}`;
+  }
+
+  async updateAmountWallet(amount, saveWallet) {
+    this.wallet.amount += +amount;
+
+    await saveWallet(this.wallet);
+  }
+
+  // ---------------------TRANSACTIONS DIALOG---------------------//
+  handlerTransactionDialog(saveTransaction) {
+    this.transactionDialog.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.submitTransactionDialog(saveTransaction);
+    });
+  }
+
+  async submitTransactionDialog(saveTransaction) {
+    this.toggleLoaderSpinner();
+    this.transactionDialog.close();
+
+    try {
+      const transactionForm = document.getElementById('formAddTransaction');
+      const dateEl = transactionForm.querySelector("[name='selected_date']");
+      const categoryNameEl = transactionForm.querySelector(
+        "[name='category_name']",
+      );
+      const amountEl = transactionForm.querySelector("[name='amount']");
+      const noteEl = transactionForm.querySelector("[name='note']");
+      const transaction = new Transaction({
+        categoryName: categoryNameEl.value,
+        date: dateEl.value,
+        amount: +amountEl.value,
+        note: noteEl.value,
+      });
+
+      await saveTransaction(transaction);
+
+      this.showSuccessToast(
+        MESSAGE.ADD_TRANSACTION_SUCCESS,
+        MESSAGE.DEFAULT_MESSAGE,
+      );
+
+      this.clearInputTransactionForm(transactionForm);
+    } catch (error) {
+      this.showErrorToast(error);
+    }
+
+    this.toggleLoaderSpinner();
+  }
+
+  clearInputTransactionForm(transactionForm) {
+    const categoryIcon = transactionForm.querySelector('.category-icon');
+
+    categoryIcon.src = defaultCategoryIcon;
+
+    transactionForm.reset();
+  }
+  // ---------------------END DIALOG---------------------//
+
   // ---------------------SELECTED CATEGORY DIALOG---------------------//
   /**
    * Load category data
@@ -73,7 +149,7 @@ export default class HomeView extends CommonView {
     this.listCategory = await getAllCategory();
 
     if (this.listCategory) {
-      this.renderCategoryItem(this.listCategory);
+      this.renderCategoryItem();
     }
   }
 
@@ -107,14 +183,16 @@ export default class HomeView extends CommonView {
     this.renderCategoryItem(newListCategory);
   }
 
-  renderCategoryItem(listCategory) {
+  renderCategoryItem(categorySelected, listCategory = this.listCategory) {
     const listCategoryEl = document.querySelector('.list-category');
 
     listCategoryEl.innerHTML = ''; // Remove old category item
 
     listCategory.forEach((category) => {
       const markup = `
-        <div class="category-item" value="${category.name}">
+        <div class="category-item ${
+          category.name === categorySelected ? 'selected' : ''
+        }" data-value='${category.name}' data-url='${category.url}'>
           <img
             class="icon-category"
             src="${category.url}"
@@ -129,30 +207,6 @@ export default class HomeView extends CommonView {
   }
 
   // ---------------------END DIALOG---------------------//
-
-  /**
-   * Load wallet user
-   */
-  async loadWalletUser() {
-    const wallet = await this.getWalletByIdUser(this.user.id);
-    const walletName = document.querySelector('.wallet__name');
-    const walletPrice = document.querySelector('.wallet__price');
-    const sign = wallet.amount >= 0 ? '+' : '-';
-    const walletNameValue = wallet.walletName;
-    // Math.abs(wallet.amount) to keep the value always > 0
-    const walletAmountValue = formatNumber(Math.abs(wallet.amount));
-
-    this.wallet = wallet; // Make wallet into global variable
-
-    walletName.textContent = walletNameValue;
-    walletPrice.textContent = `${sign}$ ${walletAmountValue}`;
-  }
-
-  async updateAmountWallet(amount, saveWallet) {
-    this.wallet.amount += +amount;
-
-    await saveWallet(this.wallet);
-  }
 
   // ---------------------ADD BUDGET DIALOG---------------------//
   addHandlerSubmitBudgetForm(saveTransaction, saveWallet) {
@@ -198,7 +252,7 @@ export default class HomeView extends CommonView {
 
       document.getElementById('formAddBudget').reset();
     } catch (error) {
-      this.initErrorToast(error);
+      this.showErrorToast(error);
     }
   }
 
@@ -258,7 +312,7 @@ export default class HomeView extends CommonView {
       this.loadData(); // Load data from database into page
     } catch (error) {
       // Show toast error
-      this.initErrorToast(error);
+      this.showErrorToast(error);
     }
 
     this.toggleLoaderSpinner();
@@ -298,7 +352,7 @@ export default class HomeView extends CommonView {
    * Implement error toast in site
    * @param {string} content The content will show in error toast
    */
-  initErrorToast(error) {
+  showErrorToast(error) {
     const title = error.title ? error.title : MESSAGE.DEFAULT_TITLE_ERROR_TOAST;
     const content = error.message ? error.message : error;
 
@@ -314,6 +368,7 @@ export default class HomeView extends CommonView {
     this.addCommonEventPage();
     this.handlerTabsTransfer();
     this.addEventSelectCategoryDialog();
+    this.handlerClickItemCategory();
   }
 
   /**
@@ -355,7 +410,7 @@ export default class HomeView extends CommonView {
     });
 
     this.addTransactionBtn.addEventListener('click', () => {
-      this.transactionDialog.showModal();
+      this.showTransactionDialog();
     });
 
     this.addBudgetBtn.addEventListener('click', () => {
@@ -375,10 +430,55 @@ export default class HomeView extends CommonView {
         (e) => ['+', '-', 'e'].includes(e.key) && e.preventDefault(),
       );
     });
+
+    // Prevent user input at category search
+    const categorySearchEl = document.querySelector('.category-name');
+    categorySearchEl.addEventListener('keydown', (e) => {
+      e.preventDefault();
+    });
+  }
+
+  showTransactionDialog(editMode = false) {
+    const deleteBtn = this.transactionDialog.querySelector('.form__delete-btn');
+
+    deleteBtn.classList.toggle('hide', !editMode);
+
+    console.log(editMode);
+
+    this.transactionDialog.showModal();
+  }
+
+  handlerClickItemCategory() {
+    const categoryList = document.querySelector('.list-category');
+
+    categoryList.addEventListener('click', (e) => {
+      const categoryItem = e.target.closest('.category-item');
+
+      if (categoryItem) {
+        const { url } = categoryItem.dataset;
+        const { value } = categoryItem.dataset;
+
+        // Set url and value into category field in transaction dialog
+        const categoryIcon = this.categoryField.querySelector('.category-icon');
+        const categoryName = this.categoryField.querySelector('.category-name');
+
+        categoryIcon.src = url;
+        categoryName.value = value;
+
+        // Close select category dialog
+        this.categoryDialog.close();
+      }
+    });
   }
 
   addEventSelectCategoryDialog() {
-    this.categoryField.addEventListener('click', () => {
+    this.categoryField.addEventListener('click', (e) => {
+      const categoryNameEl = e.target.closest('.category-name');
+
+      if (categoryNameEl) {
+        this.renderCategoryItem(categoryNameEl.value);
+      }
+
       this.categoryDialog.showModal();
     });
 

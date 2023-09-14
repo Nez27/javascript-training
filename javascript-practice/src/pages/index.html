@@ -126,7 +126,12 @@
               <div class="form__input-field">
                 <p class="form__label">Date</p>
                 <div class="date-input-container">
-                  <input class="input-date" type="date" name="selected_date" />
+                  <input
+                    class="input-date"
+                    type="date"
+                    name="selected_date"
+                    required
+                  />
                   <span class="icon-btn"></span>
                 </div>
               </div>
@@ -134,10 +139,17 @@
                 <p class="form__label">Category</p>
                 <div class="category-input-container">
                   <img
+                    class="category-icon"
                     src="../assets/images/question-icon.svg"
                     alt="Question icon"
                   />
-                  <p class="category-name">Select category</p>
+                  <input
+                    type="text"
+                    name="category_name"
+                    class="category-name"
+                    placeholder="Select Category"
+                    required
+                  />
                   <div class="icon-btn"></div>
                 </div>
               </div>
@@ -146,8 +158,9 @@
                 <input
                   class="form__input-balance"
                   type="number"
-                  name="date"
+                  name="amount"
                   value="0"
+                  required
                 />
               </div>
             </div>
@@ -161,9 +174,7 @@
               />
             </div>
             <div class="form__action">
-              <button formmethod="dialog" class="form__cancel-btn">
-                CANCEL
-              </button>
+              <button type="button" class="form__cancel-btn">CANCEL</button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
@@ -338,13 +349,5 @@
       <!-- End app -->
     </div>
     <script type="module" src="../js/main.js"></script>
-    <script>
-      document
-        .querySelector('.list-category')
-        .addEventListener('click', (e) => {
-          const value = e.target.getAttribute('value');
-          alert(value);
-        });
-    </script>
   </body>
 </html>

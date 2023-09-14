@@ -1,6 +1,12 @@
 export default class Transaction {
-  constructor({ categoryName = '', date = '', note = 'None', amount = 0 }) {
-    this.id = Transaction.createIdTransactions();
+  constructor({
+    id = Transaction.createIdTransactions(),
+    categoryName = '',
+    date = '',
+    note = 'None',
+    amount = 0,
+  }) {
+    this.id = id;
     this.categoryName = categoryName;
     this.date = date;
     this.note = note;
