@@ -30,9 +30,7 @@ class FirebaseService {
   }
 
   delete(id, path) {
-    const dbRef = ref(this.db, `${path}${id}/`);
-
-    return remove(dbRef);
+    return remove(ref(this.db, path + id));
   }
 
   /**

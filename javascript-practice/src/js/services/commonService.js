@@ -104,6 +104,7 @@ export default class CommonService {
   }
 
   async deleteData(id, path = this.defaultPath) {
+    this.connectToDb();
     await timeOutConnect(this.firebaseService.delete(id, path));
   }
 }
