@@ -34,6 +34,10 @@ export default class HomeController {
     return this.service.transactionService.getListTransactionByIdUser(idUser);
   }
 
+  handlerDeleteTransaction(idTransaction) {
+    return this.service.transactionService.deleteTransaction(idTransaction);
+  }
+
   static handlerClearAccessToken() {
     UserService.clearAccessToken();
   }
@@ -49,6 +53,7 @@ export default class HomeController {
         this.handlerSaveWallet.bind(this),
         this.handlerSaveTransaction.bind(this),
         HomeController.handlerClearAccessToken.bind(this),
+        this.handlerDeleteTransaction.bind(this),
       );
       this.homeView.addHandlerEventWalletForm();
 

@@ -28,4 +28,8 @@ export default class TransactionService extends CommonService {
 
     return null;
   }
+
+  async deleteTransaction(idTransaction) {
+    await this.deleteData(idTransaction);
+  }
 }

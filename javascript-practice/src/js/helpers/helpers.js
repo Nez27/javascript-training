@@ -108,7 +108,7 @@ export const createTransactionDetailObject = (category, transactions) => {
     const results = [];
 
     transactions.forEach((transaction) => {
-      const dateParts = transaction.date.split(','); // ['Monday', '14', 'September', '2023']
+      const dateParts = changeDateFormat(transaction.date).split(','); // ['Monday', '14', 'September', '2023']
       const day = dateParts[1];
       const fullDateString = `${dateParts[0]}, ${dateParts[2]} ${dateParts[3]}`;
       const tempData = {

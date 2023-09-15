@@ -5,7 +5,6 @@ import CommonView from './commonView';
 import Wallet from '../models/wallet';
 import Transaction from '../models/transaction';
 import {
-  changeDateFormat,
   createTransactionDetailObject,
   formatNumber,
   getAllCategoryNameInTransactions,
@@ -34,6 +33,8 @@ export default class HomeView extends CommonView {
     this.transactionDialog = document.getElementById('transactionDialog');
     this.categoryDialog = document.getElementById('categoryDialog');
     this.walletDialog = document.getElementById('walletDialog');
+
+    this.transactionForm = document.getElementById('formAddTransaction');
   }
 
   initFunction(
@@ -45,6 +46,7 @@ export default class HomeView extends CommonView {
     saveWallet,
     saveTransaction,
     clearAccessToken,
+    deleteTransaction,
   ) {
     this.getInfoUserLogin = getInfoUserLogin;
     this.isValidWallet = isValidWallet;
@@ -54,6 +56,7 @@ export default class HomeView extends CommonView {
     this.saveWallet = saveWallet;
     this.saveTransaction = saveTransaction;
     this.clearAccessToken = clearAccessToken;
+    this.deleteTransaction = deleteTransaction;
   }
 
   async loadPage() {
@@ -74,11 +77,11 @@ export default class HomeView extends CommonView {
         // Show add wallet dialog
         this.walletDialog.showModal();
       } else {
+        // Init data
+        await this.loadData();
+
         // Load event page
         this.loadEvent();
-
-        // Init data
-        this.loadData();
       }
     }
 
@@ -216,7 +219,7 @@ export default class HomeView extends CommonView {
       const listMarkup = [];
       transactionDetail.transactions.forEach((transaction) => {
         const markup = `
-          <div class="transaction__time">
+          <div class="transaction__time" data-id=${transaction.id}>
             <div class="transaction__details">
               <p class="transaction__day">${transaction.day}</p>
               <div class="transaction__time-details">
@@ -298,6 +301,54 @@ export default class HomeView extends CommonView {
         dateInput && categoryName && amountInput >= 1,
       );
     });
+
+    const deleteTransactionBtn =
+      this.transactionDialog.querySelector('.form__delete-btn');
+
+    deleteTransactionBtn.addEventListener('click', async () => {
+      const idEl = this.transactionDialog.querySelector(
+        "[name='id_transaction']",
+      );
+
+      if (idEl.value) {
+        this.transactionDialog.close();
+        this.toggleLoaderSpinner();
+        await this.deleteTransaction(idEl.value);
+        this.toggleLoaderSpinner();
+        this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
+      }
+    });
+  }
+
+  initDataTransactionDialog(idTransaction) {
+    const transactionArr = this.listTransactions.filter(
+      (obj) => obj.id === idTransaction,
+    );
+    const transaction = Object.assign({}, ...transactionArr);
+    const categoryArr = this.listCategory.filter(
+      (obj) => obj.name === transaction.categoryName,
+    );
+    const category = Object.assign({}, ...categoryArr);
+
+    const idEl = this.transactionDialog.querySelector(
+      "[name='id_transaction']",
+    );
+    const dateEl = this.transactionDialog.querySelector(
+      "[name='selected_date']",
+    );
+    const categoryEl = this.transactionDialog.querySelector(
+      "[name='category_name']",
+    );
+    const amountEl = this.transactionDialog.querySelector("[name='amount']");
+    const noteEl = this.transactionDialog.querySelector("[name='note']");
+    const iconEl = this.transactionDialog.querySelector('.category-icon');
+
+    idEl.value = transaction.id;
+    dateEl.value = transaction.date;
+    categoryEl.value = transaction.categoryName;
+    amountEl.value = Math.abs(transaction.amount);
+    noteEl.value = transaction.note;
+    iconEl.src = category.url;
   }
 
   async submitTransactionDialog() {
@@ -305,32 +356,37 @@ export default class HomeView extends CommonView {
     this.transactionDialog.close();
 
     try {
-      const transactionForm = document.getElementById('formAddTransaction');
-      const date = transactionForm.querySelector("[name='selected_date']");
-      const categoryName = transactionForm.querySelector(
+      const dateEl = this.transactionForm.querySelector(
+        "[name='selected_date']",
+      );
+      const categoryNameEl = this.transactionForm.querySelector(
         "[name='category_name']",
       );
-      const amount = transactionForm.querySelector("[name='amount']");
-      const note = transactionForm.querySelector("[name='note']");
+      const amountEl = this.transactionForm.querySelector("[name='amount']");
+      const noteEl = this.transactionForm.querySelector("[name='note']");
+      const idEl = this.transactionForm.querySelector(
+        "[name='id_transaction']",
+      );
       const transaction = new Transaction({
-        categoryName: categoryName.value,
-        date: changeDateFormat(date.value),
-        amount: -+amount.value,
-        note: note.value,
+        id: idEl.value,
+        categoryName: categoryNameEl.value,
+        date: dateEl.value,
+        amount: -+amountEl.value,
+        note: noteEl.value,
         idUser: this.wallet.idUser,
       });
 
       await this.saveTransaction(transaction);
 
       // Update wallet info
-      this.updateAmountWallet(-+amount.value, this.saveWallet);
+      this.updateAmountWallet(-+amountEl.value, this.saveWallet);
 
       this.showSuccessToast(
         MESSAGE.ADD_TRANSACTION_SUCCESS,
         MESSAGE.DEFAULT_MESSAGE,
       );
 
-      this.clearInputTransactionForm(transactionForm);
+      this.clearInputTransactionForm(this.transactionForm);
 
       // Reload data
       this.loadData();
@@ -341,8 +397,8 @@ export default class HomeView extends CommonView {
     this.toggleLoaderSpinner();
   }
 
-  clearInputTransactionForm(transactionForm) {
-    const categoryIcon = transactionForm.querySelector('.category-icon');
+  clearInputTransactionForm() {
+    const categoryIcon = this.transactionForm.querySelector('.category-icon');
 
     categoryIcon.src = defaultCategoryIcon;
 
@@ -350,7 +406,7 @@ export default class HomeView extends CommonView {
 
     this.renderCategoryItem(this.keySearchCategory);
 
-    transactionForm.reset();
+    this.transactionForm.reset();
   }
   // ---------------------END DIALOG---------------------//
 
@@ -437,7 +493,7 @@ export default class HomeView extends CommonView {
 
       const transaction = new Transaction({
         categoryName: DEFAULT_CATEGORY.INCOME,
-        date: changeDateFormat(date),
+        date,
         amount: +amount,
         note,
         idUser: this.wallet.idUser,
@@ -568,6 +624,7 @@ export default class HomeView extends CommonView {
     this.addCommonEventPage();
     this.handlerTabsTransfer();
     this.addEventSelectCategoryDialog();
+    this.addEventTransactionItem();
   }
 
   /**
@@ -644,12 +701,29 @@ export default class HomeView extends CommonView {
     });
   }
 
-  showTransactionDialog(editMode = false) {
-    const deleteBtn = this.transactionDialog.querySelector('.form__delete-btn');
+  showTransactionDialog(idTransaction = null) {
+    this.clearInputTransactionForm();
 
-    deleteBtn.classList.toggle('hide', !editMode);
+    const deleteBtn = this.transactionDialog.querySelector('.form__delete-btn');
+    deleteBtn.classList.toggle('hide', !idTransaction);
+
+    if (idTransaction) this.initDataTransactionDialog(idTransaction);
 
     this.transactionDialog.showModal();
+  }
+
+  addEventTransactionItem() {
+    const transactionItemEl = document.querySelectorAll('.transaction__item');
+    if (transactionItemEl) {
+      transactionItemEl.forEach((item) => {
+        item.addEventListener('click', (e) => {
+          const transactionTime = e.target.closest('.transaction__time');
+          const idTransaction = transactionTime.dataset.id;
+
+          this.showTransactionDialog(idTransaction);
+        });
+      });
+    }
   }
 
   addEventSelectCategoryDialog() {
