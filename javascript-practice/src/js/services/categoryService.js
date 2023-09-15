@@ -22,4 +22,16 @@ export default class CategoryService extends CommonService {
 
     return null;
   }
+
+  async getCategoryByName(nameCategory) {
+    const data = await this.getDataFromProp(
+      'name',
+      nameCategory,
+      this.defaultPath,
+    );
+
+    if (data) return data;
+
+    return null;
+  }
 }

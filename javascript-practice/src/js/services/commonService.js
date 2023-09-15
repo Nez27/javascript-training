@@ -66,11 +66,39 @@ export default class CommonService {
   async getAllDataFromPath(path = this.defaultPath) {
     this.connectToDb();
 
-    const result = await this.firebaseService.getAllDataFromPath(path);
+    const results = await timeOutConnect(
+      this.firebaseService.getAllDataFromPath(path),
+    );
+    const listData = [];
 
-    const data = await timeOutConnect(result);
+    if (results) {
+      // Convert format object
+      results.forEach((data) => {
+        listData.push(convertDataObjectToModel(data));
+      });
 
-    if (data) return data;
+      return listData;
+    }
+
+    return null;
+  }
+
+  async getListDataFromProp(property, value, path = this.defaultPath) {
+    this.connectToDb();
+
+    const results = await timeOutConnect(
+      this.firebaseService.getListDataFromProp(path, property, value),
+    );
+    const listData = [];
+
+    if (results) {
+      // Convert format object
+      results.forEach((data) => {
+        listData.push(convertDataObjectToModel(data));
+      });
+
+      return listData;
+    }
 
     return null;
   }

@@ -100,7 +100,7 @@ class FirebaseService {
       onValue(
         ref(this.db, path),
         (snapshot) => {
-          const data = [];
+          const listData = [];
 
           // snapshot is a type of data by Firebase define
           snapshot.forEach((childSnapshot) => {
@@ -111,11 +111,40 @@ class FirebaseService {
             //   data = dataTemp;
             // }
             const id = childSnapshot.key;
-            const val = childSnapshot.val();
+            const data = childSnapshot.val();
 
-            data.push({ id, ...val });
+            listData.push({ id, data });
           });
-          resolve(data);
+          resolve(listData);
+        },
+        {
+          onlyOnce: true,
+        },
+      );
+    });
+  }
+
+  getListDataFromProp(path, property, value) {
+    return new Promise((resolve) => {
+      onValue(
+        ref(this.db, path),
+        (snapshot) => {
+          let id;
+          let data;
+          const listData = [];
+
+          // snapshot is a type of data by Firebase define
+          snapshot.forEach((childSnapshot) => {
+            const dataTemp = childSnapshot.val();
+
+            if (dataTemp[property] === value) {
+              id = childSnapshot.key;
+              data = dataTemp;
+
+              listData.push({ id, data });
+            }
+          });
+          resolve(listData);
         },
         {
           onlyOnce: true,

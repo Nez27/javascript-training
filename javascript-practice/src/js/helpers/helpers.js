@@ -92,3 +92,64 @@ export const changeDateFormat = (oldFormatDate) => {
 
   return `${day}, ${date}, ${month}, ${year}`;
 };
+
+export const createTransactionDetailObject = (category, transactions) => {
+  const totalTransaction = transactions.length;
+  const totalAmount = () => {
+    let amount = 0;
+
+    transactions.forEach((transaction) => {
+      amount += transaction.amount;
+    });
+
+    return amount;
+  };
+  const listTransaction = () => {
+    const results = [];
+
+    transactions.forEach((transaction) => {
+      const dateParts = transaction.date.split(','); // ['Monday', '14', 'September', '2023']
+      const day = dateParts[1];
+      const fullDateString = `${dateParts[0]}, ${dateParts[2]} ${dateParts[3]}`;
+      const tempData = {
+        id: transaction.id,
+        day,
+        fullDateString,
+        note: transaction.note,
+        amount: transaction.amount,
+      };
+
+      results.push(tempData);
+    });
+
+    results.sort((a, b) => parseInt(b.id, 10) - parseInt(a.id, 10));
+
+    return results;
+  };
+
+  return {
+    categoryName: category.name,
+    url: category.url,
+    totalTransaction,
+    totalAmount: totalAmount(),
+    transactions: listTransaction(),
+  };
+};
+
+export const getAllCategoryNameInTransactions = (transactions) => {
+  const categoryName = new Set();
+
+  transactions.forEach((transaction) =>
+    categoryName.add(transaction.categoryName),
+  );
+
+  return Array.from(categoryName);
+};
+
+export const getAllTransactionByCategoryName = (categoryName, transactions) => {
+  const results = transactions.filter((transaction) => {
+    return transaction.categoryName === categoryName;
+  });
+
+  return results;
+};
