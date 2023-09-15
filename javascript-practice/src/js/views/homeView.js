@@ -311,11 +311,20 @@ export default class HomeView extends CommonView {
       );
 
       if (idEl.value) {
-        this.transactionDialog.close();
+        try {
+          this.transactionDialog.close();
+          this.toggleLoaderSpinner();
+
+          await this.deleteTransaction(idEl.value);
+
+          this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
+
+          await this.loadData();
+          this.addEventTransactionItem();
+        } catch (error) {
+          this.showErrorToast(error);
+        }
         this.toggleLoaderSpinner();
-        await this.deleteTransaction(idEl.value);
-        this.toggleLoaderSpinner();
-        this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
       }
     });
   }
@@ -389,7 +398,8 @@ export default class HomeView extends CommonView {
       this.clearInputTransactionForm(this.transactionForm);
 
       // Reload data
-      this.loadData();
+      await this.loadData();
+      this.addEventTransactionItem();
     } catch (error) {
       this.showErrorToast(error);
     }
@@ -503,7 +513,8 @@ export default class HomeView extends CommonView {
 
       await this.updateAmountWallet(+amount, this.saveWallet); // Update wallet
 
-      this.loadData();
+      await this.loadData();
+      this.addEventTransactionItem();
 
       // Hide loader spinner
       this.toggleLoaderSpinner();
@@ -571,8 +582,7 @@ export default class HomeView extends CommonView {
         MESSAGE.DEFAULT_MESSAGE,
       );
 
-      this.loadEvent(); // Load event page
-      this.loadData(); // Load data from database into page
+      await this.loadData(); // Load data from database into page
     } catch (error) {
       // Show toast error
       this.showErrorToast(error);
