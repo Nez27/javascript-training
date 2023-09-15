@@ -1,5 +1,10 @@
 /* eslint-disable class-methods-use-this */
-import { TYPE_TOAST, BTN_CONTENT, DEFAULT_CATEGORY } from '../constants/config';
+import {
+  TYPE_TOAST,
+  BTN_CONTENT,
+  DEFAULT_CATEGORY,
+  FIRST_ADD_WALLET_NOTE,
+} from '../constants/config';
 import * as MESSAGE from '../constants/message';
 import CommonView from './commonView';
 import Wallet from '../models/wallet';
@@ -91,9 +96,8 @@ export default class HomeView extends CommonView {
   async loadData() {
     await this.loadWalletUser();
     await this.loadTransactionData();
-    await this.loadCategory(this.getAllCategory);
     this.loadSummaryTab();
-    this.loadTransactionTab();
+    await this.loadTransactionTab();
   }
 
   // ---------------------LOAD DATA---------------------//
@@ -101,38 +105,46 @@ export default class HomeView extends CommonView {
    * Load wallet user
    */
   async loadWalletUser() {
-    const wallet = await this.getWalletByIdUser(this.user.id);
+    const wallet = this.wallet
+      ? this.wallet
+      : await this.getWalletByIdUser(this.user.id);
     const walletName = document.querySelector('.wallet__name');
     const walletPrice = document.querySelector('.wallet__price');
-    const sign = wallet.amount >= 0 ? '+' : '-';
     const walletNameValue = wallet.walletName;
-    // Math.abs(wallet.amount) to keep the value always > 0
-    const walletAmountValue = formatNumber(Math.abs(wallet.amount));
+    const walletAmountValue = wallet.inflow + wallet.outflow;
+
+    const sign = walletAmountValue >= 0 ? '+' : '-';
 
     this.wallet = wallet; // Make wallet into global variable
 
     walletName.textContent = walletNameValue;
-    walletPrice.textContent = `${sign}$ ${walletAmountValue}`;
+    walletPrice.textContent = `${sign}$ ${formatNumber(
+      Math.abs(walletAmountValue),
+    )}`; // Math.abs(walletAmountValue) to keep the value always > 0
+
+    // Update amount wallet into database
+    this.saveWallet(this.wallet);
   }
 
-  async updateAmountWallet(amount, saveWallet) {
-    this.wallet.amount += amount;
-
-    if (amount > 0) {
+  async updateAmountWallet(amount) {
+    if (amount >= 0) {
       this.wallet.inflow += amount;
     } else {
-      this.wallet.outflow -= amount;
+      this.wallet.outflow += amount;
     }
 
-    await saveWallet(this.wallet);
+    await this.saveWallet(this.wallet);
+
+    // Reload data
+    await this.loadData();
   }
 
   /**
    * Load category data
    * @param {function} getAllCategory Get all category function
    */
-  async loadCategory(getAllCategory) {
-    this.listCategory = await getAllCategory();
+  async loadCategory() {
+    this.listCategory = await this.getAllCategory();
 
     if (this.listCategory) {
       this.renderCategoryItem();
@@ -146,10 +158,10 @@ export default class HomeView extends CommonView {
 
     const { inflow } = this.wallet;
     const { outflow } = this.wallet;
-    const total = inflow - outflow;
+    const total = inflow + outflow;
 
     inflowValue.textContent = `+$ ${formatNumber(inflow)}`;
-    outflowValue.textContent = `-$ ${formatNumber(outflow)}`;
+    outflowValue.textContent = `-$ ${formatNumber(Math.abs(outflow))}`;
     totalValue.textContent = `${total >= 0 ? '+' : '-'}$ ${formatNumber(
       Math.abs(total),
     )}`;
@@ -160,6 +172,9 @@ export default class HomeView extends CommonView {
   }
 
   async loadTransactionTab() {
+    // Load category
+    await this.loadCategory();
+
     // Init data first
     const transactionDetails = this.loadTransactionDetailsData();
     const transactionEl = document.querySelector('.transaction');
@@ -176,6 +191,9 @@ export default class HomeView extends CommonView {
 
     listTransactionDetailEl.innerHTML = '';
     listTransactionDetailEl.insertAdjacentHTML('afterbegin', markup.join('\n'));
+
+    // Load event
+    this.addEventTransactionItem();
   }
 
   loadTransactionDetailsData() {
@@ -283,6 +301,7 @@ export default class HomeView extends CommonView {
     this.transactionDialog.addEventListener('submit', (e) => {
       e.preventDefault();
       this.submitTransactionDialog();
+      this.transactionDialog.close();
     });
 
     this.transactionDialog.addEventListener('input', () => {
@@ -320,7 +339,6 @@ export default class HomeView extends CommonView {
           this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
 
           await this.loadData();
-          this.addEventTransactionItem();
         } catch (error) {
           this.showErrorToast(error);
         }
@@ -362,7 +380,6 @@ export default class HomeView extends CommonView {
 
   async submitTransactionDialog() {
     this.toggleLoaderSpinner();
-    this.transactionDialog.close();
 
     try {
       const dateEl = this.transactionForm.querySelector(
@@ -387,8 +404,9 @@ export default class HomeView extends CommonView {
 
       await this.saveTransaction(transaction);
 
-      // Update wallet info
-      this.updateAmountWallet(-+amountEl.value, this.saveWallet);
+      // Reload data
+      await this.loadData();
+      this.updateAmountWallet(-+amountEl.value);
 
       this.showSuccessToast(
         MESSAGE.ADD_TRANSACTION_SUCCESS,
@@ -396,10 +414,6 @@ export default class HomeView extends CommonView {
       );
 
       this.clearInputTransactionForm(this.transactionForm);
-
-      // Reload data
-      await this.loadData();
-      this.addEventTransactionItem();
     } catch (error) {
       this.showErrorToast(error);
     }
@@ -511,10 +525,9 @@ export default class HomeView extends CommonView {
 
       await this.saveTransaction(transaction);
 
-      await this.updateAmountWallet(+amount, this.saveWallet); // Update wallet
-
+      // Reload data
       await this.loadData();
-      this.addEventTransactionItem();
+      await this.updateAmountWallet(+amount); // Update wallet
 
       // Hide loader spinner
       this.toggleLoaderSpinner();
@@ -563,6 +576,7 @@ export default class HomeView extends CommonView {
     this.toggleLoaderSpinner();
 
     try {
+      // Wallet info
       const { walletForm } = document.forms;
       const form = new FormData(walletForm);
       const walletName = form.get('walletName');
@@ -576,6 +590,21 @@ export default class HomeView extends CommonView {
       });
 
       await this.saveWallet(wallet);
+
+      // Transaction info
+      const transaction = new Transaction({
+        categoryName: 'Income',
+        date: new Date().toLocaleDateString('en-US'),
+        note: FIRST_ADD_WALLET_NOTE,
+        amount: +amount,
+        idUser: this.user.id,
+      });
+
+      await this.saveTransaction(transaction);
+
+      // Load data and event
+      await this.loadData();
+      this.loadEvent();
 
       this.showSuccessToast(
         MESSAGE.ADD_WALLET_SUCCESS,
@@ -728,9 +757,11 @@ export default class HomeView extends CommonView {
       transactionItemEl.forEach((item) => {
         item.addEventListener('click', (e) => {
           const transactionTime = e.target.closest('.transaction__time');
-          const idTransaction = transactionTime.dataset.id;
+          if (transactionTime) {
+            const idTransaction = transactionTime.dataset.id;
 
-          this.showTransactionDialog(idTransaction);
+            this.showTransactionDialog(idTransaction);
+          }
         });
       });
     }
