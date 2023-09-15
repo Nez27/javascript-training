@@ -28,30 +28,30 @@ export default class HomeController {
     return this.service.categoryService.getAllCategory();
   }
 
+  handlerGetAllTransactions(idUser) {
+    return this.service.transactionService.getListTransactionByIdUser(idUser);
+  }
+
   init() {
     if (this.homeView) {
-      this.homeView.addHandlerEventWalletForm(
-        this.handlerSaveWallet.bind(this),
-      );
-
-      this.homeView.loadPage(
+      this.homeView.initFunction(
         this.handlerGetInfoUserLogin.bind(this),
         this.handlerCheckWalletValid.bind(this),
         this.handlerGetWalletUser.bind(this),
         this.handlerGetAllCategory.bind(this),
-      );
-
-      this.homeView.addHandlerEventBudgetForm(
-        this.handlerSaveTransaction.bind(this),
+        this.handlerGetAllTransactions.bind(this),
         this.handlerSaveWallet.bind(this),
+        this.handlerSaveTransaction.bind(this),
       );
+      this.homeView.addHandlerEventWalletForm();
+
+      this.homeView.loadPage();
+
+      this.homeView.addHandlerEventBudgetForm();
 
       this.homeView.handlerEventCategoryDialog();
 
-      this.homeView.handlerEventTransactionDialog(
-        this.handlerSaveTransaction.bind(this),
-        this.handlerSaveWallet.bind(this),
-      );
+      this.homeView.handlerEventTransactionDialog();
     }
   }
 }
