@@ -6,6 +6,7 @@ import {
   goOffline,
   goOnline,
   onValue,
+  remove,
 } from 'firebase/database';
 import { DATABASE_URL } from '../constants/config';
 
@@ -26,6 +27,12 @@ class FirebaseService {
    */
   save(data, path) {
     return set(ref(this.db, path), data);
+  }
+
+  delete(id, path) {
+    const dbRef = ref(this.db, `${path}${id}/`);
+
+    return remove(dbRef);
   }
 
   /**
