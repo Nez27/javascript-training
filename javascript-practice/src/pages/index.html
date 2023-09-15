@@ -78,7 +78,7 @@
               <div class="form__input-field">
                 <p class="form__label">Date</p>
                 <div class="date-input-container">
-                  <input class="input-date" type="date" name="selected_date" />
+                  <input class="input-date" type="date" name="date" required />
                   <div class="icon-btn"></div>
                 </div>
               </div>
@@ -87,8 +87,9 @@
                 <input
                   class="form__input-balance"
                   type="number"
-                  name="date"
-                  value="0"
+                  min="1"
+                  name="amount"
+                  required
                 />
               </div>
             </div>
@@ -102,9 +103,7 @@
               />
             </div>
             <div class="form__action">
-              <button formmethod="dialog" class="form__cancel-btn">
-                CANCEL
-              </button>
+              <button class="form__cancel-btn" type="button">CANCEL</button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
@@ -122,12 +121,17 @@
         </div>
         <!-- Body -->
         <div class="dialog__body">
-          <form class="form" id="formAddBudget">
+          <form class="form" id="formAddTransaction">
             <div class="form__date-category-amount-input">
               <div class="form__input-field">
                 <p class="form__label">Date</p>
                 <div class="date-input-container">
-                  <input class="input-date" type="date" name="selected_date" />
+                  <input
+                    class="input-date"
+                    type="date"
+                    name="selected_date"
+                    required
+                  />
                   <span class="icon-btn"></span>
                 </div>
               </div>
@@ -135,10 +139,17 @@
                 <p class="form__label">Category</p>
                 <div class="category-input-container">
                   <img
+                    class="category-icon"
                     src="../assets/images/question-icon.svg"
                     alt="Question icon"
                   />
-                  <p class="category-name">Select category</p>
+                  <input
+                    type="text"
+                    name="category_name"
+                    class="category-name"
+                    placeholder="Select Category"
+                    required
+                  />
                   <div class="icon-btn"></div>
                 </div>
               </div>
@@ -147,8 +158,9 @@
                 <input
                   class="form__input-balance"
                   type="number"
-                  name="date"
+                  name="amount"
                   value="0"
+                  required
                 />
               </div>
             </div>
@@ -162,9 +174,7 @@
               />
             </div>
             <div class="form__action">
-              <button formmethod="dialog" class="form__cancel-btn">
-                CANCEL
-              </button>
+              <button type="button" class="form__cancel-btn">CANCEL</button>
               <button type="submit" class="form__save-btn">SAVE</button>
             </div>
           </form>
@@ -195,81 +205,7 @@
           </form>
         </div>
         <div class="dialog__body">
-          <div class="list-category">
-            <!-- Category item -->
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-            <div class="category-item">
-              <img
-                class="icon-category"
-                src="../assets/images/ic_category_foodndrink.png.png"
-                alt="Food & Beverage Icon"
-              />
-              <p class="name-category">Food & Beverage</p>
-            </div>
-          </div>
+          <div class="list-category"></div>
         </div>
       </div>
     </dialog>
@@ -284,8 +220,8 @@
                 <img src="../assets/images/icon.png" alt="Wallet Icon" />
               </div>
               <div class="wallet__info">
-                <p class="wallet__name">Nezumi</p>
-                <p class="wallet__price">+$ 499,900,900.00</p>
+                <p class="wallet__name">User</p>
+                <p class="wallet__price">+$ 0.00</p>
               </div>
             </div>
             <button class="header__add-btn" id="addBudget">Add budget</button>

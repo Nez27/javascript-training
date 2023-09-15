@@ -17,6 +17,35 @@ export const LOCAL_STORAGE = {
   ACCESS_TOKEN: 'accessToken',
 };
 
+export const DEFAULT_CATEGORY = {
+  INCOME: 'Income',
+};
+
+export const DAY = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
+export const MONTH = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 export const TYPE_TOAST = { success: 'success', error: 'error' };
 export const MARK_ICON = { success: 'check', error: 'error' };
 

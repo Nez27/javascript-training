@@ -9,7 +9,7 @@ export default class WalletService extends CommonService {
 
   /**
    * Save wallet into database
-   * @param {Object} wallet The wallet object need to be saved into databae
+   * @param {Object} wallet The wallet object need to be saved into database
    */
   async saveWallet(wallet) {
     await this.save(wallet);

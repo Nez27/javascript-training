@@ -12,10 +12,3 @@
     @extend %active;
   }
 }
-
-.dark-overlay {
-  @extend .overlay;
-
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: $zindex-lv-3;
-}

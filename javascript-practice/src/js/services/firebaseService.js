@@ -94,6 +94,35 @@ class FirebaseService {
       );
     });
   }
+
+  getAllDataFromPath(path) {
+    return new Promise((resolve) => {
+      onValue(
+        ref(this.db, path),
+        (snapshot) => {
+          const data = [];
+
+          // snapshot is a type of data by Firebase define
+          snapshot.forEach((childSnapshot) => {
+            // const dataTemp = childSnapshot.val();
+
+            // if (dataTemp[property] === value) {
+            //   id = childSnapshot.key;
+            //   data = dataTemp;
+            // }
+            const id = childSnapshot.key;
+            const val = childSnapshot.val();
+
+            data.push({ id, ...val });
+          });
+          resolve(data);
+        },
+        {
+          onlyOnce: true,
+        },
+      );
+    });
+  }
 }
 
 export default new FirebaseService();

@@ -1,5 +1,5 @@
 import * as MESSAGE from '../constants/message';
-import { TIME_OUT_SEC, REGEX } from '../constants/config';
+import { TIME_OUT_SEC, REGEX, DAY, MONTH } from '../constants/config';
 import FirebaseService from '../services/firebaseService';
 
 /**
@@ -74,4 +74,21 @@ export const getSubdirectoryURL = () => {
   }
 
   return subDirectory;
+};
+
+export const formatNumber = (number) => {
+  return number.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+  });
+};
+
+export const changeDateFormat = (oldFormatDate) => {
+  const tempDate = new Date(oldFormatDate);
+
+  const day = DAY[tempDate.getDay() - 1];
+  const date = tempDate.getDate();
+  const month = MONTH[tempDate.getMonth()];
+  const year = tempDate.getFullYear();
+
+  return `${day}, ${date}, ${month}, ${year}`;
 };

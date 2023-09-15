@@ -596,13 +596,29 @@
 
     position: relative;
     margin-top: 4px;
-    cursor: pointer;
+
+    & .category-icon {
+      height: 24px;
+      width: 24px;
+    }
   }
 
   .category-name {
     font-size: $fs-lg;
     line-height: 25.5px;
-    color: $dark-gray;
+    color: $black;
+    border: none;
+    caret-color: transparent;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .icon-category {
+    width: 40px;
+    height: 40px;
   }
 
   .list-category {
@@ -621,6 +637,13 @@
     margin-inline: 68px;
     padding: 8px 0;
     border-bottom: 1px solid $gray;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &:hover,
+    &.selected {
+      background-color: $hover-light-primary-color;
+    }
   }
 }
 
@@ -639,6 +662,7 @@
 
 .hide {
   opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes fade {
