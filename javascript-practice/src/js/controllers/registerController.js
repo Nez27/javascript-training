@@ -12,8 +12,13 @@ export default class RegisterController {
     return this.service.userService.saveUser(user);
   }
 
+  handlerGetInfoUserLogin() {
+    return this.service.userService.getInfoUserLogin();
+  }
+
   init() {
     if (this.registerView) {
+      this.registerView.loadPage(this.handlerGetInfoUserLogin.bind(this));
       this.registerView.addHandlerForm(
         this.handlerCheckUserValid.bind(this),
         this.handlerSaveUser.bind(this),

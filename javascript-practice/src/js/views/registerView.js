@@ -10,6 +10,18 @@ export default class RegisterView extends CommonLoginRegisterView {
     this.dialog = document.querySelector('.toast');
   }
 
+  async loadPage(getInfoUserLogin) {
+    this.toggleLoaderSpinner();
+
+    const user = await getInfoUserLogin();
+
+    if (user) {
+      window.location.replace('/');
+    }
+
+    this.toggleLoaderSpinner();
+  }
+
   /**
    * Get data from user input
    * @returns {Object || null} Return object or null

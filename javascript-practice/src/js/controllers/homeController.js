@@ -1,3 +1,5 @@
+import UserService from '../services/userService';
+
 export default class HomeController {
   constructor(service, view) {
     this.service = service;
@@ -32,6 +34,10 @@ export default class HomeController {
     return this.service.transactionService.getListTransactionByIdUser(idUser);
   }
 
+  static handlerClearAccessToken() {
+    UserService.clearAccessToken();
+  }
+
   init() {
     if (this.homeView) {
       this.homeView.initFunction(
@@ -42,6 +48,7 @@ export default class HomeController {
         this.handlerGetAllTransactions.bind(this),
         this.handlerSaveWallet.bind(this),
         this.handlerSaveTransaction.bind(this),
+        HomeController.handlerClearAccessToken.bind(this),
       );
       this.homeView.addHandlerEventWalletForm();
 
