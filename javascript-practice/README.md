@@ -56,7 +56,7 @@
   - `cd ./javascript-training`.
 - Step 3: Move it to branch feat/javascript-practice.
   - `$ git checkout feat/javascript-practice`.
-- Step 4: Move to folder practice-02.
+- Step 4: Move to folder javascript-practice.
   - `$ cd ./javascript-practice`.
 - Step 5:
   - Open terminal > `npm i`.
