@@ -123,4 +123,8 @@ export default class UserService extends CommonService {
 
     return null;
   }
+
+  static clearAccessToken() {
+    LocalStorageService.remove(LOCAL_STORAGE.ACCESS_TOKEN);
+  }
 }

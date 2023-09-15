@@ -44,6 +44,7 @@ export default class HomeView extends CommonView {
     getAllTransactions,
     saveWallet,
     saveTransaction,
+    clearAccessToken,
   ) {
     this.getInfoUserLogin = getInfoUserLogin;
     this.isValidWallet = isValidWallet;
@@ -52,6 +53,7 @@ export default class HomeView extends CommonView {
     this.getAllTransactions = getAllTransactions;
     this.saveWallet = saveWallet;
     this.saveTransaction = saveTransaction;
+    this.clearAccessToken = clearAccessToken;
   }
 
   async loadPage() {
@@ -61,6 +63,7 @@ export default class HomeView extends CommonView {
     const user = await this.getInfoUserLogin();
 
     if (!user) {
+      this.clearAccessToken();
       window.location.replace('/login');
     } else {
       this.user = user;
@@ -631,6 +634,13 @@ export default class HomeView extends CommonView {
     const categorySearchEl = document.querySelector('.category-name');
     categorySearchEl.addEventListener('keydown', (e) => {
       e.preventDefault();
+    });
+
+    const logoutBtn = document.querySelector('.logout-text');
+    logoutBtn.addEventListener('click', () => {
+      this.clearAccessToken();
+
+      window.location.replace('/login');
     });
   }
 

@@ -60,9 +60,37 @@
       height: 41px;
     }
 
+    &__info {
+      position: relative;
+    }
+
+    &__dialog {
+      @extend %rounded-sm;
+
+      padding: 10px;
+      position: absolute;
+      background-color: $white;
+      border: 1px solid $black;
+      top: 17px;
+      left: 10px;
+      opacity: 0;
+      visibility: none;
+      transition: 0.3s;
+
+      &:hover {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+
     &__name {
       font-size: $fs-x-sm;
       line-height: 21px;
+
+      &:hover + .wallet__dialog {
+        visibility: visible;
+        opacity: 1;
+      }
     }
 
     &__price {
@@ -77,6 +105,7 @@
     box-shadow: 0px 3px 24px 0px rgba(0, 0, 0, 0.12);
     margin-inline: auto;
     width: 624px;
+    margin-bottom: 20px;
 
     &__tabs {
       padding-top: 20px;
@@ -644,6 +673,15 @@
     &:hover,
     &.selected {
       background-color: $hover-light-primary-color;
+    }
+  }
+
+  .logout-text {
+    font-size: $fs-x-sm;
+    cursor: pointer;
+
+    &:hover {
+      color: $primary-color;
     }
   }
 }
