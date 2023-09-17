@@ -22,11 +22,7 @@ export default class TransactionService extends CommonService {
       this.defaultPath,
     );
 
-    if (results) {
-      return results;
-    }
-
-    return null;
+    return results || null;
   }
 
   async deleteTransaction(idTransaction) {

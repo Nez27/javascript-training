@@ -4,6 +4,7 @@ import {
   BTN_CONTENT,
   DEFAULT_CATEGORY,
   FIRST_ADD_WALLET_NOTE,
+  REMOVE_CATEGORY,
 } from '../constants/config';
 import * as MESSAGE from '../constants/message';
 import CommonView from './commonView';
@@ -14,6 +15,7 @@ import {
   formatNumber,
   getAllCategoryNameInTransactions,
   getAllTransactionByCategoryName,
+  renderRequiredText,
 } from '../helpers/helpers';
 import defaultCategoryIcon from '../../assets/images/question-icon.svg';
 
@@ -44,7 +46,6 @@ export default class HomeView extends CommonView {
 
   initFunction(
     getInfoUserLogin,
-    isValidWallet,
     getWalletByIdUser,
     getAllCategory,
     getAllTransactions,
@@ -54,7 +55,6 @@ export default class HomeView extends CommonView {
     deleteTransaction,
   ) {
     this.getInfoUserLogin = getInfoUserLogin;
-    this.isValidWallet = isValidWallet;
     this.getWalletByIdUser = getWalletByIdUser;
     this.getAllCategory = getAllCategory;
     this.getAllTransactions = getAllTransactions;
@@ -75,14 +75,15 @@ export default class HomeView extends CommonView {
       window.location.replace('/login');
     } else {
       this.user = user;
-      const wallet = await this.isValidWallet(user.id);
+      this.wallet = await this.getWalletByIdUser(user.id);
 
       // Check user's wallet if have or not
-      if (!wallet) {
+      if (!this.wallet) {
         // Show add wallet dialog
         this.walletDialog.showModal();
       } else {
         // Init data
+        await this.loadTransactionData();
         await this.loadData();
 
         // Load event page
@@ -95,7 +96,6 @@ export default class HomeView extends CommonView {
 
   async loadData() {
     await this.loadWalletUser();
-    await this.loadTransactionData();
     this.loadSummaryTab();
     await this.loadTransactionTab();
   }
@@ -126,17 +126,26 @@ export default class HomeView extends CommonView {
     this.saveWallet(this.wallet);
   }
 
-  async updateAmountWallet(amount) {
-    if (amount >= 0) {
-      this.wallet.inflow += amount;
-    } else {
-      this.wallet.outflow += amount;
-    }
+  async updateAmountWallet() {
+    let inflow = 0;
+    let outflow = 0;
+
+    // Init data first
+    this.transactionDetails = this.loadTransactionDetailsData();
+
+    this.transactionDetails.forEach((transaction) => {
+      if (transaction.totalAmount >= 0) {
+        inflow += transaction.totalAmount;
+      } else {
+        outflow -= transaction.totalAmount;
+      }
+    });
+
+    // Reassign value for wallet user;
+    this.wallet.inflow = inflow;
+    this.wallet.outflow = -outflow;
 
     await this.saveWallet(this.wallet);
-
-    // Reload data
-    await this.loadData();
   }
 
   /**
@@ -144,10 +153,12 @@ export default class HomeView extends CommonView {
    * @param {function} getAllCategory Get all category function
    */
   async loadCategory() {
-    this.listCategory = await this.getAllCategory();
+    if (!this.listCategory) {
+      this.listCategory = await this.getAllCategory();
+    }
 
     if (this.listCategory) {
-      this.renderCategoryItem();
+      this.renderCategoryList();
     }
   }
 
@@ -176,15 +187,16 @@ export default class HomeView extends CommonView {
     await this.loadCategory();
 
     // Init data first
-    const transactionDetails = this.loadTransactionDetailsData();
+    this.transactionDetails = this.loadTransactionDetailsData();
+
     const transactionEl = document.querySelector('.transaction');
     const listTransactionDetailEl =
       transactionEl.querySelector('.transaction__list');
 
     const markup = [];
 
-    if (transactionDetails) {
-      transactionDetails.forEach((transactionDetail) => {
+    if (this.transactionDetails) {
+      this.transactionDetails.forEach((transactionDetail) => {
         markup.push(this.transactionDetailMarkup(transactionDetail));
       });
     }
@@ -203,9 +215,7 @@ export default class HomeView extends CommonView {
     );
 
     // Create transactions details object
-    const tempList = [];
-
-    listCategoryInTransaction.forEach((categoryName) => {
+    const tempList = listCategoryInTransaction.map((categoryName) => {
       // Get category object from list category has been loaded.
       const category = this.listCategory.filter(
         (item) => item.name === categoryName,
@@ -216,11 +226,9 @@ export default class HomeView extends CommonView {
         this.listTransactions,
       );
 
-      tempList.push(
-        createTransactionDetailObject(
-          Object.assign({}, ...category),
-          transactions,
-        ),
+      return createTransactionDetailObject(
+        Object.assign({}, ...category),
+        transactions,
       );
     });
 
@@ -300,27 +308,35 @@ export default class HomeView extends CommonView {
   handlerEventTransactionDialog() {
     this.transactionDialog.addEventListener('submit', (e) => {
       e.preventDefault();
+      this.clearErrorTransactionDialog();
       this.submitTransactionDialog();
-      this.transactionDialog.close();
     });
 
     this.transactionDialog.addEventListener('input', () => {
-      const dateInput = this.transactionDialog.querySelector(
-        "[name='selected_date']",
-      ).value;
-      const categoryName = this.transactionDialog.querySelector(
-        "[name='category_name']",
-      ).value;
-      const amountInput =
-        this.transactionDialog.querySelector("[name='amount']").value;
-      const saveBtn = this.transactionDialog.querySelector('.form__save-btn');
-
-      saveBtn.classList.toggle(
-        'active',
-        dateInput && categoryName && amountInput >= 1,
-      );
+      this.changeBtnStyleTransactionDialog();
+      this.clearErrorTransactionDialog();
     });
 
+    // Add delete transaction event
+    this.deleteTransactionEvent();
+  }
+
+  clearErrorTransactionDialog() {
+    // Clear error style
+    const inputFieldEls =
+      this.transactionDialog.querySelectorAll('.form__input-field');
+    const errorTextEls = this.transactionDialog.querySelectorAll('.error-text');
+
+    inputFieldEls.forEach((item) => {
+      if (item.classList.contains('error-input'))
+        item.classList.remove('error-input');
+    });
+    errorTextEls.forEach((item) => {
+      if (item) item.remove();
+    });
+  }
+
+  deleteTransactionEvent() {
     const deleteTransactionBtn =
       this.transactionDialog.querySelector('.form__delete-btn');
 
@@ -336,15 +352,34 @@ export default class HomeView extends CommonView {
 
           await this.deleteTransaction(idEl.value);
 
-          this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
-
+          // Reload data
+          await this.loadTransactionData();
           await this.loadData();
+
+          this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
         } catch (error) {
           this.showErrorToast(error);
         }
         this.toggleLoaderSpinner();
       }
     });
+  }
+
+  changeBtnStyleTransactionDialog() {
+    const dateInput = this.transactionDialog.querySelector(
+      "[name='selected_date']",
+    ).value;
+    const categoryName = this.transactionDialog.querySelector(
+      "[name='category_name']",
+    ).value;
+    const amountInput =
+      this.transactionDialog.querySelector("[name='amount']").value;
+    const saveBtn = this.transactionDialog.querySelector('.form__save-btn');
+
+    saveBtn.classList.toggle(
+      'active',
+      dateInput && categoryName && amountInput >= 1,
+    );
   }
 
   initDataTransactionDialog(idTransaction) {
@@ -379,8 +414,6 @@ export default class HomeView extends CommonView {
   }
 
   async submitTransactionDialog() {
-    this.toggleLoaderSpinner();
-
     try {
       const dateEl = this.transactionForm.querySelector(
         "[name='selected_date']",
@@ -393,43 +426,87 @@ export default class HomeView extends CommonView {
       const idEl = this.transactionForm.querySelector(
         "[name='id_transaction']",
       );
-      const transaction = new Transaction({
-        id: idEl.value,
-        categoryName: categoryNameEl.value,
-        date: dateEl.value,
-        amount: -+amountEl.value,
-        note: noteEl.value,
-        idUser: this.wallet.idUser,
-      });
+      const amount =
+        categoryNameEl.value === 'Income' ? +amountEl.value : -+amountEl.value; // Check if this is a income transaction, amount must plus
 
-      await this.saveTransaction(transaction);
+      // Validate data user input
+      if (
+        this.validateTransactionForm(dateEl.value, categoryNameEl.value, amount)
+      ) {
+        this.toggleLoaderSpinner();
+        this.transactionDialog.close();
 
-      // Reload data
-      await this.loadData();
-      this.updateAmountWallet(-+amountEl.value);
+        const transaction = new Transaction({
+          id: idEl.value,
+          categoryName: categoryNameEl.value,
+          date: dateEl.value,
+          amount,
+          note: noteEl.value,
+          idUser: this.wallet.idUser,
+        });
 
-      this.showSuccessToast(
-        MESSAGE.ADD_TRANSACTION_SUCCESS,
-        MESSAGE.DEFAULT_MESSAGE,
-      );
+        await this.saveTransaction(transaction);
 
-      this.clearInputTransactionForm(this.transactionForm);
+        // Reload data
+        await this.loadTransactionData();
+        this.updateAmountWallet();
+        await this.loadData();
+
+        if (!idEl.value) {
+          // Add success
+          this.showSuccessToast(
+            MESSAGE.ADD_TRANSACTION_SUCCESS,
+            MESSAGE.DEFAULT_MESSAGE,
+          );
+        } else {
+          // Update success
+          this.showSuccessToast(
+            MESSAGE.UPDATE_TRANSACTION_SUCCESS,
+            MESSAGE.DEFAULT_MESSAGE,
+          );
+        }
+
+        this.toggleLoaderSpinner();
+        this.clearInputTransactionForm(this.transactionForm);
+      }
     } catch (error) {
       this.showErrorToast(error);
+      this.toggleLoaderSpinner();
+    }
+  }
+
+  validateTransactionForm(date, categoryName, amount) {
+    const inputFieldEls =
+      this.transactionDialog.querySelectorAll('.form__input-field');
+
+    if (!date || !categoryName || !amount) {
+      if (!date) {
+        renderRequiredText('date', inputFieldEls[0]);
+        inputFieldEls[0].classList.add('error-input');
+      }
+
+      if (!categoryName) {
+        renderRequiredText('category', inputFieldEls[1]);
+        inputFieldEls[1].classList.add('error-input');
+      }
+
+      if (!amount) {
+        renderRequiredText('amount', inputFieldEls[2]);
+        inputFieldEls[2].classList.add('error-input');
+      }
+
+      return false;
     }
 
-    this.toggleLoaderSpinner();
+    return true;
   }
 
   clearInputTransactionForm() {
     const categoryIcon = this.transactionForm.querySelector('.category-icon');
 
     categoryIcon.src = defaultCategoryIcon;
-
     this.keySearchCategory = null; // Delete keyword search
-
-    this.renderCategoryItem(this.keySearchCategory);
-
+    this.renderCategoryList(this.keySearchCategory);
     this.transactionForm.reset();
   }
   // ---------------------END DIALOG---------------------//
@@ -462,15 +539,20 @@ export default class HomeView extends CommonView {
     }
 
     // Render category item
-    this.renderCategoryItem(this.keySearchCategory, newListCategory);
+    this.renderCategoryList(this.keySearchCategory, newListCategory);
   }
 
-  renderCategoryItem(categorySelected, listCategory = this.listCategory) {
+  renderCategoryList(categorySelected, listCategory = this.listCategory) {
+    // Remove category name unnecessary
+    const newListCategory = listCategory.filter(
+      (item) => !REMOVE_CATEGORY.includes(item.name),
+    );
+
     const listCategoryEl = document.querySelector('.list-category');
 
     listCategoryEl.innerHTML = ''; // Remove old category item
 
-    listCategory.forEach((category) => {
+    newListCategory.forEach((category) => {
       const markup = `
         <div class="category-item ${
           category.name === categorySelected ? 'selected' : ''
@@ -495,56 +577,101 @@ export default class HomeView extends CommonView {
     this.budgetDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      this.clearErrorStyleBudgetForm();
       this.submitBudgetForm();
     });
 
     this.budgetDialog.addEventListener('input', (e) => {
       const bodyDialog = e.target.closest('.dialog__body');
-      this.validateBudgetForm(bodyDialog);
+
+      this.changeBtnStyle(bodyDialog);
+      this.clearErrorStyleBudgetForm();
+    });
+  }
+
+  clearErrorStyleBudgetForm() {
+    // Clear error style
+    const inputFieldEls =
+      this.budgetDialog.querySelectorAll('.form__input-field');
+    const errorTexts = this.budgetDialog.querySelectorAll('.error-text');
+
+    inputFieldEls.forEach((item) => {
+      if (item.classList.contains('error-input'))
+        item.classList.remove('error-input');
+    });
+
+    errorTexts.forEach((item) => {
+      if (item) item.remove();
     });
   }
 
   async submitBudgetForm() {
     try {
-      this.toggleLoaderSpinner(); // Enable loader spinner
-      this.budgetDialog.close(); // Close dialog
-
       const { formAddBudget } = document.forms;
       const form = new FormData(formAddBudget);
-      const date = form.get('date');
+      const date = form.get('selected_date');
       const amount = form.get('amount');
       const note = form.get('note');
 
-      const transaction = new Transaction({
-        categoryName: DEFAULT_CATEGORY.INCOME,
-        date,
-        amount: +amount,
-        note,
-        idUser: this.wallet.idUser,
-      });
+      // Validate data user input
 
-      await this.saveTransaction(transaction);
+      if (this.validateBudgetForm(date, amount)) {
+        this.toggleLoaderSpinner(); // Enable loader spinner
+        this.budgetDialog.close(); // Close dialog
 
-      // Reload data
-      await this.loadData();
-      await this.updateAmountWallet(+amount); // Update wallet
+        const transaction = new Transaction({
+          categoryName: DEFAULT_CATEGORY.INCOME,
+          date,
+          amount: +amount,
+          note,
+          idUser: this.wallet.idUser,
+        });
 
-      // Hide loader spinner
-      this.toggleLoaderSpinner();
+        await this.saveTransaction(transaction);
 
-      // Show success message
-      this.showSuccessToast(
-        MESSAGE.ADD_TRANSACTION_SUCCESS,
-        MESSAGE.DEFAULT_MESSAGE,
-      );
+        // Reload data
+        await this.loadTransactionData();
+        await this.updateAmountWallet();
+        await this.loadData();
 
-      document.getElementById('formAddBudget').reset();
+        // Hide loader spinner
+        this.toggleLoaderSpinner();
+
+        // Show success message
+        this.showSuccessToast(
+          MESSAGE.ADD_TRANSACTION_SUCCESS,
+          MESSAGE.DEFAULT_MESSAGE,
+        );
+
+        document.getElementById('formAddBudget').reset();
+      }
     } catch (error) {
       this.showErrorToast(error);
     }
   }
 
-  validateBudgetForm(bodyDialog) {
+  validateBudgetForm(date, amount) {
+    const inputFieldEl =
+      this.budgetDialog.querySelectorAll('.form__input-field');
+
+    if (!date || !amount) {
+      if (!date) {
+        renderRequiredText('date', inputFieldEl[0]);
+        inputFieldEl[0].classList.add('error-input');
+      }
+
+      if (!amount) {
+        renderRequiredText('amount', inputFieldEl[1]);
+        inputFieldEl[1].classList.add('error-input');
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
+  changeBtnStyle(bodyDialog) {
     const date = bodyDialog.querySelector('.input-date').value;
     const amount = +bodyDialog.querySelector('.form__input-balance').value;
     const saveBtn = bodyDialog.querySelector('.form__save-btn');
@@ -562,19 +689,34 @@ export default class HomeView extends CommonView {
     this.walletDialog.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      this.clearErrorStyleWalletDialog();
       this.submitWalletForm();
     });
 
     this.walletDialog.addEventListener('input', (e) => {
       const bodyDialog = e.target.closest('.dialog__body');
-      this.validateWalletForm(bodyDialog);
+
+      this.changeBtnStyleWalletDialog(bodyDialog);
+      this.clearErrorStyleWalletDialog();
+    });
+  }
+
+  clearErrorStyleWalletDialog() {
+    const inputFieldEls =
+      this.walletDialog.querySelectorAll('.form__input-field');
+    const errorTextEls = this.walletDialog.querySelectorAll('.error-text');
+
+    inputFieldEls.forEach((item) => {
+      if (item.classList.contains('error-input'))
+        item.classList.remove('error-input');
+    });
+
+    errorTextEls.forEach((item) => {
+      if (item) item.remove();
     });
   }
 
   async submitWalletForm() {
-    this.walletDialog.close();
-    this.toggleLoaderSpinner();
-
     try {
       // Wallet info
       const { walletForm } = document.forms;
@@ -582,45 +724,73 @@ export default class HomeView extends CommonView {
       const walletName = form.get('walletName');
       const amount = form.get('amount');
 
-      const wallet = new Wallet({
-        walletName,
-        amount: +amount,
-        idUser: this.user.id,
-        inflow: +amount,
-      });
+      if (this.validateWalletDialog(walletName, amount)) {
+        this.walletDialog.close();
+        this.toggleLoaderSpinner();
 
-      await this.saveWallet(wallet);
+        this.wallet = new Wallet({
+          walletName,
+          amount: +amount,
+          idUser: this.user.id,
+          inflow: +amount,
+        });
 
-      // Transaction info
-      const transaction = new Transaction({
-        categoryName: 'Income',
-        date: new Date().toLocaleDateString('en-US'),
-        note: FIRST_ADD_WALLET_NOTE,
-        amount: +amount,
-        idUser: this.user.id,
-      });
+        await this.saveWallet(this.wallet);
 
-      await this.saveTransaction(transaction);
+        // Transaction info
+        const transaction = new Transaction({
+          categoryName: 'Income',
+          date: new Date().toISOString().slice(0, 10),
+          note: FIRST_ADD_WALLET_NOTE,
+          amount: +amount,
+          idUser: this.user.id,
+        });
 
-      // Load data and event
-      await this.loadData();
-      this.loadEvent();
+        await this.saveTransaction(transaction);
 
-      this.showSuccessToast(
-        MESSAGE.ADD_WALLET_SUCCESS,
-        MESSAGE.DEFAULT_MESSAGE,
-      );
+        // Load data and event
+        await this.loadTransactionData();
+        await this.loadData();
+        this.loadEvent();
 
-      await this.loadData(); // Load data from database into page
+        this.showSuccessToast(
+          MESSAGE.ADD_WALLET_SUCCESS,
+          MESSAGE.DEFAULT_MESSAGE,
+        );
+
+        await this.loadData(); // Load data from database into page
+
+        this.toggleLoaderSpinner();
+      }
     } catch (error) {
       // Show toast error
       this.showErrorToast(error);
+      this.toggleLoaderSpinner();
     }
-
-    this.toggleLoaderSpinner();
   }
 
-  validateWalletForm(bodyDialog) {
+  validateWalletDialog(walletName, amount) {
+    const inputFieldEls =
+      this.walletDialog.querySelectorAll('.form__input-field');
+
+    if (!walletName || !amount) {
+      if (!walletName) {
+        renderRequiredText('wallet name', inputFieldEls[0]);
+        inputFieldEls[0].classList.add('error-input');
+      }
+
+      if (!amount) {
+        renderRequiredText('amount', inputFieldEls[2]);
+        inputFieldEls[2].classList.add('error-input');
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
+  changeBtnStyleWalletDialog(bodyDialog) {
     const walletName = bodyDialog.querySelector('.form__input-text').value;
     const amount = bodyDialog.querySelector('.form__input-balance').value;
     const saveBtn = bodyDialog.querySelector('.form__save-btn');
@@ -671,14 +841,14 @@ export default class HomeView extends CommonView {
    */
   handlerTabsTransfer() {
     this.tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
+      tab.addEventListener('click', (e) => {
         this.removeActiveTab();
         tab.classList.add('active');
 
         const line = document.querySelector('.app__line');
 
-        line.classList.toggle('right', line.classList.contains('left'));
-        line.classList.toggle('left', !line.classList.contains('right'));
+        line.style.width = `${e.target.offsetWidth}px`;
+        line.style.left = `${e.target.offsetLeft}px`;
 
         this.allContent.forEach((content) => {
           content.classList.remove('active');
@@ -709,6 +879,10 @@ export default class HomeView extends CommonView {
     });
 
     this.addBudgetBtn.addEventListener('click', () => {
+      // Set default value for date input
+      this.budgetDialog.querySelector("[name='selected_date']").valueAsDate =
+        new Date();
+
       this.budgetDialog.showModal();
     });
 
@@ -743,11 +917,20 @@ export default class HomeView extends CommonView {
   showTransactionDialog(idTransaction = null) {
     this.clearInputTransactionForm();
 
+    // Show delete button only if it is a edit form
     const deleteBtn = this.transactionDialog.querySelector('.form__delete-btn');
     deleteBtn.classList.toggle('hide', !idTransaction);
 
-    if (idTransaction) this.initDataTransactionDialog(idTransaction);
+    if (idTransaction) {
+      // Init data transaction to dialog
+      this.initDataTransactionDialog(idTransaction);
+    } else
+      this.transactionDialog.querySelector(
+        "[name='selected_date']",
+      ).valueAsDate = new Date(); // Set default value for date input
 
+    // Change style submit btn
+    this.changeBtnStyleTransactionDialog();
     this.transactionDialog.showModal();
   }
 
@@ -785,6 +968,9 @@ export default class HomeView extends CommonView {
 
         // Close select category dialog
         this.categoryDialog.close();
+
+        // Clear error style for transaction dialog
+        this.clearErrorTransactionDialog();
       }
     });
 
@@ -794,7 +980,7 @@ export default class HomeView extends CommonView {
         // Make the keyword search category name into global
         this.keySearchCategory = categoryNameEl.value;
 
-        this.renderCategoryItem(this.keySearchCategory);
+        this.renderCategoryList(this.keySearchCategory);
       }
       this.categoryDialog.showModal();
     });

@@ -51,3 +51,9 @@
 
   padding: 8 0px;
 }
+
+%error-text {
+  align-self: flex-start;
+  padding-left: 5px;
+  color: $dark-error-color;
+}

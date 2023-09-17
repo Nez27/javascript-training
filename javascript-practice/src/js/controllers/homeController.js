@@ -10,10 +10,6 @@ export default class HomeController {
     return this.service.userService.getInfoUserLogin();
   }
 
-  handlerCheckWalletValid(idUser) {
-    return this.service.walletService.isValidWallet(idUser);
-  }
-
   handlerGetWalletUser(idUser) {
     return this.service.walletService.getWalletByIdUser(idUser);
   }
@@ -46,7 +42,6 @@ export default class HomeController {
     if (this.homeView) {
       this.homeView.initFunction(
         this.handlerGetInfoUserLogin.bind(this),
-        this.handlerCheckWalletValid.bind(this),
         this.handlerGetWalletUser.bind(this),
         this.handlerGetAllCategory.bind(this),
         this.handlerGetAllTransactions.bind(this),

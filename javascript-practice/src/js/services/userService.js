@@ -26,11 +26,7 @@ export default class UserService extends CommonService {
   async isValidUser(email) {
     const userExist = await this.getUserByEmail(email);
 
-    if (userExist) {
-      return true;
-    }
-
-    return false;
+    return !!userExist;
   }
 
   /**
@@ -41,11 +37,7 @@ export default class UserService extends CommonService {
   async getUserByEmail(email) {
     const result = await this.getDataFromProp('email', email);
 
-    if (result) {
-      return result;
-    }
-
-    return null;
+    return result || null;
   }
 
   /**
@@ -117,11 +109,7 @@ export default class UserService extends CommonService {
   async getUserByToken(accessToken) {
     const result = await this.getDataFromProp('accessToken', accessToken);
 
-    if (result) {
-      return result;
-    }
-
-    return null;
+    return result || null;
   }
 
   static clearAccessToken() {

@@ -10,14 +10,11 @@ export default class CategoryService extends CommonService {
 
   async getAllCategory() {
     const data = await this.getAllDataFromPath(this.defaultPath);
-    const listCategory = [];
 
     if (data) {
-      data.forEach((category) => {
-        listCategory.unshift(new Category(category));
+      return data.reverse().map((category) => {
+        return new Category(category);
       });
-
-      return listCategory;
     }
 
     return null;
