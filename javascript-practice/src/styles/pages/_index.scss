@@ -143,16 +143,6 @@
       background-color: $primary-color;
       border-radius: 10px;
       transition: all 0.3s ease-in-out;
-
-      &.left {
-        left: 152px;
-        width: 116px;
-      }
-
-      &.right {
-        left: 272px;
-        width: 200px;
-      }
     }
   }
 
@@ -344,6 +334,10 @@
           font-size: $fs-md;
           line-height: 24px;
         }
+
+        &__input-field {
+          height: fit-content;
+        }
       }
     }
 
@@ -364,11 +358,11 @@
           @extend %d-flex;
           @include flex-layout($gap: 32px);
 
-          & .form__input-field:first-child {
+          & .form__input-container:first-child .form__input-field {
             width: 208px;
           }
 
-          & .form__input-field:last-child {
+          & .form__input-container:last-child .form__input-field {
             width: 240px;
           }
         }
@@ -504,7 +498,7 @@
     &__input-field {
       @extend %rounded;
 
-      padding: 6px 16px 13.5px 16px;
+      padding: 6px 16px 12px;
       border: 1px solid $gray;
     }
 
@@ -519,6 +513,7 @@
       font-size: $fs-lg;
       width: 100%;
       border: none;
+      background-color: transparent;
 
       &:focus {
         outline: none;
@@ -530,11 +525,12 @@
     }
 
     &__input-balance {
-      font-size: $fs-md;
+      font-size: $fs-lg;
       line-height: 20px;
-      margin-top: 6px;
+      height: 28px;
       border: none;
       width: 100%;
+      background-color: transparent;
 
       &:focus {
         outline: none;
@@ -599,6 +595,7 @@
     width: 100%;
     border: none;
     font-size: $fs-lg;
+    background-color: transparent;
 
     &:focus {
       outline: none;
@@ -614,7 +611,7 @@
     position: absolute;
     top: 10px;
     right: 5px;
-    background-color: $white;
+    background-color: transparent;
     border-top: 3px solid $dark-gray;
     border-right: 3px solid $dark-gray;
     border-bottom: none;
@@ -644,6 +641,7 @@
     color: $black;
     border: none;
     caret-color: transparent;
+    background-color: transparent;
     cursor: pointer;
 
     &:focus {
@@ -688,6 +686,24 @@
     &:hover {
       color: $primary-color;
     }
+  }
+
+  .error-input {
+    background-color: $light-error-color;
+    border-color: $dark-error-color;
+
+    & .form__input-text::placeholder {
+      color: $white;
+    }
+  }
+
+  .error-text {
+    @extend %error-text;
+  }
+
+  .form__input-container {
+    @extend %d-flex;
+    @include flex-layout($direction: column, $gap: 7px);
   }
 }
 

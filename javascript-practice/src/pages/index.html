@@ -18,16 +18,17 @@
         <!-- Dialog body -->
         <div class="dialog__body">
           <form class="form" id="walletForm">
-            <div class="form__input-field">
-              <p class="form__label">Wallet name</p>
-              <input
-                type="text"
-                class="form__input-text"
-                placeholder="Your wallet name?"
-                name="walletName"
-                required
-                minlength="3"
-              />
+            <div class="form__input-container">
+              <div class="form__input-field">
+                <p class="form__label">Wallet name</p>
+                <input
+                  type="text"
+                  class="form__input-text"
+                  placeholder="Your wallet name?"
+                  name="walletName"
+                  minlength="3"
+                />
+              </div>
             </div>
             <div class="form__currency-balance">
               <div class="form__input-field">
@@ -40,14 +41,15 @@
                   <p class="form__text-currency">United States Dollar</p>
                 </div>
               </div>
-              <div class="form__input-field">
-                <p class="form__label">Initial Balance</p>
-                <input
-                  type="number"
-                  class="form__input-balance"
-                  name="amount"
-                  required
-                />
+              <div class="form__input-container">
+                <div class="form__input-field">
+                  <p class="form__label">Initial Balance</p>
+                  <input
+                    type="number"
+                    class="form__input-balance"
+                    name="amount"
+                  />
+                </div>
               </div>
             </div>
             <button type="submit" class="form__save-btn">SAVE</button>
@@ -67,22 +69,29 @@
         <div class="dialog__body">
           <form class="form" id="formAddBudget">
             <div class="form__date-amount-input">
-              <div class="form__input-field">
-                <p class="form__label">Date</p>
-                <div class="date-input-container">
-                  <input class="input-date" type="date" name="date" required />
-                  <div class="icon-btn"></div>
+              <div class="form__input-container">
+                <div class="form__input-field">
+                  <p class="form__label">Date</p>
+                  <div class="date-input-container">
+                    <input
+                      class="input-date"
+                      type="date"
+                      name="selected_date"
+                    />
+                    <div class="icon-btn"></div>
+                  </div>
                 </div>
               </div>
-              <div class="form__input-field">
-                <p class="form__label">Amount</p>
-                <input
-                  class="form__input-balance"
-                  type="number"
-                  min="1"
-                  name="amount"
-                  required
-                />
+              <div class="form__input-container">
+                <div class="form__input-field">
+                  <p class="form__label">Amount</p>
+                  <input
+                    class="form__input-balance"
+                    type="number"
+                    min="1"
+                    name="amount"
+                  />
+                </div>
               </div>
             </div>
             <div class="form__note-input">
@@ -116,45 +125,48 @@
           <form class="form" id="formAddTransaction">
             <input type="text" name="id_transaction" hidden />
             <div class="form__date-category-amount-input">
-              <div class="form__input-field">
-                <p class="form__label">Date</p>
-                <div class="date-input-container">
-                  <input
-                    class="input-date"
-                    type="date"
-                    name="selected_date"
-                    required
-                  />
-                  <span class="icon-btn"></span>
+              <div class="form__input-container">
+                <div class="form__input-field">
+                  <p class="form__label">Date</p>
+                  <div class="date-input-container">
+                    <input
+                      class="input-date"
+                      type="date"
+                      name="selected_date"
+                    />
+                    <span class="icon-btn"></span>
+                  </div>
                 </div>
               </div>
-              <div class="form__input-field" id="selectCategory">
-                <p class="form__label">Category</p>
-                <div class="category-input-container">
-                  <img
-                    class="category-icon"
-                    src="../assets/images/question-icon.svg"
-                    alt="Question icon"
-                  />
-                  <input
-                    type="text"
-                    name="category_name"
-                    class="category-name"
-                    placeholder="Select Category"
-                    required
-                  />
-                  <div class="icon-btn"></div>
+              <div class="form__input-container">
+                <div class="form__input-field" id="selectCategory">
+                  <p class="form__label">Category</p>
+                  <div class="category-input-container">
+                    <img
+                      class="category-icon"
+                      src="../assets/images/question-icon.svg"
+                      alt="Question icon"
+                    />
+                    <input
+                      type="text"
+                      name="category_name"
+                      class="category-name"
+                      placeholder="Select Category"
+                    />
+                    <div class="icon-btn"></div>
+                  </div>
                 </div>
               </div>
-              <div class="form__input-field">
-                <p class="form__label">Amount</p>
-                <input
-                  class="form__input-balance"
-                  type="number"
-                  name="amount"
-                  value="0"
-                  required
-                />
+              <div class="form__input-container">
+                <div class="form__input-field">
+                  <p class="form__label">Amount</p>
+                  <input
+                    class="form__input-balance"
+                    type="number"
+                    name="amount"
+                    value="0"
+                  />
+                </div>
               </div>
             </div>
             <div class="form__note-input">

@@ -1,8 +1,8 @@
-import CommonLoginRegisterView from './commonLoginRegisterView';
+import AuthenticationView from './authenticationView';
 import { TYPE_TOAST, BTN_CONTENT } from '../constants/config';
 import * as MESSAGE from '../constants/message';
 
-export default class LoginView extends CommonLoginRegisterView {
+export default class LoginView extends AuthenticationView {
   constructor() {
     super();
 
@@ -26,14 +26,29 @@ export default class LoginView extends CommonLoginRegisterView {
    * Get data from user input
    * @returns {Object || null} Return object or null
    */
-  getDataFromForm(event) {
+  validateForm(event) {
     const formData = new FormData(event.target);
     const email = formData.get('email');
     const password = formData.get('password');
 
-    this.account = { email, password };
+    // Validate user input
+    this.listError = []; // Reset list error
+    const emailValid = this.validateEmail(email);
+    const passwordValid = this.validatePassword(password);
 
-    return this.account;
+    // Show error style
+    this.emailEl.classList.toggle('error-input', !emailValid);
+    this.inputPasswordEl.classList.toggle('error-input', !passwordValid);
+
+    if (emailValid && passwordValid) {
+      this.account = { email, password };
+
+      return this.account;
+    }
+
+    this.showError(this.listError);
+
+    return null;
   }
 
   /**
@@ -73,16 +88,18 @@ export default class LoginView extends CommonLoginRegisterView {
       this.toggleLoaderSpinner();
 
       // Get data from form
-      const userInput = this.getDataFromForm(event);
-      // Check user exist
-      const results = await loginUser(userInput.email, userInput.password);
+      const userInput = this.validateForm(event);
+      if (userInput) {
+        // Check user exist
+        const results = await loginUser(userInput.email, userInput.password);
 
-      if (results) {
-        window.location.replace('/');
+        if (results) {
+          window.location.replace('/');
 
-        return;
+          return;
+        }
+        throw MESSAGE.ERROR_CREDENTIAL;
       }
-      throw MESSAGE.ERROR_CREDENTIAL;
     } catch (error) {
       // Show toast error
       this.initErrorToast(error);

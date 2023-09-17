@@ -21,27 +21,31 @@
             <div class="form__container">
               <h1 class="form__title">Register</h1>
               <p class="form__description">Using Money Lover account</p>
-              <input
-                type="email"
-                class="form__input"
-                placeholder="Email"
-                name="email"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                class="form__input"
-                placeholder="Password"
-                required
-              />
-              <input
-                type="password"
-                name="password_confirm"
-                class="form__input"
-                placeholder="Confirm Password"
-                required
-              />
+              <div class="form__input-container">
+                <input
+                  type="text"
+                  class="form__input"
+                  placeholder="Email"
+                  name="email"
+                />
+              </div>
+              <div class="form__input-container">
+                <input
+                  type="password"
+                  name="password"
+                  class="form__input"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="form__input-container">
+                <input
+                  type="password"
+                  name="password_confirm"
+                  class="form__input"
+                  placeholder="Confirm Password"
+                />
+              </div>
+
               <button type="submit" class="form__submit-btn">Register</button>
               <p class="form__redirect-signup-text">
                 Have you an account?

@@ -69,15 +69,12 @@ export default class CommonService {
     const results = await timeOutConnect(
       this.firebaseService.getAllDataFromPath(path),
     );
-    const listData = [];
 
     if (results) {
       // Convert format object
-      results.forEach((data) => {
-        listData.push(convertDataObjectToModel(data));
+      return results.map((data) => {
+        return convertDataObjectToModel(data);
       });
-
-      return listData;
     }
 
     return null;
@@ -89,15 +86,12 @@ export default class CommonService {
     const results = await timeOutConnect(
       this.firebaseService.getListDataFromProp(path, property, value),
     );
-    const listData = [];
-
     if (results) {
       // Convert format object
-      results.forEach((data) => {
-        listData.push(convertDataObjectToModel(data));
-      });
 
-      return listData;
+      return results.map((data) => {
+        return convertDataObjectToModel(data);
+      });
     }
 
     return null;

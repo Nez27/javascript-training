@@ -23,11 +23,7 @@ export default class WalletService extends CommonService {
   async isValidWallet(idUser) {
     const wallet = await this.getWalletByIdUser(idUser);
 
-    if (wallet) {
-      return true;
-    }
-
-    return false;
+    return !!wallet;
   }
 
   /**
@@ -38,10 +34,6 @@ export default class WalletService extends CommonService {
   async getWalletByIdUser(idUser) {
     const result = await this.getDataFromProp('idUser', idUser);
 
-    if (result) {
-      return result;
-    }
-
-    return null;
+    return result || null;
   }
 }

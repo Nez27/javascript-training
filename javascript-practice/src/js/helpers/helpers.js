@@ -7,8 +7,16 @@ import FirebaseService from '../services/firebaseService';
  * @param {string} password Password input
  * @returns {boolean} Return true if validate password success, otherwise return false
  */
-export const isValidatePassword = (password) => {
+export const isValidPassword = (password) => {
   return REGEX.PASSWORD.test(password);
+};
+
+export const isValidateEmail = (email) => {
+  return String(email).toLowerCase().match(REGEX.EMAIL);
+};
+
+export const compare2Password = (password, passwordConfirm) => {
+  return password === passwordConfirm;
 };
 
 /**
@@ -85,7 +93,7 @@ export const formatNumber = (number) => {
 export const changeDateFormat = (oldFormatDate) => {
   const tempDate = new Date(oldFormatDate);
 
-  const day = DAY[tempDate.getDay() - 1];
+  const day = DAY[tempDate.getDay()];
   const date = tempDate.getDate();
   const month = MONTH[tempDate.getMonth()];
   const year = tempDate.getFullYear();
@@ -105,9 +113,7 @@ export const createTransactionDetailObject = (category, transactions) => {
     return amount;
   };
   const listTransaction = () => {
-    const results = [];
-
-    transactions.forEach((transaction) => {
+    const results = transactions.map((transaction) => {
       const dateParts = changeDateFormat(transaction.date).split(','); // ['Monday', '14', 'September', '2023']
       const day = dateParts[1];
       const fullDateString = `${dateParts[0]}, ${dateParts[2]} ${dateParts[3]}`;
@@ -119,7 +125,7 @@ export const createTransactionDetailObject = (category, transactions) => {
         amount: transaction.amount,
       };
 
-      results.push(tempData);
+      return tempData;
     });
 
     results.sort((a, b) => parseInt(b.id, 10) - parseInt(a.id, 10));
@@ -152,4 +158,16 @@ export const getAllTransactionByCategoryName = (categoryName, transactions) => {
   });
 
   return results;
+};
+
+export const renderRequiredText = (field, element) => {
+  const markup = `
+    <p class="error-text">${MESSAGE.REQUIRED_MESSAGE(field)}</p>
+  `;
+
+  element.insertAdjacentHTML('afterend', markup);
+};
+
+export const redirectToLoginPage = () => {
+  window.location.replace('/login');
 };

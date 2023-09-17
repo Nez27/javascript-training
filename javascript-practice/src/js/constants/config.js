@@ -23,14 +23,16 @@ export const DEFAULT_CATEGORY = {
   INCOME: 'Income',
 };
 
+export const REMOVE_CATEGORY = ['Income'];
+
 export const DAY = [
+  'Sunday',
   'Monday',
   'Tuesday',
   'Wednesday',
   'Thursday',
   'Friday',
   'Saturday',
-  'Sunday',
 ];
 
 export const MONTH = [
@@ -54,4 +56,6 @@ export const MARK_ICON = { success: 'check', error: 'error' };
 export const REGEX = {
   PASSWORD:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  EMAIL:
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 };

@@ -52,6 +52,7 @@
       padding: 15px 15px;
       border-radius: 10px;
       line-height: 22px;
+      list-style: inside;
     }
 
     &__description {
@@ -69,6 +70,11 @@
       border: 2px solid $background-input-color;
       background-color: $background-input-color;
       padding-inline: 14px;
+
+      &-container {
+        @extend %d-flex;
+        @include flex-layout($direction: column, $gap: 7px);
+      }
     }
 
     &__submit-btn {
@@ -86,5 +92,9 @@
   .error-input {
     border: 2px solid $dark-error-color;
     background-color: $light-error-color;
+  }
+
+  .error-text {
+    @extend %error-text;
   }
 }
