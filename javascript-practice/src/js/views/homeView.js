@@ -354,6 +354,7 @@ export default class HomeView extends CommonView {
 
           // Reload data
           await this.loadTransactionData();
+          await this.updateAmountWallet();
           await this.loadData();
 
           this.showSuccessToast('Delete success!', MESSAGE.DEFAULT_MESSAGE);
@@ -382,35 +383,51 @@ export default class HomeView extends CommonView {
     );
   }
 
-  initDataTransactionDialog(idTransaction) {
-    const transactionArr = this.listTransactions.filter(
-      (obj) => obj.id === idTransaction,
-    );
-    const transaction = Object.assign({}, ...transactionArr);
-    const categoryArr = this.listCategory.filter(
-      (obj) => obj.name === transaction.categoryName,
-    );
-    const category = Object.assign({}, ...categoryArr);
+  initValueTransactionDialog(idTransaction) {
+    let categoryName;
 
-    const idEl = this.transactionDialog.querySelector(
-      "[name='id_transaction']",
-    );
-    const dateEl = this.transactionDialog.querySelector(
-      "[name='selected_date']",
-    );
-    const categoryEl = this.transactionDialog.querySelector(
-      "[name='category_name']",
-    );
-    const amountEl = this.transactionDialog.querySelector("[name='amount']");
-    const noteEl = this.transactionDialog.querySelector("[name='note']");
-    const iconEl = this.transactionDialog.querySelector('.category-icon');
+    if (idTransaction) {
+      // Get transaction object
+      const transactionArr = this.listTransactions.filter(
+        (obj) => obj.id === idTransaction,
+      );
+      const transaction = Object.assign({}, ...transactionArr);
+      // Get category object
+      const categoryArr = this.listCategory.filter(
+        (obj) => obj.name === transaction.categoryName,
+      );
+      const category = Object.assign({}, ...categoryArr);
 
-    idEl.value = transaction.id;
-    dateEl.value = transaction.date;
-    categoryEl.value = transaction.categoryName;
-    amountEl.value = Math.abs(transaction.amount);
-    noteEl.value = transaction.note;
-    iconEl.src = category.url;
+      const idEl = this.transactionDialog.querySelector(
+        "[name='id_transaction']",
+      );
+      const dateEl = this.transactionDialog.querySelector(
+        "[name='selected_date']",
+      );
+      const categoryEl = this.transactionDialog.querySelector(
+        "[name='category_name']",
+      );
+      const amountEl = this.transactionDialog.querySelector("[name='amount']");
+      const noteEl = this.transactionDialog.querySelector("[name='note']");
+      const iconEl = this.transactionDialog.querySelector('.category-icon');
+
+      idEl.value = transaction.id;
+      dateEl.value = transaction.date;
+      categoryEl.value = transaction.categoryName;
+      amountEl.value = Math.abs(transaction.amount);
+      noteEl.value = transaction.note;
+      iconEl.src = category.url;
+
+      categoryName = categoryEl.value;
+    }
+
+    // Show delete button only if it is a edit form and not a income transaction
+    const deleteBtn = this.transactionDialog.querySelector('.form__delete-btn');
+    const showDeleteBtn = () => {
+      return idTransaction && categoryName !== 'Income';
+    };
+
+    deleteBtn.classList.toggle('hide', !showDeleteBtn());
   }
 
   async submitTransactionDialog() {
@@ -917,14 +934,10 @@ export default class HomeView extends CommonView {
   showTransactionDialog(idTransaction = null) {
     this.clearInputTransactionForm();
 
-    // Show delete button only if it is a edit form
-    const deleteBtn = this.transactionDialog.querySelector('.form__delete-btn');
-    deleteBtn.classList.toggle('hide', !idTransaction);
+    // Init data transaction to dialog
+    this.initValueTransactionDialog(idTransaction);
 
-    if (idTransaction) {
-      // Init data transaction to dialog
-      this.initDataTransactionDialog(idTransaction);
-    } else
+    if (!idTransaction)
       this.transactionDialog.querySelector(
         "[name='selected_date']",
       ).valueAsDate = new Date(); // Set default value for date input
@@ -936,14 +949,21 @@ export default class HomeView extends CommonView {
 
   addEventTransactionItem() {
     const transactionItemEl = document.querySelectorAll('.transaction__item');
+
     if (transactionItemEl) {
       transactionItemEl.forEach((item) => {
         item.addEventListener('click', (e) => {
           const transactionTime = e.target.closest('.transaction__time');
+          const categoryNameEl = item.querySelector(
+            '.transaction__category-name',
+          );
+
           if (transactionTime) {
             const idTransaction = transactionTime.dataset.id;
 
-            this.showTransactionDialog(idTransaction);
+            // If it is income transaction, don't show dialog
+            if (categoryNameEl.textContent.trim() !== 'Income')
+              this.showTransactionDialog(idTransaction);
           }
         });
       });

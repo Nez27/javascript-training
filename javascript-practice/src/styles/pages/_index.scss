@@ -14,41 +14,6 @@
     padding-top: 96px;
   }
 
-  .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: $white;
-
-    &__content {
-      @extend %d-flex;
-      @include flex-layout($justify: space-between, $align: center);
-
-      padding: 12px 8px;
-    }
-
-    &__left-content {
-      @extend %d-flex;
-      @include flex-layout($align: center, $gap: 12px);
-    }
-
-    &__add-btn {
-      @extend %base-btn, %rounded-sm;
-
-      height: 32px;
-      padding-inline: 12px;
-      font-weight: 500;
-      line-height: 16px;
-      transition: 0.2s;
-      cursor: pointer;
-
-      &:hover {
-        background: $dark-primary-color;
-      }
-    }
-  }
-
   .wallet {
     @extend %d-flex;
     @include flex-layout($align: center, $gap: 8px);
@@ -358,12 +323,8 @@
           @extend %d-flex;
           @include flex-layout($gap: 32px);
 
-          & .form__input-container:first-child .form__input-field {
-            width: 208px;
-          }
-
-          & .form__input-container:last-child .form__input-field {
-            width: 240px;
+          & .form__input-container {
+            width: 100%;
           }
         }
 
