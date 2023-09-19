@@ -1,23 +1,6 @@
 import * as MESSAGE from '../constants/message';
-import { TIME_OUT_SEC, REGEX, DAY, MONTH } from '../constants/config';
+import { TIME_OUT_SEC, DAY, MONTH } from '../constants/config';
 import FirebaseService from '../services/firebaseService';
-
-/**
- * Validate password
- * @param {string} password Password input
- * @returns {boolean} Return true if validate password success, otherwise return false
- */
-export const isValidPassword = (password) => {
-  return REGEX.PASSWORD.test(password);
-};
-
-export const isValidateEmail = (email) => {
-  return String(email).toLowerCase().match(REGEX.EMAIL);
-};
-
-export const compare2Password = (password, passwordConfirm) => {
-  return password === passwordConfirm;
-};
 
 /**
  * A waiting function with s second
@@ -59,18 +42,6 @@ export const createToken = () => {
   return token;
 };
 
-export const convertModelToDataObject = (model) => {
-  const { id, ...data } = model;
-
-  return { id, data };
-};
-
-export const convertDataObjectToModel = (data) => {
-  const { id, ...object } = data;
-
-  return { id, ...object.data };
-};
-
 export const getSubdirectoryURL = () => {
   const url = window.location.href;
   const parts = url.split('/'); // Results: ['http:', '', 'example.com', '']
@@ -99,73 +70,6 @@ export const changeDateFormat = (oldFormatDate) => {
   const year = tempDate.getFullYear();
 
   return `${day}, ${date}, ${month}, ${year}`;
-};
-
-export const createTransactionDetailObject = (category, transactions) => {
-  const totalTransaction = transactions.length;
-  const totalAmount = () => {
-    let amount = 0;
-
-    transactions.forEach((transaction) => {
-      amount += transaction.amount;
-    });
-
-    return amount;
-  };
-  const listTransaction = () => {
-    const results = transactions.map((transaction) => {
-      const dateParts = changeDateFormat(transaction.date).split(','); // ['Monday', '14', 'September', '2023']
-      const day = dateParts[1];
-      const fullDateString = `${dateParts[0]}, ${dateParts[2]} ${dateParts[3]}`;
-      const tempData = {
-        id: transaction.id,
-        day,
-        fullDateString,
-        note: transaction.note,
-        amount: transaction.amount,
-      };
-
-      return tempData;
-    });
-
-    results.sort((a, b) => parseInt(b.id, 10) - parseInt(a.id, 10));
-
-    return results;
-  };
-
-  return {
-    categoryName: category.name,
-    url: category.url,
-    totalTransaction,
-    totalAmount: totalAmount(),
-    transactions: listTransaction(),
-  };
-};
-
-export const getAllCategoryNameInTransactions = (transactions) => {
-  const categoryName = new Set();
-
-  transactions.forEach((transaction) =>
-    categoryName.add(transaction.categoryName),
-  );
-
-  return Array.from(categoryName);
-};
-
-export const getAllTransactionByCategoryName = (categoryName, transactions) => {
-  const results = transactions.filter((transaction) => {
-    return transaction.categoryName === categoryName;
-  });
-
-  return results;
-};
-
-export const renderRequiredText = (field, element) => {
-  const markup = `
-    <p class="error-text">${MESSAGE.REQUIRED_MESSAGE(field)}</p>
-  `;
-
-  element.insertAdjacentHTML('afterend', markup);
 };
 
 export const redirectToLoginPage = () => {

@@ -10,18 +10,24 @@ import * as MESSAGE from '../constants/message';
 import CommonView from './commonView';
 import Wallet from '../models/wallet';
 import Transaction from '../models/transaction';
+import { formatNumber } from '../helpers/helpers';
+import { renderRequiredText } from '../helpers/validateForm';
 import {
   createTransactionDetailObject,
-  formatNumber,
   getAllCategoryNameInTransactions,
   getAllTransactionByCategoryName,
-  renderRequiredText,
-} from '../helpers/helpers';
+} from '../helpers/dataProcess';
 import defaultCategoryIcon from '../../assets/images/question-icon.svg';
+import TransactionView from './transactionView';
 
 export default class HomeView extends CommonView {
   constructor() {
     super();
+
+    this.transactionView = new TransactionView();
+    this.transactionView.initTransitionChange(
+      this.onTransactionViewChange.bind(this),
+    );
 
     this.tabs = document.querySelectorAll('.app__tab-item');
     this.allContent = document.querySelectorAll('.app__content-item');
@@ -62,6 +68,10 @@ export default class HomeView extends CommonView {
     this.saveTransaction = saveTransaction;
     this.clearAccessToken = clearAccessToken;
     this.deleteTransaction = deleteTransaction;
+  }
+
+  onTransactionViewChange() {
+    // TODO Load budget data
   }
 
   async loadPage() {
@@ -111,7 +121,7 @@ export default class HomeView extends CommonView {
     const walletName = document.querySelector('.wallet__name');
     const walletPrice = document.querySelector('.wallet__price');
     const walletNameValue = wallet.walletName;
-    const walletAmountValue = wallet.inflow + wallet.outflow;
+    const walletAmountValue = wallet.amountWallet();
 
     const sign = walletAmountValue >= 0 ? '+' : '-';
 

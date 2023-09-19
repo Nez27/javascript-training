@@ -1,8 +1,8 @@
+import { timeOutConnect } from '../helpers/helpers';
 import {
   convertDataObjectToModel,
   convertModelToDataObject,
-  timeOutConnect,
-} from '../helpers/helpers';
+} from '../helpers/dataProcess';
 import FirebaseService from './firebaseService';
 
 export default class CommonService {
