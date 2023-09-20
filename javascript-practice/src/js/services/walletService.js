@@ -35,6 +35,10 @@ export default class WalletService extends CommonService {
   async getWalletByIdUser(idUser) {
     const result = await this.getDataFromProp('idUser', idUser);
 
-    return new Wallet(result) || null;
+    if (result) {
+      return new Wallet(result);
+    }
+
+    return null;
   }
 }

@@ -1,3 +1,4 @@
+import Transform from '../helpers/transform';
 import UserService from '../services/userService';
 
 export default class HomeController {
@@ -49,16 +50,13 @@ export default class HomeController {
         this.handlerSaveTransaction.bind(this),
         HomeController.handlerClearAccessToken.bind(this),
         this.handlerDeleteTransaction.bind(this),
+        new Transform(),
       );
-      this.homeView.addHandlerEventWalletForm();
 
       this.homeView.loadPage();
 
-      this.homeView.addHandlerEventBudgetForm();
-
-      this.homeView.handlerEventCategoryDialog();
-
-      this.homeView.handlerEventTransactionDialog();
+      // Subscribe listener data update
+      this.homeView.subscribeListenerData();
     }
   }
 }
