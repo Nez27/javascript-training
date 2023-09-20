@@ -108,6 +108,8 @@
       background-color: $primary-color;
       border-radius: 10px;
       transition: all 0.3s ease-in-out;
+      width: 116px;
+      left: 152px;
     }
   }
 
@@ -245,7 +247,7 @@
     &__note {
       @extend .transaction__date-time;
 
-      color: $dark-gray;
+      color: $black;
     }
 
     &__outcome {
@@ -506,13 +508,8 @@
       line-height: 16.1px;
       font-weight: 500;
       padding: 10px 20px;
-      color: $dark-gray;
+      color: $black;
       cursor: pointer;
-
-      &.active {
-        background-color: $primary-color;
-        color: $white;
-      }
     }
 
     &__cancel-btn {
@@ -573,14 +570,15 @@
     top: 10px;
     right: 5px;
     background-color: transparent;
-    border-top: 3px solid $dark-gray;
-    border-right: 3px solid $dark-gray;
+    border-top: 3px solid $black;
+    border-right: 3px solid $black;
     border-bottom: none;
     border-left: none;
     height: 7px;
     width: 7px;
     rotate: 45deg;
     pointer-events: none;
+    opacity: 0.56;
   }
 
   .category-input-container {
@@ -665,6 +663,22 @@
   .form__input-container {
     @extend %d-flex;
     @include flex-layout($direction: column, $gap: 7px);
+  }
+
+  .form__save-btn {
+    .text {
+      color: $black;
+      opacity: 0.54;
+    }
+
+    &.active {
+      background-color: $primary-color;
+
+      & .text {
+        color: $white;
+        opacity: 1;
+      }
+    }
   }
 }
 

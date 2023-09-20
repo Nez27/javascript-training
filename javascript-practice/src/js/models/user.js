@@ -1,12 +1,10 @@
+import { createId } from '../helpers/dataProcess';
+
 export default class User {
   constructor({ email, password, accessToken = '' }) {
-    this.id = User.createIdUser();
+    this.id = createId();
     this.email = email;
     this.password = password;
     this.accessToken = accessToken;
-  }
-
-  static createIdUser() {
-    return new Date().getTime();
   }
 }

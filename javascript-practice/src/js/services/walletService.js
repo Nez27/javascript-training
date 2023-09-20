@@ -1,3 +1,4 @@
+import Wallet from '../models/wallet';
 import CommonService from './commonService';
 
 export default class WalletService extends CommonService {
@@ -34,6 +35,10 @@ export default class WalletService extends CommonService {
   async getWalletByIdUser(idUser) {
     const result = await this.getDataFromProp('idUser', idUser);
 
-    return result || null;
+    if (result) {
+      return new Wallet(result);
+    }
+
+    return null;
   }
 }

@@ -5,7 +5,7 @@ import {
   isValidPassword,
   isValidateEmail,
   renderRequiredText,
-} from '../helpers/helpers';
+} from '../helpers/validateForm';
 
 export default class AuthenticationView extends CommonView {
   constructor() {
