@@ -1,6 +1,6 @@
 import { REMOVE_CATEGORY } from '../constants/config';
 
-class CategoryView {
+export default class CategoryView {
   constructor() {
     this.categoryDialog = document.getElementById('categoryDialog');
     this.categoryField = document.getElementById('selectCategory');
@@ -132,5 +132,3 @@ class CategoryView {
     });
   }
 }
-
-export default new CategoryView();

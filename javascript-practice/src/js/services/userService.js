@@ -78,8 +78,6 @@ export default class UserService extends CommonService {
       LOCAL_STORAGE.ACCESS_TOKEN,
       newUserData.accessToken,
     );
-
-    LocalStorageService.add(LOCAL_STORAGE.IS_FIRST_LOGIN, true);
   }
 
   async getInfoUserLogin() {
@@ -88,12 +86,6 @@ export default class UserService extends CommonService {
 
     if (accessToken) {
       const user = await this.getUserByToken(accessToken);
-
-      if (LocalStorageService.get(LOCAL_STORAGE.IS_FIRST_LOGIN)) {
-        user.isFirstLogin = true;
-
-        LocalStorageService.remove(LOCAL_STORAGE.IS_FIRST_LOGIN);
-      }
 
       return user;
     }

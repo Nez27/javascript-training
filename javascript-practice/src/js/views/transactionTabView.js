@@ -4,10 +4,10 @@ import {
   getAllTransactionByCategoryName,
 } from '../helpers/dataProcess';
 import { formatNumber } from '../helpers/helpers';
-import TransactionView from './transactionView';
 
-class TransactionTabView {
-  constructor() {
+export default class TransactionTabView {
+  constructor(transactionView) {
+    this.transactionView = transactionView;
     this.addEventTransactionItem();
   }
 
@@ -158,12 +158,10 @@ class TransactionTabView {
 
             // If it is income transaction, don't show dialog
             if (categoryNameEl.textContent.trim() !== 'Income')
-              TransactionView.showTransactionDialog(idTransaction);
+              this.transactionView.showTransactionDialog(idTransaction);
           }
         });
       });
     }
   }
 }
-
-export default new TransactionTabView();

@@ -3,7 +3,7 @@ import Transaction from '../models/transaction';
 import * as MESSAGE from '../constants/message';
 import { renderRequiredText } from '../helpers/validateForm';
 
-class BudgetView {
+export default class BudgetView {
   constructor() {
     this.budgetDialog = document.getElementById('budgetDialog');
     this.addBudgetBtn = document.getElementById('addBudget');
@@ -170,5 +170,3 @@ class BudgetView {
     this.addHandlerEventBudgetForm();
   }
 }
-
-export default new BudgetView();

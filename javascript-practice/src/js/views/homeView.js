@@ -24,6 +24,13 @@ export default class HomeView extends CommonView {
     this.amountInputs = document.querySelectorAll('.form__input-balance');
 
     this.transactionDialog = document.getElementById('transactionDialog');
+
+    this.walletView = new WalletView();
+    this.categoryView = new CategoryView();
+    this.transactionView = new TransactionView(this.categoryView);
+    this.budgetView = new BudgetView();
+    this.summaryTabView = new SummaryTabView();
+    this.transactionTabView = new TransactionTabView(this.transactionView);
   }
 
   initFunction(
@@ -57,11 +64,11 @@ export default class HomeView extends CommonView {
   }
 
   initCategoryViewFunction() {
-    CategoryView.initFunction(this.getAllCategory, this.transform);
+    this.categoryView.initFunction(this.getAllCategory, this.transform);
   }
 
   initTransactionViewFunction() {
-    TransactionView.initFunction(
+    this.transactionView.initFunction(
       this.toggleLoaderSpinner.bind(this),
       this.deleteTransaction,
       this.loadTransactionData.bind(this),
@@ -75,7 +82,7 @@ export default class HomeView extends CommonView {
   }
 
   initBudgetViewFunction() {
-    BudgetView.initFunction(
+    this.budgetView.initFunction(
       this.showErrorToast.bind(this),
       this.showSuccessToast.bind(this),
       this.toggleLoaderSpinner.bind(this),
@@ -88,19 +95,19 @@ export default class HomeView extends CommonView {
   }
 
   initFunctionCategoryView() {
-    CategoryView.initFunction(this.getAllCategory, this.transform);
+    this.categoryView.initFunction(this.getAllCategory, this.transform);
   }
 
   initSummaryTabViewFunction() {
-    SummaryTabView.initFunction(this.transform);
+    this.summaryTabView.initFunction(this.transform);
   }
 
   initTransactionTabViewFunction() {
-    TransactionTabView.initFunction(this.transform);
+    this.transactionTabView.initFunction(this.transform);
   }
 
   initWalletViewFunction() {
-    WalletView.initFunction(
+    this.walletView.initFunction(
       this.transform,
       this.toggleLoaderSpinner.bind(this),
       this.saveWallet,
@@ -115,24 +122,24 @@ export default class HomeView extends CommonView {
 
   subscribeListenerData() {
     this.subscribe();
-    TransactionView.subscribe();
-    BudgetView.subscribe();
-    SummaryTabView.subscribe();
-    TransactionTabView.subscribe();
-    WalletView.subscribe();
+    this.transactionView.subscribe();
+    this.budgetView.subscribe();
+    this.summaryTabView.subscribe();
+    this.transactionTabView.subscribe();
+    this.walletView.subscribe();
   }
 
   async loadData() {
     // Send data to other class
     this.sendData();
 
-    await CategoryView.loadCategory();
+    await this.categoryView.loadCategory();
 
     await this.loadWalletUser();
 
-    SummaryTabView.load();
+    this.summaryTabView.load();
 
-    TransactionTabView.loadTransactionTab();
+    this.transactionTabView.loadTransactionTab();
   }
 
   async loadPage() {
@@ -150,7 +157,7 @@ export default class HomeView extends CommonView {
       // Check user's wallet if have or not
       if (!this.wallet) {
         // Show add wallet dialog
-        WalletView.showDialog();
+        this.walletView.showDialog();
       } else {
         // Init data
         await this.loadTransactionData();
@@ -218,7 +225,8 @@ export default class HomeView extends CommonView {
     let outflow = 0;
 
     // Init data first
-    this.transactionDetails = TransactionTabView.loadTransactionDetailsData();
+    this.transactionDetails =
+      this.transactionTabView.loadTransactionDetailsData();
 
     this.transactionDetails.forEach((transaction) => {
       if (transaction.totalAmount >= 0) {

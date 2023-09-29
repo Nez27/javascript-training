@@ -1,17 +1,18 @@
 import * as MESSAGE from '../constants/message';
 import { renderRequiredText } from '../helpers/validateForm';
 import Transaction from '../models/transaction';
-import CategoryView from './categoryView';
 
 import defaultCategoryIcon from '../../assets/images/question-icon.svg';
 
-class TransactionView {
-  constructor() {
+export default class TransactionView {
+  constructor(categoryView) {
     this.addTransactionBtn = document.getElementById('addTransaction');
     this.transactionDialog = document.getElementById('transactionDialog');
     this.transactionForm = document.getElementById('formAddTransaction');
 
     this.handlerEventTransactionDialog();
+
+    this.categoryView = categoryView;
   }
 
   initFunction(
@@ -288,7 +289,10 @@ class TransactionView {
 
     categoryIcon.src = defaultCategoryIcon;
     this.keySearchCategory = null; // Delete keyword search
-    CategoryView.renderCategoryList(this.keySearchCategory);
+    this.categoryView.renderCategoryList(
+      this.keySearchCategory,
+      this.listCategory,
+    );
     this.transactionForm.reset();
   }
 
@@ -308,5 +312,3 @@ class TransactionView {
     this.transactionDialog.showModal();
   }
 }
-
-export default new TransactionView();

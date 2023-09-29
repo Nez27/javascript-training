@@ -4,7 +4,7 @@ import Wallet from '../models/wallet';
 import * as MESSAGE from '../constants/message';
 import { renderRequiredText } from '../helpers/validateForm';
 
-class WalletView {
+export default class WalletView {
   constructor() {
     this.walletDialog = document.getElementById('walletDialog');
 
@@ -176,5 +176,3 @@ class WalletView {
     }
   }
 }
-
-export default new WalletView();

@@ -1,6 +1,6 @@
 import { formatNumber } from '../helpers/helpers';
 
-class SummaryTabView {
+export default class SummaryTabView {
   initFunction(transform) {
     this.transform = transform;
   }
@@ -33,5 +33,3 @@ class SummaryTabView {
     )}`;
   }
 }
-
-export default new SummaryTabView();
